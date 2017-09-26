@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "WebApp\WebApp.csproj", "{958CBB1A-0143-44E3-A3B9-30F804ADA1E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoServiceCore", "CryptoServiceCore\CryptoServiceCore.csproj", "{636299EE-F94C-490C-B5FC-3EC709297017}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoServiceCore", "CryptoServiceCore\CryptoServiceCore.csproj", "{636299EE-F94C-490C-B5FC-3EC709297017}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -23,4 +23,8 @@
     <ProjectReference Include="..\CryptoServiceCore\CryptoServiceCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>
