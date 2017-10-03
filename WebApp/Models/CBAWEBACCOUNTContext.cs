@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -6,28 +6,17 @@ namespace WebApp.Models
 {
     public partial class CBAWEBACCOUNTContext : DbContext
     {
-
         //Constuctor do not remove (DI)
-        public CBAWEBACCOUNTContext (DbContextOptions<CBAWEBACCOUNTContext> options)
-            : base(options)     { }
-
+        public CBAWEBACCOUNTContext(DbContextOptions<CBAWEBACCOUNTContext> options)
+            : base(options) { }
 
         public virtual DbSet<Customers> Customers { get; set; }
+        public virtual DbSet<Invoice> Invoice { get; set; }
+        public virtual DbSet<InvoiceLine> InvoiceLine { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
-        // Conexion String is inside appsettings.json
-        
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    ////            if (!optionsBuilder.IsConfigured)
-        //    ////            {
-        //    ////#warning To protect potentially sensitive information in your connection string, you should move it out of source code. 
-        //    ////                See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-        //    ////                        optionsBuilder.UseSqlServer(@"server=cbasqlserver.database.windows.net;initial catalog=CBAWEBACCOUNT;persist security info=True;user id=Developer;password=1231!#ASDF!a");
-        //    ////            }
-        //}
-
+  
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customers>(entity =>
@@ -43,6 +32,49 @@ namespace WebApp.Models
                 entity.Property(e => e.LastName)
                     .IsRequired()
                     .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Invoice>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.Gstnumber).HasColumnName("GSTNumber");
+
+                entity.Property(e => e.InvoiceNumber)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.IssueeCareOf).HasColumnType("nchar(100)");
+
+                entity.Property(e => e.IssueeOrganization)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<InvoiceLine>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Amount).HasColumnType("money");
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.InvoiceId).HasColumnName("InvoiceID");
+
+                entity.HasOne(d => d.Invoice)
+                    .WithMany(p => p.InvoiceLine)
+                    .HasForeignKey(d => d.InvoiceId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_InvoiceLine_Invoice");
             });
 
             modelBuilder.Entity<Products>(entity =>
