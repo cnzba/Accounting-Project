@@ -7,9 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\app\invoices\invoice.service.spec.ts" />
-    <None Remove="ClientApp\app\invoices\invoice.service.ts" />
-    <None Remove="ClientApp\app\invoices\invoice.ts" />
+    <Content Remove="ClientApp\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,11 +31,4 @@
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\app\invoices\invoice.service.spec.ts" />
-    <TypeScriptCompile Include="ClientApp\app\invoices\invoice.service.ts" />
-    <TypeScriptCompile Include="ClientApp\app\invoices\invoice.ts" />
-  </ItemGroup>
-
 </Project>
