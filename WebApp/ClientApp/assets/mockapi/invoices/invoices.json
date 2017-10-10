@@ -1,0 +1,26 @@
+[
+    {
+        "invoiceId": 1,
+        "invoiceNumber": "INV-00050",
+        "invoiceDate": "October 5, 2017",
+        "issueeOrganization": "Electrocal Commission",
+        "issueeCareOf": "Glen Clarke",
+        "totalAmount": 25.00
+    },
+    {
+        "invoiceId": 2,
+        "invoiceNumber": "INV-00051",
+        "invoiceDate": "October 5, 2017",
+        "issueeOrganization": "John Doe",
+        "issueeCareOf": "",
+        "totalAmount": 15.00
+    },
+    {
+        "invoiceId": 3,
+        "invoiceNumber": "INV-00052",
+        "invoiceDate": "September 9, 2017",
+        "issueeOrganization": "Jane Smith",
+        "issueeCareOf": "",
+        "totalAmount": 75.00
+    }
+]
