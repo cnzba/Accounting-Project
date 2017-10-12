@@ -21,6 +21,7 @@ describe('Invoice service (list of invoices)', () => {
             invoiceService.getInvoices().subscribe(
                 (invoiceList) => {
                     expect(invoiceList.length).toBe(3);
+                    expect(invoiceList[0].invoiceId).toBe(1);
                 });
         })));
 });
