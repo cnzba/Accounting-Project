@@ -5,7 +5,8 @@
         "invoiceDate": "October 5, 2017",
         "issueeOrganization": "Electrocal Commission",
         "issueeCareOf": "Glen Clarke",
-        "totalAmount": 25.00
+        "totalAmount": 25.00,
+        "invoiceLines": [{ "id": 1,"description": "Fundraising Dinner", "amount": 25.00}]
     },
     {
         "invoiceId": 2,
@@ -13,7 +14,14 @@
         "invoiceDate": "October 5, 2017",
         "issueeOrganization": "John Doe",
         "issueeCareOf": "",
-        "totalAmount": 15.00
+        "totalAmount": 15.00,
+        "invoiceLines": [
+            {
+                "id": 1,
+                "description": "Cake",
+                "amount": 15.00
+            }
+        ]
     },
     {
         "invoiceId": 3,
@@ -21,6 +29,23 @@
         "invoiceDate": "September 9, 2017",
         "issueeOrganization": "Jane Smith",
         "issueeCareOf": "",
-        "totalAmount": 75.00
+        "totalAmount": 75.00,
+        "invoiceLines": [
+            {
+                "id": 1,
+                "description": "Fundraising Dinner",
+                "amount": 25.00
+            },
+            {
+                "id": 2,
+                "description": "Cake",
+                "amount": 15.00
+            },
+            {
+                "id": 3,
+                "description": "Coffee",
+                "amount": 35.00
+            }
+        ]
     }
 ]

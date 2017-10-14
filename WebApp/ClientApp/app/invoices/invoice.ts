@@ -7,5 +7,13 @@ export interface IInvoice {
     totalAmount: number;
 //    subTotal: number;
 //    GST: string; // GST may be 0, in which case subTotal == totalAmount
+
+    invoiceLines: IInvoiceLine[];
+}
+
+export interface IInvoiceLine {
+    id: number; // needed to order the lines
+    description: string;
+    amount: number;
 }
 
