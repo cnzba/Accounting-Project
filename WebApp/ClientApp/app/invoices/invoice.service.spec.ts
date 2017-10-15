@@ -14,14 +14,15 @@ describe('Invoice service (list of invoices)', () => {
         });
     });
 
-    it("Should have 3 invoices",
+    it("Should have 2 invoices",
         async(inject([InvoiceService], (invoiceService) => {
             expect(invoiceService).toBeDefined();
 
             invoiceService.getInvoices().subscribe(
                 (invoiceList) => {
-                    expect(invoiceList.length).toBe(3);
-                    expect(invoiceList[0].invoiceId).toBe(1);
+                    expect(invoiceList.length).toBe(2);
+                    expect(invoiceList[0].id).toBe(1);
+                    expect(invoiceList[1].id).toBe(2);
                 });
         })));
 });

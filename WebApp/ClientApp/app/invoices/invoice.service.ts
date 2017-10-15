@@ -11,9 +11,8 @@ import { IInvoice } from './invoice';
 
 @Injectable()
 export class InvoiceService {
-    // private _productUrl = './api/products/products.json';
-    // private _productUrl = 'http://localhost:62650/api/products';
-    private _invoiceUrl = 'assets/mockapi/invoices/invoices.json';
+    // private _invoiceUrl = 'assets/mockapi/invoices/invoices.json';
+    private _invoiceUrl = 'api/invoice';
 
     constructor(private _http: HttpClient) { }
 
@@ -27,7 +26,7 @@ export class InvoiceService {
         // needs to change get specific invoice from Web API
         // need to get by invoice number, not invoice ID
         return this.getInvoices()
-            .map((invoices: IInvoice[]) => invoices.find(i => i.invoiceId === id));
+            .map((invoices: IInvoice[]) => invoices.find(i => i.id === id));
     } 
 
     private handleError(err: HttpErrorResponse) {

@@ -1,14 +1,16 @@
 export interface IInvoice {
-    invoiceId: number;
+    id: number;
     invoiceNumber: string;
-    invoiceDate: Date;
+    date: Date;
     issueeOrganization: string;
     issueeCareOf: string;
-    totalAmount: number;
+    gstnumber: string;
+    charitiesNumber: string;
+//    totalAmount: number;
 //    subTotal: number;
 //    GST: string; // GST may be 0, in which case subTotal == totalAmount
 
-    invoiceLines: IInvoiceLine[];
+    invoiceLine: IInvoiceLine[];
 }
 
 export interface IInvoiceLine {
