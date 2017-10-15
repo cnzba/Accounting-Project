@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
+using Microsoft.EntityFrameworkCore;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApp.Controllers
@@ -25,14 +26,14 @@ namespace WebApp.Controllers
         [HttpGet]
         public IEnumerable<Invoice> Get()
         {
-            return cBAWEBACCOUNTContext.Invoice.ToList();
+            return cBAWEBACCOUNTContext.Invoice.Include("InvoiceLine").ToList();
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var invoice = cBAWEBACCOUNTContext.Invoice.FirstOrDefault(t => t.Id == id);
+            var invoice = cBAWEBACCOUNTContext.Invoice.Include("InvoiceLine").FirstOrDefault(t => t.Id == id);
             if (invoice == null)
             {
                 return NotFound();
