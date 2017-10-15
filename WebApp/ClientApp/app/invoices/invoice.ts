@@ -15,6 +15,7 @@ export interface IInvoice {
 
 export interface IInvoiceLine {
     id: number; // needed to order the lines
+    invoiceId: number; 
     description: string;
     amount: number;
 }
