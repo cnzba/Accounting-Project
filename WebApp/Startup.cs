@@ -10,6 +10,7 @@ using System.IO;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
+using CryptoService;
 
 namespace WebApp
 {
@@ -26,6 +27,9 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CBAWEBACCOUNTContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CBA_Database")));
+
+            ////Dependency Injection Scope
+            services.AddScoped<ICryptography, Cryptography>();
 
             services.AddMvc();
 
