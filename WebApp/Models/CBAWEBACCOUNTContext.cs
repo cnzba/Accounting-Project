@@ -7,6 +7,9 @@ namespace WebApp.Models
     public partial class CBAWEBACCOUNTContext : DbContext
     {
         //Constuctor do not remove (DI)
+        public CBAWEBACCOUNTContext()
+          { }
+
         public CBAWEBACCOUNTContext(DbContextOptions<CBAWEBACCOUNTContext> options)
             : base(options) { }
 
