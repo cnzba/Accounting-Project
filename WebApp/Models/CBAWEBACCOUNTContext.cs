@@ -13,6 +13,7 @@ namespace WebApp.Models
         public CBAWEBACCOUNTContext(DbContextOptions<CBAWEBACCOUNTContext> options)
             : base(options) { }
 
+        public virtual DbSet<ConfigurationValue> ConfigurationValue { get; set; }
         public virtual DbSet<Customers> Customers { get; set; }
         public virtual DbSet<Invoice> Invoice { get; set; }
         public virtual DbSet<InvoiceLine> InvoiceLine { get; set; }
@@ -22,6 +23,17 @@ namespace WebApp.Models
   
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ConfigurationValue>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasMaxLength(50)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Value)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            });
+
             modelBuilder.Entity<Customers>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
