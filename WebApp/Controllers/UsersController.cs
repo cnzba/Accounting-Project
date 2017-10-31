@@ -8,18 +8,22 @@ using CryptoService;
 namespace WebApp.Controllers
 {
     [Produces("application/json")]
-    //[Route("api/Users")]
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
         private readonly CBAWEBACCOUNTContext _context;
 
-        ICryptography crypto = new Cryptography();
+        //Dependency Injection
+        private readonly ICryptography _crypto;       
 
-        public UsersController(CBAWEBACCOUNTContext context)
+        public UsersController(CBAWEBACCOUNTContext context, ICryptography crypto)
         {
             _context = context;
+
+            //Dependency Injection
+            _crypto = crypto;
         }
+        
 
         // GET: api/Users
         [HttpGet]
@@ -70,18 +74,17 @@ namespace WebApp.Controllers
 
             if (id != users.IdUser)
             {
-                return BadRequest();
+                return BadRequest("Invalid ID");
+            }
+
+            if(LoginExists(users.Login))
+            {
+                return BadRequest("Invalid Login");
             }
 
 
-            // var tempUsr = await _context.Users.SingleOrDefaultAsync(m => m.IdUser == id);
 
-            // if (!tempUsr.Password.Equals(users.Password))
-            //  {
-            //      users.Password = await crypto.HashMD5(users.Password);
-            // }
-
-             users.Password = crypto.HashMD5(users.Password);
+             users.Password = _crypto.HashMD5(users.Password);
             _context.Entry(users).State = EntityState.Modified;
 
             try
@@ -117,7 +120,13 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            users.Password = crypto.HashMD5(users.Password);
+            if (LoginExists(users.Login))
+            {
+                return BadRequest("Login Invalid");
+            }
+
+
+            users.Password = _crypto.HashMD5(users.Password);
             _context.Users.Add(users);
             await _context.SaveChangesAsync();
 
@@ -149,5 +158,11 @@ namespace WebApp.Controllers
         {
             return _context.Users.Any(e => e.IdUser == id);
         }
+
+        private bool LoginExists(string login)
+        {
+            return _context.Users.Any(e => e.Login.ToLower().Equals(login.ToLower().Trim()));
+        }
+
     }
 }
