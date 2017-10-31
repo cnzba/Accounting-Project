@@ -1,0 +1,64 @@
+﻿<section class="sec">
+    <div class="cont" *ngIf="selectedinvoi">
+        <h2>Detail View of {{selectedinvoi.id}} </h2>
+        <table class="t1">
+            <tr class="tr1">
+                <td style="height: 46px;width: 132px">Client Name</td>
+                <td style="height: 46px;width: 238px">{{selectedinvoi.client}}</td>
+                <td style="height: 46px;width: 23px"></td>
+                <td style="height: 46px;width: 131px">Invoice Number</td>
+                <td style="height: 46px;width: 146px">{{selectedinvoi.id}}</td>
+
+                <!-- <label>name: </label>
+                  <input [(ngModel)]="selectedinvoi.client" placeholder="name" />
+                </div>-->
+
+            </tr>
+            <tr>
+                <td style="width: 132px">Client Contact</td>
+                <td style="width: 238px">301 Tuam Street <br />Christchurch Central<br />Christchurch 8011 <br /> Ph:03 379 422/027 273 8815</td>
+                <td style="width: 23px"></td>
+                <td style="width: 131px">Date Created</td>
+                <td style="width: 146px">{{selectedinvoi.date}}</td>
+
+            </tr>
+            <tr class="tr2">
+                <td style="width: 132px">Status</td>
+                <td style="width: 238px">{{selectedinvoi.status}}</td>
+                <td style="width: 23px"></td>
+                <td style="width: 131px">GST Number</td>
+                <td style="width: 146px">{{selectedinvoi.GST}}</td>
+
+            </tr>
+            <tr>
+                <td style="width: 132px">Due Date</td>
+                <td style="width: 238px">{{selectedinvoi.due}}</td>
+                <td style="width: 23px"></td>
+                <td style="width: 131px">Charities Number</td>
+                <td style="width: 146px">{{selectedinvoi.charnum}}</td>
+
+            </tr>
+            <tr class="tr1">
+                <td colspan="4" style="height: 46px; width:146px">Description</td>
+                <td style="height: 46px; width: 146px">Amount</td>
+            </tr>
+            <tr class="tr2">
+                <td colspan="4">{{selectedinvoi.des}}</td>
+                <td style="width: 146px">{{selectedinvoi.amount}}</td>
+            </tr>
+            <tr>
+                <td colspan="4"></td>
+                <td style="width: 146px"></td>
+            </tr>
+            <tr class="tr2">
+                <td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GST Amount</td>
+                <td style="width:146px">{{selectedinvoi.amount*0.15}}</td>
+            </tr>
+            <tr>
+                <td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Amount</td>
+                <td style="width:146px">{{selectedinvoi.amount+(selectedinvoi.amount*0.15)}}</td>
+            </tr>
+        </table>
+    </div>
+</section>
+<button (click)="goBack()">Back</button>
