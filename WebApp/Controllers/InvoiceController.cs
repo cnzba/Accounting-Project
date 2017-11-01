@@ -4,22 +4,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
+using WebApp.Options;
 using Microsoft.EntityFrameworkCore;
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.Extensions.Options;
 
 namespace WebApp.Controllers
 {
     [Route("api/[controller]")]
     public class InvoiceController : Controller
     {
-
         private readonly CBAWEBACCOUNTContext cBAWEBACCOUNTContext;
+        private readonly CBAOptions options;
 
-        public InvoiceController(CBAWEBACCOUNTContext context)
+        // context; options via DI
+        public InvoiceController(CBAWEBACCOUNTContext context, IOptions<CBAOptions> optionsAccessor)
         {
             cBAWEBACCOUNTContext = context;
-
-            
+            options = optionsAccessor.Value;
         }
 
         // GET: api/values
