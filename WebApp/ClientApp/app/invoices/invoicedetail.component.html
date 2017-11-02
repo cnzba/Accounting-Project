@@ -4,10 +4,10 @@
         <table class="t1">
             <tr class="tr1">
                 <td style="height: 46px;width: 132px">Client Name</td>
-                <td style="height: 46px;width: 238px">{{selectedinvoi.client}}</td>
+                <td style="height: 46px;width: 238px">{{selectedinvoi.Organization}}</td>
                 <td style="height: 46px;width: 23px"></td>
                 <td style="height: 46px;width: 131px">Invoice Number</td>
-                <td style="height: 46px;width: 146px">{{selectedinvoi.id}}</td>
+                <td style="height: 46px;width: 146px">{{selectedinvoi.invoiceNumber}}</td>
 
                 <!-- <label>name: </label>
                   <input [(ngModel)]="selectedinvoi.client" placeholder="name" />
@@ -24,18 +24,18 @@
             </tr>
             <tr class="tr2">
                 <td style="width: 132px">Status</td>
-                <td style="width: 238px">{{selectedinvoi.status}}</td>
-                <td style="width: 23px"></td>
+              <!--  <td style="width: 238px">{{selectedinvoi.status}}</td>
+                <td style="width: 23px"></td>-->
                 <td style="width: 131px">GST Number</td>
-                <td style="width: 146px">{{selectedinvoi.GST}}</td>
+                <td style="width: 146px">{{selectedinvoi.gstnumber}}</td>
 
             </tr>
             <tr>
                 <td style="width: 132px">Due Date</td>
-                <td style="width: 238px">{{selectedinvoi.due}}</td>
-                <td style="width: 23px"></td>
+              <!--  <td style="width: 238px">{{selectedinvoi.due}}</td>
+                <td style="width: 23px"></td>-->
                 <td style="width: 131px">Charities Number</td>
-                <td style="width: 146px">{{selectedinvoi.charnum}}</td>
+                <td style="width: 146px">{{selectedinvoi.charitiesnumber}}</td>
 
             </tr>
             <tr class="tr1">
@@ -43,7 +43,7 @@
                 <td style="height: 46px; width: 146px">Amount</td>
             </tr>
             <tr class="tr2">
-                <td colspan="4">{{selectedinvoi.des}}</td>
+                <td colspan="4">{{selectedinvoi.description}}</td>
                 <td style="width: 146px">{{selectedinvoi.amount}}</td>
             </tr>
             <tr>
@@ -51,14 +51,14 @@
                 <td style="width: 146px"></td>
             </tr>
             <tr class="tr2">
-                <td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GST Amount</td>
+                <td colspan="4" style="text-align:right">GST Amount</td>
                 <td style="width:146px">{{selectedinvoi.amount*0.15}}</td>
             </tr>
             <tr>
-                <td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Amount</td>
+                <td colspan="4" style="text-align:right">Total Amount</td>
                 <td style="width:146px">{{selectedinvoi.amount+(selectedinvoi.amount*0.15)}}</td>
             </tr>
         </table>
     </div>
-</section>
+</section>>
 <button (click)="goBack()">Back</button>

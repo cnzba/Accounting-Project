@@ -22,12 +22,13 @@ export class InvoiceService {
             .catch(this.handleError);
     }
 
-    getInvoice(id: number): Observable<IInvoice> {
+  getInvoice(id: number): Observable<IInvoice> {
         // needs to change get specific invoice from Web API
         // need to get by invoice number, not invoice ID
         return this.getInvoices()
-            .map((invoices: IInvoice[]) => invoices.find(i => i.id === id));
-    }
+           .map((invoices: IInvoice[]) => invoices.find(i => i.id === id));
+
+     }
     
 
     private handleError(err: HttpErrorResponse) {

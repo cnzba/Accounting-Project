@@ -1,34 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { InvoiceService } from "./invoice.service";
-export class IInvoice {
-    id: number;
-    date: string;
-    client: string;
-    amount: number;
-
-    due: string;
-    status: string;
-    GST: string;
-    charnum: string;
-    des: string;
-
-
-
-}
-
-
-const INVOICES: IInvoice[] = [
-    {
-        id: 50, date: '10/5/2016', client: 'Electrocal Commission c/o Glen Clarke', amount: 25, due: 'Paid', status: 'sent',
-        GST: '$-712-551', charnum: '21479', des: 'Fundraising Dinner'
-    },
-    {
-        id:51, date: '20/6/2016', client: 'John Smith', amount: 15, due: '15/6/2017', status: 'sent', GST: '96-345-234',
-        charnum: '234578', des: 'Donation'
-    }
-
-
-];
+import { IInvoice } from "./invoice";
 
 @Component({
   selector: 'app-invoicelist',
@@ -36,10 +8,29 @@ const INVOICES: IInvoice[] = [
   styleUrls: ['./invoicelist.component.css']
 })
 export class InvoicelistComponent implements OnInit {
+        InvoiceService: any;
 
-  constructor() { }
+    title: string = 'CBA Invoicing';
+    invo: IInvoice[];
+    selectedinvoi: IInvoice;
+    errorMessage: string;
 
-  ngOnInit() {
+    // inject InvoiceService
+    constructor(private invoiceService: InvoiceService) {
+    }
+    getInvoices(): void {
+        this.InvoiceService.getInvoices().then(invo => this.invo = invo);
+    }
+
+    ngOnInit(): void {
+        this.getInvoices();
+
+  
+              error => this.errorMessage = <any>error;
+      }
+
+      onSelect(inv: IInvoice): void {
+          this.selectedinvoi = inv;
+      }
   }
 
-}

@@ -20,10 +20,9 @@
                     [class.selected]="inv === selectedinvoi"
                     (click)="onSelect(inv)">
 
-
-                    <td style="height: 46px; width: 50px" class="badge">{{inv.id}}</td>
+                    <td style="height:46px";width:50px" class="badge">{{inv.invoiceNumber}}</td>
                     <td style="height: 46px; width: 50px">{{inv.date}}</td>
-                    <td style="height: 46px; width: 50px">{{inv.client}} </td>
+                    <td style="height: 46px; width: 50px">{{inv.issueOrganization}} </td>
                     <td style="height: 46px; width: 50px">{{inv.amount}}</td>
 
                 </tr>
