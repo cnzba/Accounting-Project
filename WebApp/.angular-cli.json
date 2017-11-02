@@ -36,13 +36,16 @@
     },
     "lint": [
         {
-            "project": "ClientApp/tsconfig.app.json"
+            "project": "ClientApp/tsconfig.app.json",
+            "exclude": "**/node_modules/**"
         },
         {
-            "project": "ClientApp/tsconfig.spec.json"
+            "project": "ClientApp/tsconfig.spec.json",
+            "exclude": "**/node_modules/**"
         },
         {
-            "project": "ClientAppE2E/tsconfig.e2e.json"
+            "project": "ClientAppE2E/tsconfig.e2e.json",
+            "exclude": "**/node_modules/**"
         }
     ],
     "test": {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +10,7 @@ using System.IO;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
+using CryptoService;
 
 namespace WebApp
 {
@@ -26,6 +27,9 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CBAWEBACCOUNTContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CBA_Database")));
+
+            ////Dependency Injection Scope
+            services.AddScoped<ICryptography, Cryptography>();
 
             services.AddMvc();
 
@@ -48,6 +52,7 @@ namespace WebApp
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseSwagger();
@@ -64,7 +69,7 @@ namespace WebApp
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller}/{action}/{id?}");
             });
 
 
