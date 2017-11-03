@@ -1,4 +1,4 @@
-﻿<section class="sec">
+<section class="sec">
     <div class="cont" *ngIf="selectedinvoi">
         <h2>Detail View of {{selectedinvoi.id}} </h2>
         <table class="t1">
@@ -42,9 +42,9 @@
                 <td colspan="4" style="height: 46px; width:146px">Description</td>
                 <td style="height: 46px; width: 146px">Amount</td>
             </tr>
-            <tr class="tr2">
-                <td colspan="4">{{selectedinvoi.description}}</td>
-                <td style="width: 146px">{{selectedinvoi.amount}}</td>
+            <tr *ngFor='let invoiceLine of selectedinvoi.invoiceLine'>
+                <td colspan="4">{{invoiceLine.description}}</td>
+                <td style="width: 146px">{{invoiceLine.amount}}</td>
             </tr>
             <tr>
                 <td colspan="4"></td>
@@ -56,9 +56,9 @@
             </tr>
             <tr>
                 <td colspan="4" style="text-align:right">Total Amount</td>
-                <td style="width:146px">{{selectedinvoi.amount+(selectedinvoi.amount*0.15)}}</td>
+                <td style="width:146px">0</td>
             </tr>
         </table>
     </div>
-</section>>
+</section>
 <button (click)="goBack()">Back</button>
