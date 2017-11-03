@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <None Remove="ClientApp\app\alert\alert.service.ts" />
-    <None Remove="ClientApp\app\app.routing.ts" />
     <None Remove="ClientApp\app\logintest\register.component.ts" />
     <None Remove="ClientApp\app\login\mockauthentication-backend.ts" />
     <None Remove="ClientApp\app\login\user.ts" />
@@ -47,7 +46,6 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\alert\alert.service.ts" />
-    <TypeScriptCompile Include="ClientApp\app\app.routing.ts" />
     <TypeScriptCompile Include="ClientApp\app\logintest\register.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\login\authentication.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\login\mockauthentication-backend.ts" />
