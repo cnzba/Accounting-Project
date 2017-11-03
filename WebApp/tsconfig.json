@@ -1,4 +1,4 @@
-{
+﻿{
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./wwwroot/out-tsc",
@@ -12,7 +12,7 @@
       "node_modules/@types"
     ],
     "lib": [
-      "es2017",
+      "es7",
       "dom"
     ]
   }

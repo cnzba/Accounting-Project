@@ -1,0 +1,31 @@
+﻿table, th, td {
+    border: 1px dotted black;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+
+.tr1 {
+    background-color: gainsboro;
+    border-top: 2px solid black;
+}
+
+.t1 {
+    border-bottom: 2px solid black;
+}
+
+.sec {
+    display: inline;
+}
+
+.tr2 {
+    background-color: gainsboro;
+}
+
+thead {
+    width: 100%;
+    background-color: gainsboro;
+}

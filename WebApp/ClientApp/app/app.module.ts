@@ -1,6 +1,9 @@
-import { BrowserModule } from '@angular/platform-browser';
+﻿import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router'; 
+import 'rxjs/add/operator/map';
+
 import { AppComponent } from './app.component';
 import { HttpClientModule } from "@angular/common/http";
 import { AlertComponent } from './alert/alert.component';
@@ -23,16 +26,25 @@ import { BaseRequestOptions, HttpModule } from "@angular/http";
         AlertComponent,
         LoginComponent,
         LogintestComponent,
-        RegisterComponent
+        RegisterComponent,
+        InvoicelistComponent,
+        InvoicedetailComponent
     ],
     imports: [
         BrowserModule,
         HttpClientModule,
         FormsModule,
         HttpModule,
-        routing
+        RouterModule.forRoot([
+            {
+                path: "",
+                component: InvoicelistComponent
+            },
+            { path: "invoices/:id", component: InvoicedetailComponent },
+
     ],
-    providers: [
+            providers: [
+        InvoiceService,
         AuthGuard,
         AlertService,
         AuthenticationService,
