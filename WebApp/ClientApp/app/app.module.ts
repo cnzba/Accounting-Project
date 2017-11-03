@@ -26,7 +26,7 @@ import { InvoiceService } from "./invoices/invoice.service";
               path: "",
               component: InvoicelistComponent
           },
-          { path: "details/:id", component: InvoicedetailComponent },
+          { path: "invoices/:id", component: InvoicedetailComponent },
 
           
       ])

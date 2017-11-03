@@ -12,7 +12,7 @@ import { IInvoice } from "./invoice";
 })
 export class InvoicedetailComponent implements OnInit {
     title: string = 'CBA Invoicing';
-    invo: IInvoice[]=[];
+    
     selectedinvoi: IInvoice;
     errorMessage: string;
   
@@ -25,8 +25,8 @@ export class InvoicedetailComponent implements OnInit {
         this.route.paramMap
             .switchMap((params: ParamMap) => this.invoiceService.getInvoice(+params.get('id')))
             .subscribe(invoices => {
-                  this.invo = invoices;
-              },
+                this.selectedinvoi = invoices;
+            });
        
     }
     goBack(): void {

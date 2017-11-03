@@ -12,14 +12,16 @@ export class InvoicelistComponent implements OnInit {
 
     title: string = 'CBA Invoicing';
     invo: IInvoice[];
-    selectedinvoi: IInvoice;
+    
     errorMessage: string;
 
     // inject InvoiceService
     constructor(private invoiceService: InvoiceService) {
     }
     getInvoices(): void {
-        this.InvoiceService.getInvoices().then(invo => this.invo = invo);
+        this.invoiceService.getInvoices().subscribe(invoices => {
+            this.invo = invoices;
+        });
     }
 
     ngOnInit(): void {
@@ -29,8 +31,8 @@ export class InvoicelistComponent implements OnInit {
               error => this.errorMessage = <any>error;
       }
 
-      onSelect(inv: IInvoice): void {
-          this.selectedinvoi = inv;
-      }
+     // onSelect(inv: IInvoice): void {
+         // this.selectedinvoi = inv;
+     // }
   }
 
