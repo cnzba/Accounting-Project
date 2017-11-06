@@ -3,7 +3,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
  
 export function fakeBackendFactory(backend: MockBackend, options: BaseRequestOptions, realBackend: XHRBackend) {
     // array in local storage for registered users
-    let users: any[] = /* JSON.parse(localStorage.getItem('users')) ||*/ [{"id":1, "firstName": "John", "lastName": "Smith", "username": "guest", "password": "guest"}];
+    let users: any[] = /* JSON.parse(localStorage.getItem('users')) ||*/ [{"id":1, "firstName": "G", "lastName": "Guest", "username": "guest", "password": "guest"}];
  
     // configure fake backend
     backend.connections.subscribe((connection: MockConnection) => {

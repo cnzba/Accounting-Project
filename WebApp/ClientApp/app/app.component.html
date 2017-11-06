@@ -1,6 +1,6 @@
 <h1>{{title}}</h1>
 <P *ngIf="!currentUser">Log in with username/password: guest/guest</P>
-<P *ngIf="currentUser">Logged in as {{currentUser.firstName}} (<a [routerLink]="['/login']">Logout</a>)</P>
+<P *ngIf="currentUser">Logged in as {{currentUser.firstName+' '+currentUser.lastName}} (<a [routerLink]="['/login']">Logout</a>)</P>
 
 <alert></alert>
 <router-outlet></router-outlet>
