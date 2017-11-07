@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace WebApp.Models
@@ -16,8 +16,13 @@ namespace WebApp.Models
         public string IssueeOrganization { get; set; }
         public string IssueeCareOf { get; set; }
         public int Gstnumber { get; set; }
-        public int? CharitiesNumber { get; set; }
+        public int CharitiesNumber { get; set; }
+        public string ClientContact { get; set; }
+        public decimal Gst { get; set; }
+        public DateTime DueDate { get; set; }
+        public int StatusId { get; set; }
 
+        public InvoiceStatus Status { get; set; }
         public ICollection<InvoiceLine> InvoiceLine { get; set; }
     }
 }

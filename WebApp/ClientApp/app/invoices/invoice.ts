@@ -1,4 +1,4 @@
-﻿export interface IInvoice {
+export interface IInvoice {
     id: number;
     invoiceNumber: string;
     date: Date;
@@ -6,12 +6,20 @@
     issueeCareOf: string;
     gstnumber: string;
     charitiesNumber: string;
+    clientContact: string;
+    dueDate: Date;
    
-    //    totalAmount: number;
-    //    subTotal: number;
-    //    GST: string; // GST may be 0, in which case subTotal == totalAmount
+    grandTotal: number;
+    subTotal: number;
+    gst: number; 
 
+    status: IInvoiceStatus;
     invoiceLine: IInvoiceLine[];
+}
+
+export interface IInvoiceStatus {
+    id: number;
+    status: string;
 }
 
 export interface IInvoiceLine {

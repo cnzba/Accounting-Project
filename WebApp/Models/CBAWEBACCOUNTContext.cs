@@ -8,7 +8,7 @@ namespace WebApp.Models
     {
         //Constuctor do not remove (DI)
         public CBAWEBACCOUNTContext()
-          { }
+        { }
 
         public CBAWEBACCOUNTContext(DbContextOptions<CBAWEBACCOUNTContext> options)
             : base(options) { }
@@ -17,10 +17,11 @@ namespace WebApp.Models
         public virtual DbSet<Customers> Customers { get; set; }
         public virtual DbSet<Invoice> Invoice { get; set; }
         public virtual DbSet<InvoiceLine> InvoiceLine { get; set; }
+        public virtual DbSet<InvoiceStatus> InvoiceStatus { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
-  
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ConfigurationValue>(entity =>
@@ -51,11 +52,19 @@ namespace WebApp.Models
 
             modelBuilder.Entity<Invoice>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ClientContact)
+                    .IsRequired()
+                    .HasMaxLength(200);
 
                 entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.DueDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Gst)
+                    .HasColumnName("GST")
+                    .HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.Gstnumber).HasColumnName("GSTNumber");
 
@@ -63,25 +72,28 @@ namespace WebApp.Models
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.IssueeCareOf).HasColumnType("nchar(100)");
+                entity.Property(e => e.IssueeCareOf).HasMaxLength(100);
 
                 entity.Property(e => e.IssueeOrganization)
                     .IsRequired()
                     .HasMaxLength(50);
+
+                entity.HasOne(d => d.Status)
+                    .WithMany()
+                    .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Invoice_InvoiceStatus");
             });
 
             modelBuilder.Entity<InvoiceLine>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Amount).HasColumnType("money");
+                entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.Description)
                     .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.InvoiceId).HasColumnName("InvoiceID");
 
@@ -90,6 +102,13 @@ namespace WebApp.Models
                     .HasForeignKey(d => d.InvoiceId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_InvoiceLine_Invoice");
+            });
+
+            modelBuilder.Entity<InvoiceStatus>(entity =>
+            {
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasMaxLength(20);
             });
 
             modelBuilder.Entity<Products>(entity =>

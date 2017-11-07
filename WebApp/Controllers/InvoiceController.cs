@@ -27,14 +27,14 @@ namespace WebApp.Controllers
         [HttpGet]
         public IEnumerable<Invoice> Get()
         {
-            return cBAWEBACCOUNTContext.Invoice.Include("InvoiceLine").ToList();
+            return cBAWEBACCOUNTContext.Invoice.Include("InvoiceLine").Include("Status").ToList();
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var invoice = cBAWEBACCOUNTContext.Invoice.Include("InvoiceLine").FirstOrDefault(t => t.Id == id);
+            var invoice = cBAWEBACCOUNTContext.Invoice.Include("InvoiceLine").Include("Status").FirstOrDefault(t => t.Id == id);
             if (invoice == null)
             {
                 return NotFound();
