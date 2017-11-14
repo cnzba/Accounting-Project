@@ -1,23 +1,53 @@
 ﻿<head>
     <title>Editable Invoice</title>
-    <!--ript>
-         function MyCtlr($scope) {
-             $scope.addItem = function () {
-                 $scope.invoice.items.unshift({ amount: 0, description: "" });
-             }
-             $scope.removeItem = function (item) {
-                 $scope.invoice.items.splice($scope.invoice.items.indexOf(item), 1);
-             }
-         };
-         angular.module('jqanim', []).directive('jqAnimate', function () {
-                 return function (scope, instanceElement) {
+   <script>
+       var app = angular.module("myapp", []);
+       app.controller("mycont", ['$scope', function ($scope) {
+           $scope.invoiceitems = [
 
-                     setTimeout(function () { instanceElement.show('slow'); }, 0);
+               {
+                   'description': 'web marketing',
+                   'amount': 50
+               },
+               {
+                   'description': 'web',
+                   'amount': 60
+               }
 
-                 }
-             });
-             }
-     </script>-->
+
+       }];
+       $scope.addNew = function (invoiceitems) {
+           $scope.invoiceitems.push({
+               'description': "",
+                   'amount': "",
+           });
+       };
+       $scope.remove = function () {
+           var newDataList = [];
+           $scope.selectedAll = false;
+           angular.forEach($scope.invoiceitems, function (selected) {
+               if (!selected.selected) {
+                   newDataList.push(selected);
+               }
+           });
+           $scope.invoiceitems = newDataList;
+       };
+       $scope.checkAll = function () {
+           if (!$scope.selectedAll) {
+               $scope.selectedAll = true;
+           } else {
+               $scope.selectedAll = false;
+           }
+           angular.forEach($scope.invoiceitems, function (item) {
+               item.selected = $scope.selectedAll;
+           });
+       };    
+    
+    
+}]);
+       
+
+    </script>
 </head>
 <body ng-app="myapp" ng-controller="mycont">
     <h2>Editable Invoice</h2>
@@ -60,46 +90,62 @@
             <td style="width: 146px">{{selectedinvoi.charitiesNumber}}</td>
 
         </tr>
-        <tr class="tr1" ng-repeat="item in invoice.items" jq:animate="dropdown;250">
+        </table>
+    <form ng-submit="addNew()">
+        <table>
+            <thead>
+                <tr>
+                    <th><input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" /></th>
+                    <th colspan="3">
+                        Description
+                    </th>
+                    <th colspan="3">
+                        amount
+                    </th>
 
-            <td colspan="4" style="height: 46px; width:146px">Description</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in invoiceitems">
+                    <td>
+                        <input type="checkbox" ng-model="selectedinvoi.selected" />
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="form-control" ng-model="item.description" required />
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="form-control" ng-model="item.amount" required />
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input ng-hide="!personalDetails.length" type="button" class="btn btn-danger pull-right" ng-click="remove()" value="Remove">
+                            <input type="submit" class="btn btn-primary addnew pull-right" value="Add New">
+                        </div>
+                    </td>
+                </tr>
 
-            <td style="height: 46px; width: 146px">Amount</td>
-        </tr>
-        <tr *ngFor='let invoiceLine of selectedinvoi.invoiceLine'>
-            <td text-align="center">
-                <button class="btn1" type="button" (click)="deletefield(i)">
-                    Delete
-                </button>
-            </td>
-            <td colspan="4"><input type="text" ng-model="description" placeholder="Description"></td>
-            <td style="width: 146px"><input type="text" ng-model="amount" placeholder="Amount"></td>
-        </tr>
-        <tr>
-            <td colspan="4">
-                <button class="btn2" type="button" (click)="addfield()">
-                    Add
-                </button>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4"></td>
-            <td style="width: 146px"></td>
-        </tr>
-        <tr>
-            <td colspan="4" style="text-align:right">Sub Total</td>
-            <td style="width:146px">{{selectedinvoi.subTotal}}</td>
-        </tr>
 
-        <tr *ngIf="selectedinvoi.gst>0">
-            <td colspan="4" style="text-align:right">GST Amount</td>
-            <td style="width:146px">{{selectedinvoi.gst}}</td>
-        </tr>
 
-        <tr class="tr2">
-            <td colspan="4" style="text-align:right">Grand Total</td>
-            <td style="width:146px">{{selectedinvoi.grandTotal}}</td>
-        </tr>
-    </table>
+                <tr>
+                    <td colspan="4" style="text-align:right">Sub Total</td>
+                    <td style="width:146px">{{selectedinvoi.subTotal}}</td>
+                </tr>
+
+                <tr *ngIf="selectedinvoi.gst>0">
+                    <td colspan="4" style="text-align:right">GST Amount</td>
+                    <td style="width:146px">{{selectedinvoi.gst}}</td>
+                </tr>
+
+                <tr class="tr2">
+                    <td colspan="4" style="text-align:right">Grand Total</td>
+                    <td style="width:146px">{{selectedinvoi.grandTotal}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </form>
 
 </body>
