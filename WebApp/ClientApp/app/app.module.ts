@@ -8,13 +8,15 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from "@angular/common/http";
 import { InvoicelistComponent } from './invoices/invoicelist.component';
 import { InvoicedetailComponent } from './invoices/invoicedetail.component';
+import { EditinvoiceComponent } from './invoices/editinvoice.component';
 import { InvoiceService } from "./invoices/invoice.service";
 
 @NgModule({
   declarations: [
     AppComponent,
     InvoicelistComponent,
-    InvoicedetailComponent,
+      InvoicedetailComponent,
+    EditinvoiceComponent
     
   ],
   imports: [
@@ -27,7 +29,10 @@ import { InvoiceService } from "./invoices/invoice.service";
               component: InvoicelistComponent
           },
           { path: "invoices/:id", component: InvoicedetailComponent },
-
+          {
+              path: "editinv",
+              component:EditinvoiceComponent
+          }
           
       ])
   ],
