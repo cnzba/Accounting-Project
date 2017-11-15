@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,14 +9,14 @@ namespace WebApp.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    public class UsersController : Controller
+    public class UserController : Controller
     {
-        private readonly CBAWEBACCOUNTContext _context;
+        private readonly CBAContext _context;
 
         //Dependency Injection
         private readonly ICryptography _crypto;       
 
-        public UsersController(CBAWEBACCOUNTContext context, ICryptography crypto)
+        public UserController(CBAContext context, ICryptography crypto)
         {
             _context = context;
 
@@ -34,7 +34,7 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var users = await _context.Users.ToListAsync();
+            var users = await _context.User.ToListAsync();
 
             if (users == null)
             {
@@ -53,7 +53,7 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var users = await _context.Users.SingleOrDefaultAsync(m => m.IdUser == id);
+            var users = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
 
             if (users == null)
             {
@@ -65,14 +65,14 @@ namespace WebApp.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsers([FromRoute] int id, [FromBody] Users users)
+        public async Task<IActionResult> PutUsers([FromRoute] int id, [FromBody] User users)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != users.IdUser)
+            if (id != users.Id)
             {
                 return BadRequest("Invalid ID");
             }
@@ -111,7 +111,7 @@ namespace WebApp.Controllers
 
         // POST: api/Users
         [HttpPost]
-        public async Task<IActionResult> PostUsers([FromBody] Users users)
+        public async Task<IActionResult> PostUsers([FromBody] User users)
         {
 
 
@@ -127,10 +127,10 @@ namespace WebApp.Controllers
 
 
             users.Password = _crypto.HashMD5(users.Password);
-            _context.Users.Add(users);
+            _context.User.Add(users);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUsers", new { id = users.IdUser }, users);
+            return CreatedAtAction("GetUsers", new { id = users.Id }, users);
         }
 
         // DELETE: api/Users/5
@@ -142,13 +142,13 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var users = await _context.Users.SingleOrDefaultAsync(m => m.IdUser == id);
+            var users = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
             if (users == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(users);
+            _context.User.Remove(users);
             await _context.SaveChangesAsync();
 
             return Ok(users);
@@ -156,12 +156,12 @@ namespace WebApp.Controllers
 
         private bool UsersExists(int id)
         {
-            return _context.Users.Any(e => e.IdUser == id);
+            return _context.User.Any(e => e.Id == id);
         }
 
         private bool LoginExists(string login)
         {
-            return _context.Users.Any(e => e.Login.ToLower().Equals(login.ToLower().Trim()));
+            return _context.User.Any(e => e.Login.ToLower().Equals(login.ToLower().Trim()));
         }
 
     }

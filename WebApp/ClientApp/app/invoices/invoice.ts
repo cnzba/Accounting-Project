@@ -1,25 +1,20 @@
 export interface IInvoice {
     id: number;
     invoiceNumber: string;
-    date: Date;
+    dateCreated: Date;
+    dateDue: Date;
     issueeOrganization: string;
     issueeCareOf: string;
-    gstnumber: string;
+    gstNumber: string;
     charitiesNumber: string;
     clientContact: string;
-    dueDate: Date;
    
     grandTotal: number;
     subTotal: number;
     gst: number; 
 
-    status: IInvoiceStatus;
-    invoiceLine: IInvoiceLine[];
-}
-
-export interface IInvoiceStatus {
-    id: number;
     status: string;
+    invoiceLine: IInvoiceLine[];
 }
 
 export interface IInvoiceLine {

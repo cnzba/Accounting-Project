@@ -10,14 +10,15 @@ using Microsoft.Extensions.Options;
 
 namespace WebApp.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     public class InvoiceController : Controller
     {
-        private readonly CBAWEBACCOUNTContext cBAWEBACCOUNTContext;
+        private readonly CBAContext cBAWEBACCOUNTContext;
         private readonly CBAOptions options;
 
         // context; options via DI
-        public InvoiceController(CBAWEBACCOUNTContext context, IOptions<CBAOptions> optionsAccessor)
+        public InvoiceController(CBAContext context, IOptions<CBAOptions> optionsAccessor)
         {
             cBAWEBACCOUNTContext = context;
             options = optionsAccessor.Value;
@@ -27,14 +28,14 @@ namespace WebApp.Controllers
         [HttpGet]
         public IEnumerable<Invoice> Get()
         {
-            return cBAWEBACCOUNTContext.Invoice.Include("InvoiceLine").Include("Status").ToList();
+            return cBAWEBACCOUNTContext.Invoice.Include("InvoiceLine").ToList();
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var invoice = cBAWEBACCOUNTContext.Invoice.Include("InvoiceLine").Include("Status").FirstOrDefault(t => t.Id == id);
+            var invoice = cBAWEBACCOUNTContext.Invoice.Include("InvoiceLine").FirstOrDefault(t => t.Id == id);
             if (invoice == null)
             {
                 return NotFound();
