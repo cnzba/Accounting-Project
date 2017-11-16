@@ -2,6 +2,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using WebApp.Models;
 using WebApp.Options;
 
 namespace WebApp
@@ -10,7 +12,9 @@ namespace WebApp
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+            MigrateAndSeedCBADatabase(host);
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
@@ -27,5 +31,22 @@ namespace WebApp
                     })
                 .UseStartup<Startup>()
                 .Build();
+
+        private static void MigrateAndSeedCBADatabase(IWebHost host)
+        {
+            var env = (IHostingEnvironment)host.Services.GetService(typeof(IHostingEnvironment));
+            if (!env.IsDevelopment()) return;
+            
+            var app = (IServiceScopeFactory)host.Services.GetService(typeof(IServiceScopeFactory));
+            using (var scope = app.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetService<CBAContext>();
+                context.Database.Migrate();
+
+                var seeder = scope.ServiceProvider.GetService<CBASeeder>();
+                seeder.Seed();
+            }
+        }
     }
+
 }

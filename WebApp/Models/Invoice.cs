@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace WebApp.Models
@@ -15,6 +17,43 @@ namespace WebApp.Models
             InvoiceLine = new HashSet<InvoiceLine>();
         }
 
+        #region Properties
+        [JsonIgnore]
+        public int Id { get; set; } // the PK is not visible to the client
+        public string InvoiceNumber { get; set; } // the alternate key is used instead
+
+        // read/write for the client
+        public string IssueeOrganization { get; set; }
+        public string IssueeCareOf { get; set; }
+        public string ClientContact { get; set; }
+        public DateTime DateDue { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public InvoiceStatus Status { get; set; } // must be New on create
+
+        // read-only for the client; set by the server when invoice is created
+        [BindNever]
+        public DateTime DateCreated { get; set; }
+
+        [BindNever]
+        public string GstNumber { get; set; }
+
+        [BindNever]
+        public string CharitiesNumber { get; set; }
+
+        [BindNever]
+        public decimal GstRate { get; set; }
+        #endregion
+
+        #region Navigation properties and foreign keys
+        // Foreign Key commented as EF Core will auto add it to model as shadow property
+        // public int StatusId { get; set; } 
+
+        // navigation property
+        public ICollection<InvoiceLine> InvoiceLine { get; set; }
+        #endregion
+
+        #region Computed fields
         public decimal SubTotal
         {
             get
@@ -27,33 +66,9 @@ namespace WebApp.Models
         {
             get
             {
-                return SubTotal + Gst;
+                return SubTotal + SubTotal*GstRate;
             }
         }
-
-        public int Id { get; set; }
-
-        public DateTime DateCreated { get; set; }
-        public DateTime DateDue { get; set; }
-
-        public string InvoiceNumber { get; set; }
-        public string IssueeOrganization { get; set; }
-        public string IssueeCareOf { get; set; }
-        public string ClientContact { get; set; }
-
-        public string GstNumber { get; set; }
-        public string CharitiesNumber { get; set; }
-
-        public decimal Gst { get; set; }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public InvoiceStatus Status { get; set; }
-
-        // Foreign Keys (commented because EF Core will add them to the model automatically
-        // as shadow properties)
-        // public int StatusId { get; set; }
-
-        // navigation property
-        public ICollection<InvoiceLine> InvoiceLine { get; set; }
+        #endregion
     }
 }

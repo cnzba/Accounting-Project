@@ -18,7 +18,7 @@
             <tbody>
                 <tr *ngFor="let inv of invo">
                     <td style="height: 46px; width:50px" class="badge">
-                    <a [routerLink]="['/invoices', inv.id]">{{inv.invoiceNumber}}</a></td>
+                    <a [routerLink]="['/invoices', inv.invoiceNumber]">{{inv.invoiceNumber}}</a></td>
                         <td style="height: 46px; width: 50px">{{inv.dateCreated | date: 'dd/MM/yyyy'}}</td>
                         <td style="height: 46px; width: 50px">{{inv.issueeOrganization}} </td>
                         <td style="height: 46px; width: 50px">{{0//inv.amount}}</td>
