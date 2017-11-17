@@ -18,7 +18,7 @@ namespace WebApp.Models
         }
 
         #region Properties
-        [JsonIgnore]
+        [JsonIgnore] [BindNever]
         public int Id { get; set; } // the PK is not visible to the client
         public string InvoiceNumber { get; set; } // the alternate key is used instead
 
