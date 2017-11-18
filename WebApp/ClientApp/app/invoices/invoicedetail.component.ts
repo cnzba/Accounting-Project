@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Location } from '@angular/common';
 import 'rxjs/add/operator/switchMap';
@@ -23,7 +23,7 @@ export class InvoicedetailComponent implements OnInit {
     ) { }
     ngOnInit(): void {
         this.route.paramMap
-            .switchMap((params: ParamMap) => this.invoiceService.getInvoice(+params.get('id')))
+            .switchMap((params: ParamMap) => this.invoiceService.getInvoice(params.get('id')))
             .subscribe(invoices => {
                 this.selectedinvoi = invoices;
             });

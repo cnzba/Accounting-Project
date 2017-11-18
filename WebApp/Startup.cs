@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using WebApp.Options;
 using CryptoService;
+using Newtonsoft.Json;
+using System;
 
 namespace WebApp
 {
@@ -22,12 +24,13 @@ namespace WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CBAWEBACCOUNTContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CBA_Database")));
-
-            ////Dependency Injection Scope
+            services.AddDbContext<CBAContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CBA_Database")));
             services.AddScoped<ICryptography, Cryptography>();
+            services.AddTransient<CBASeeder>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
 
-            services.AddMvc();
+            services.AddMvc()
+                .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             services.AddSwaggerGen(c =>
             {
@@ -51,6 +54,7 @@ namespace WebApp
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            // allow angular to pick up from index.html
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
@@ -62,8 +66,6 @@ namespace WebApp
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "CBA WEB/API");
             });
 
-
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -71,21 +73,6 @@ namespace WebApp
                     template: "{controller}/{action}/{id?}");
             });
 
-
-            //app.Use(async (context, next) =>
-            //{
-            //    await next();
-            //    if (context.Response.StatusCode == 404 &&
-            //       !Path.HasExtension(context.Request.Path.Value) &&
-            //       !context.Request.Path.Value.StartsWith("/api/"))
-            //    {
-            //        context.Request.Path = "/index.html";
-            //        await next();
-            //    }
-            //});
-            //app.UseMvcWithDefaultRoute();
-            //app.UseDefaultFiles();
-            //app.UseStaticFiles();
         }
     }
 }

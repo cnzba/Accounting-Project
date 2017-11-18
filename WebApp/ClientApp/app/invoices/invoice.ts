@@ -1,16 +1,19 @@
-﻿export interface IInvoice {
+export interface IInvoice {
     id: number;
     invoiceNumber: string;
-    date: Date;
+    dateCreated: Date;
+    dateDue: Date;
     issueeOrganization: string;
     issueeCareOf: string;
-    gstnumber: string;
+    gstNumber: string;
     charitiesNumber: string;
+    clientContact: string;
    
-    //    totalAmount: number;
-    //    subTotal: number;
-    //    GST: string; // GST may be 0, in which case subTotal == totalAmount
+    grandTotal: number;
+    subTotal: number;
+    gst: number; 
 
+    status: string;
     invoiceLine: IInvoiceLine[];
 }
 

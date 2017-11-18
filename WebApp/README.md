@@ -1,18 +1,17 @@
 # CBA Accounting ClientApp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.0.
-
 ## Editor configuration
 The .editorconfig overrides some editor settings that may have been set within Visual Studio or other editor.
 This is primarily to keep formatting consistent (e.g. number of spaces per tab) when different developers are using different editors.
 
 ## Overview of top-level project files
-* _.NET Core_
+_.NET Core_
 * **WebApp.csproj** Project file for .NET Core
 * **appsettings.json** Settings file for .NET Core
 * **Program.cs** Program main entry file for .NET Core (builds web host)
 * **Startup.cs** Configuration file for .NET Core (configures middleware)
-* _Angular_
+
+_Angular_
 * **.angular-cli.json** The main configuration file for Angular
 * **proxy.conf.json** Links the angular client to the .NET Core Web API. When using "npm start", all api requests (/api/...) are routed to the local .NET server. The port in this file should be the same as the port in Properties/launchSettings.json.
 * **karma.conf.js** Unit test configuration for Angular
@@ -24,7 +23,7 @@ This is primarily to keep formatting consistent (e.g. number of spaces per tab) 
 ## Development server
 
 Run `npm start` or `ng serve --proxy-config proxy.conf.json` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-Run `dotnet run` to run the local web api. Navigate to `http://localhost:62682/api/users`.
+Run `dotnet run` to run the local web api. Navigate to `http://localhost:62682/swagger`.
 
 ## Code scaffolding
 
