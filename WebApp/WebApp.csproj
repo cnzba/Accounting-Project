@@ -12,14 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\app\alert\alert.service.ts" />
-    <None Remove="ClientApp\app\logintest\register.component.ts" />
-    <None Remove="ClientApp\app\login\mockauthentication-backend.ts" />
-    <None Remove="ClientApp\app\login\user.ts" />
-    <None Remove="ClientApp\app\users\user.service.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="ClientApp\assets\mockapi\invoices\invoices.json" />
   </ItemGroup>
 
@@ -46,14 +38,5 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\app\alert\alert.service.ts" />
-    <TypeScriptCompile Include="ClientApp\app\logintest\register.component.ts" />
-    <TypeScriptCompile Include="ClientApp\app\login\authentication.service.ts" />
-    <TypeScriptCompile Include="ClientApp\app\login\mockauthentication-backend.ts" />
-    <TypeScriptCompile Include="ClientApp\app\users\user.service.ts" />
-    <TypeScriptCompile Include="ClientApp\app\users\user.ts" />
   </ItemGroup>
 </Project>
