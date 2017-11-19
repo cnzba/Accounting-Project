@@ -12,13 +12,11 @@ namespace WebApp.Models
     public class CBASeeder
     {
         CBAContext _context;
-        IHostingEnvironment _hosting;
         ICryptography _cryptography;
 
-        public CBASeeder(CBAContext context, IHostingEnvironment hosting, ICryptography cryptography)
+        public CBASeeder(CBAContext context, ICryptography cryptography)
         {
             _context = context;
-            _hosting = hosting;
             _cryptography = cryptography;
         }
         public void Seed()
@@ -33,7 +31,7 @@ namespace WebApp.Models
                     IssueeCareOf = "Glen Clarke",
                     ClientContact = "530/546A Memorial Ave\\r\\nChristchurch Airport\\r\\nChristchurch 8053",
                     Status = InvoiceStatus.New,
-                    Gst = 0,
+                    GstRate = .15m,
                     GstNumber = "96-712-561",
                     CharitiesNumber = "CC20097",
                     InvoiceLine = new List<InvoiceLine>()
@@ -54,7 +52,7 @@ namespace WebApp.Models
                     IssueeOrganization = "Jason Carpets",
                     ClientContact = "297 Moorhouse Ave\\r\\nSydenham\\r\\nChristchurch 8011",
                     Status = InvoiceStatus.Sent,
-                    Gst = 0,
+                    GstRate = .15m,
                     GstNumber = "96-712-561",
                     CharitiesNumber = "CC20097",
                     InvoiceLine = new List<InvoiceLine>()
@@ -75,7 +73,7 @@ namespace WebApp.Models
                     IssueeOrganization = "Transtellar",
                     ClientContact = "52 Solmine Ave\\r\\nRiccarton\\r\\nChristchurch 8025",
                     Status = InvoiceStatus.Paid,
-                    Gst = 9.78M,
+                    GstRate = .15m,
                     GstNumber = "96-712-561",
                     CharitiesNumber = "CC20097",
                     InvoiceLine = new List<InvoiceLine>()

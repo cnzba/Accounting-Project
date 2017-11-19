@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using WebApp.Options;
 using CryptoService;
+using Newtonsoft.Json;
 using System;
 
 namespace WebApp
@@ -26,8 +27,10 @@ namespace WebApp
             services.AddDbContext<CBAContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CBA_Database")));
             services.AddScoped<ICryptography, Cryptography>();
             services.AddTransient<CBASeeder>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
 
-            services.AddMvc();
+            services.AddMvc()
+                .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             services.AddSwaggerGen(c =>
             {
@@ -43,8 +46,6 @@ namespace WebApp
         {
             if (env.IsDevelopment())
             {
-                SeedCBADatabase(app);
-
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
             }
@@ -72,15 +73,6 @@ namespace WebApp
                     template: "{controller}/{action}/{id?}");
             });
 
-        }
-
-        private void SeedCBADatabase(IApplicationBuilder app)
-        {
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var seeder = scope.ServiceProvider.GetService<CBASeeder>();
-                seeder.Seed();
-            }
         }
     }
 }

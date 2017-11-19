@@ -11,9 +11,10 @@ using WebApp.Models;
 namespace WebApp.Migrations
 {
     [DbContext(typeof(CBAContext))]
-    partial class CBAContextModelSnapshot : ModelSnapshot
+    [Migration("20171116190203_gstrateitemorder")]
+    partial class gstrateitemorder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,8 +68,7 @@ namespace WebApp.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<int?>("InvoiceId")
-                        .IsRequired();
+                    b.Property<int?>("InvoiceId");
 
                     b.Property<int>("ItemOrder");
 
@@ -104,8 +104,7 @@ namespace WebApp.Migrations
                 {
                     b.HasOne("WebApp.Models.Invoice", "Invoice")
                         .WithMany("InvoiceLine")
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("InvoiceId");
                 });
 #pragma warning restore 612, 618
         }

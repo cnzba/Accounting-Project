@@ -7,9 +7,11 @@ namespace WebApp.Models
     public partial class CBAContext : DbContext
     {
         // Constuctor do not remove (DI)
+        public CBAContext() { }
         public CBAContext(DbContextOptions<CBAContext> options) : base(options) { }
 
         public virtual DbSet<Invoice> Invoice { get; set; }
+        public virtual DbSet<InvoiceLine> InvoiceLine { get; set; }
         public virtual DbSet<User> User { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,6 +39,8 @@ namespace WebApp.Models
             modelBuilder.Entity<InvoiceLine>(entity =>
             {
                 entity.Property(e => e.Amount).IsRequired();
+                // an invoice line cannot exist without an invoice: IsRequired gives cascade delete behaviour
+                entity.Property("InvoiceId").IsRequired(); 
             });
 
             modelBuilder.Entity<User>(entity =>

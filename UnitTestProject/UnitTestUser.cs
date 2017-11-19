@@ -29,7 +29,7 @@ namespace UnitTestProject
             var service = new UserController(mockContext.Object, new Cryptography());
 
             // Test Methodo API GetUsers() 
-            var actionResult = await service.GetUsers();
+            var actionResult = await service.GetUser();
 
             var okObjectResult = actionResult as OkObjectResult;
             Assert.IsNotNull(okObjectResult);

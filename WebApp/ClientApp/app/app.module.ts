@@ -1,4 +1,4 @@
-﻿import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router'; 
@@ -14,8 +14,7 @@ import { InvoiceService } from "./invoices/invoice.service";
   declarations: [
     AppComponent,
     InvoicelistComponent,
-    InvoicedetailComponent,
-    
+    InvoicedetailComponent
   ],
   imports: [
       BrowserModule,

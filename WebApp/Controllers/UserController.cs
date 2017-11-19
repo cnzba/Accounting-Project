@@ -25,9 +25,9 @@ namespace WebApp.Controllers
         }
         
 
-        // GET: api/Users
+        // GET: api/User
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUser()
         {
             if (!ModelState.IsValid)
             {
@@ -44,59 +44,59 @@ namespace WebApp.Controllers
             return Ok(users);
         }
 
-        // GET: api/Users/5
+        // GET: api/User/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUsers([FromRoute] int id)
+        public async Task<IActionResult> GetUser([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var users = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
+            var user = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
 
-            if (users == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return Ok(users);
+            return Ok(user);
         }
 
-        // PUT: api/Users/5
+        // PUT: api/User/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsers([FromRoute] int id, [FromBody] User users)
+        public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != users.Id)
+            if (id != user.Id)
             {
                 return BadRequest("Invalid ID");
             }
 
-            if(LoginExists(users.Login))
+            if(LoginExists(user.Login))
             {
                 return BadRequest("Invalid Login");
             }
 
 
 
-             users.Password = _crypto.HashMD5(users.Password);
-            _context.Entry(users).State = EntityState.Modified;
+             user.Password = _crypto.HashMD5(user.Password);
+            _context.Entry(user).State = EntityState.Modified;
 
             try
             {
-                _context.Entry(users).State = EntityState.Modified;
+                _context.Entry(user).State = EntityState.Modified;
 
 
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UsersExists(id))
+                if (!UserExists(id))
                 {
                     return NotFound();
                 }
@@ -109,9 +109,9 @@ namespace WebApp.Controllers
             return NoContent();
         }
 
-        // POST: api/Users
+        // POST: api/User
         [HttpPost]
-        public async Task<IActionResult> PostUsers([FromBody] User users)
+        public async Task<IActionResult> PostUser([FromBody] User user)
         {
 
 
@@ -120,41 +120,41 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (LoginExists(users.Login))
+            if (LoginExists(user.Login))
             {
                 return BadRequest("Login Invalid");
             }
 
 
-            users.Password = _crypto.HashMD5(users.Password);
-            _context.User.Add(users);
+            user.Password = _crypto.HashMD5(user.Password);
+            _context.User.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUsers", new { id = users.Id }, users);
+            return CreatedAtAction("GetUsers", new { id = user.Id }, user);
         }
 
-        // DELETE: api/Users/5
+        // DELETE: api/User/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUsers([FromRoute] int id)
+        public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var users = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
-            if (users == null)
+            var user = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
+            if (user == null)
             {
                 return NotFound();
             }
 
-            _context.User.Remove(users);
+            _context.User.Remove(user);
             await _context.SaveChangesAsync();
 
-            return Ok(users);
+            return Ok(user);
         }
 
-        private bool UsersExists(int id)
+        private bool UserExists(int id)
         {
             return _context.User.Any(e => e.Id == id);
         }
