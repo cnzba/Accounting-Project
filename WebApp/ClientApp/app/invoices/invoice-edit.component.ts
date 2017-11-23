@@ -6,6 +6,8 @@ import { InvoiceService } from "./invoice.service";
 import { IInvoice } from "./invoice";
 
 
+
+
 @Component({
   selector: 'app-invoice-edit',
   templateUrl: './invoice-edit.component.html',
@@ -29,7 +31,6 @@ export class InvoiceEditComponent implements OnInit {
     deleteFieldValue(index) {
         this.selectedinvoiinvoiceLine.splice(index, 1);
     }
-
 
 
   ngOnInit() {
