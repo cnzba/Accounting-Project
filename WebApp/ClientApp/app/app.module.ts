@@ -8,15 +8,18 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from "@angular/common/http";
 import { InvoicelistComponent } from './invoices/invoicelist.component';
 import { InvoicedetailComponent } from './invoices/invoicedetail.component';
-import { EditinvoiceComponent } from './invoices/editinvoice.component';
+
 import { InvoiceService } from "./invoices/invoice.service";
+import { InvoiceEditComponent } from './invoices/invoice-edit.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     InvoicelistComponent,
       InvoicedetailComponent,
-    EditinvoiceComponent
+   
+  
+    InvoiceEditComponent
     
   ],
   imports: [
@@ -30,8 +33,8 @@ import { InvoiceService } from "./invoices/invoice.service";
           },
           { path: "invoices/:id", component: InvoicedetailComponent },
           {
-              path: "editinv",
-              component:EditinvoiceComponent
+              path: "Editable Invoice",
+              component: InvoiceEditComponent
           }
           
       ])
