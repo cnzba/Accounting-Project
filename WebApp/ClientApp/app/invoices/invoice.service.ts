@@ -12,24 +12,33 @@ import { IInvoice } from './invoice';
 @Injectable()
 export class InvoiceService {
     // private _invoiceUrl = 'assets/mockapi/invoices/invoices.json';
-    private _invoiceUrl = 'api/invoice';
+    private invoiceUrl = 'api/invoice';
 
-    constructor(private _http: HttpClient) { }
+    constructor(private http: HttpClient) { }
 
     getInvoices(): Observable<IInvoice[]> {
-        return this._http.get<IInvoice[]>(this._invoiceUrl)
-            .do(data => console.log('All: ' + JSON.stringify(data)))
+        return this.http.get<IInvoice[]>(this.invoiceUrl)
+            .do(data => console.log('GetAll: ' + JSON.stringify(data)))
             .catch(this.handleError);
     }
 
-  getInvoice(invoiceNumber: string): Observable<IInvoice> {
-        // needs to change get specific invoice from Web API
-        // need to get by invoice number, not invoice ID
-        return this.getInvoices()
-           .map((invoices: IInvoice[]) => invoices.find(i => i.invoiceNumber === invoiceNumber));
+    getInvoice(invoiceNumber: string): Observable<IInvoice> {
+        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber)
+            .do(data => console.log('Get1: ' + JSON.stringify(data)))
+            .catch(this.handleError);
+    }
 
-     }
-    
+    createInvoice(invoice: IInvoice): Observable<IInvoice> {
+        return this.http.post<IInvoice>(this.invoiceUrl, invoice)
+            .do(data => console.log('Create: ' + JSON.stringify(data)))
+            .catch(this.handleError);
+    }
+
+    updateInvoice(invoice: IInvoice): Observable<IInvoice> {
+        return this.http.put<IInvoice>(this.invoiceUrl + '/' + invoice.invoiceNumber, invoice)
+            .do(data => console.log('Update: ' + JSON.stringify(data)))
+            .catch(this.handleError);
+    }
 
     private handleError(err: HttpErrorResponse) {
         // in a real world app, we may send the server to some remote logging infrastructure
@@ -46,5 +55,5 @@ export class InvoiceService {
         console.error(errorMessage);
         return Observable.throw(errorMessage);
     }
-   
+
 }
