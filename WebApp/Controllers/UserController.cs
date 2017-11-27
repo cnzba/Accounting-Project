@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using CryptoService;
+using System;
 
 namespace WebApp.Controllers
 {
@@ -44,6 +45,24 @@ namespace WebApp.Controllers
             return Ok(users);
         }
 
+        [HttpGet]
+        internal User GetUser(string Name)
+        {
+            var user = new User();
+
+            try
+            {
+                user = _context.User.Where(a => a.Login.ToLower().Equals(Name.ToLower())).FirstOrDefault();
+               
+            }
+            catch (Exception e)
+            {
+                var x = e;
+            }
+            return user;
+        }
+
+
         // GET: api/User/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser([FromRoute] int id)
@@ -77,15 +96,11 @@ namespace WebApp.Controllers
                 return BadRequest("Invalid ID");
             }
 
-            if(LoginExists(user.Login))
+            if (LoginExists(user.Login))
             {
-                return BadRequest("Invalid Login");
+                user.Password = _crypto.HashMD5(user.Password);
+                _context.Entry(user).State = EntityState.Modified;
             }
-
-
-
-             user.Password = _crypto.HashMD5(user.Password);
-            _context.Entry(user).State = EntityState.Modified;
 
             try
             {

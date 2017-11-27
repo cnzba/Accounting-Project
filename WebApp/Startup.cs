@@ -9,6 +9,7 @@ using WebApp.Options;
 using CryptoService;
 using Newtonsoft.Json;
 using System;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WebApp
 {
@@ -31,6 +32,12 @@ namespace WebApp
 
             services.AddMvc()
                 .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
+            // Cookie Authentication 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.LoginPath = "/Account/Login/";
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -60,6 +67,9 @@ namespace WebApp
 
             app.UseSwagger();
 
+            // Enable Authentication
+            app.UseAuthentication();
+
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
@@ -72,6 +82,8 @@ namespace WebApp
                     name: "default",
                     template: "{controller}/{action}/{id?}");
             });
+
+
 
         }
     }
