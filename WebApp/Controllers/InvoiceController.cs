@@ -2,11 +2,13 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
+    [Authorize]
     public class InvoiceController : Controller
     {
         private readonly IInvoiceService service;
