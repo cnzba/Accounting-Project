@@ -23,59 +23,59 @@ namespace UnitTestProject
              
             var mockSet = CreateMoqDbSetUser(CreateMoqUsersData());
 
-            var mockContext = new Mock<CBAWEBACCOUNTContext>();
-            mockContext.Setup(c => c.Users).Returns(mockSet.Object);
+            var mockContext = new Mock<CBAContext>();
+            mockContext.Setup(c => c.User).Returns(mockSet.Object);
             
-            var service = new UsersController(mockContext.Object, new Cryptography());
+            var service = new UserController(mockContext.Object, new Cryptography());
 
             // Test Methodo API GetUsers() 
-            var actionResult = await service.GetUsers();
+            var actionResult = await service.GetUser();
 
             var okObjectResult = actionResult as OkObjectResult;
             Assert.IsNotNull(okObjectResult);
 
-            var lstUsers = okObjectResult.Value as List<Users>;
+            var lstUsers = okObjectResult.Value as List<User>;
             Assert.IsNotNull(lstUsers);
            
             // Test total itens
             Assert.AreEqual(lstUsers.Count, 3);
            
             // Test values
-            Assert.AreEqual(lstUsers[0].Login, CreateMoqUsersData().Where(a=> a.IdUser == lstUsers[0].IdUser).Select(a=> a.Login).FirstOrDefault());
-            Assert.AreEqual(lstUsers[0].Name, CreateMoqUsersData().Where(a => a.IdUser == lstUsers[0].IdUser).Select(a => a.Name).FirstOrDefault());
-            Assert.AreEqual(lstUsers[0].Password, CreateMoqUsersData().Where(a => a.IdUser == lstUsers[0].IdUser).Select(a => a.Password).FirstOrDefault());
+            Assert.AreEqual(lstUsers[0].Login, CreateMoqUsersData().Where(a=> a.Id == lstUsers[0].Id).Select(a=> a.Login).FirstOrDefault());
+            Assert.AreEqual(lstUsers[0].Name, CreateMoqUsersData().Where(a => a.Id == lstUsers[0].Id).Select(a => a.Name).FirstOrDefault());
+            Assert.AreEqual(lstUsers[0].Password, CreateMoqUsersData().Where(a => a.Id == lstUsers[0].Id).Select(a => a.Password).FirstOrDefault());
 
 
 
         }        
 
 
-        private IQueryable<Users> CreateMoqUsersData()
+        private IQueryable<User> CreateMoqUsersData()
         {
-            return new List<Users>
+            return new List<User>
             {
-                new Users { IdUser = 1, Active = true, Login = "Teste User001", Name = "test name1", Password = "123" },
-                new Users { IdUser = 2, Active = true, Login = "Teste User002", Name = "test name2", Password = "123" },
-                new Users { IdUser = 3, Active = true, Login = "Teste User003", Name = "test name3", Password = "123" },
+                new User { Id = 1, Active = true, Login = "Teste User001", Name = "test name1", Password = "123" },
+                new User { Id = 2, Active = true, Login = "Teste User002", Name = "test name2", Password = "123" },
+                new User { Id = 3, Active = true, Login = "Teste User003", Name = "test name3", Password = "123" },
 
             }.AsQueryable();
         }
 
-        private Mock<DbSet<Users>> CreateMoqDbSetUser(IQueryable<Users> UsrData)
+        private Mock<DbSet<User>> CreateMoqDbSetUser(IQueryable<User> UsrData)
         {
-            Mock<DbSet<Users>> mockSet = new Mock<DbSet<Users>>();
+            Mock<DbSet<User>> mockSet = new Mock<DbSet<User>>();
 
-            mockSet.As<IAsyncEnumerable<Users>>()
+            mockSet.As<IAsyncEnumerable<User>>()
                 .Setup(m => m.GetEnumerator())
-                .Returns(new TestAsyncEnumerator<Users>(UsrData.GetEnumerator()));
+                .Returns(new TestAsyncEnumerator<User>(UsrData.GetEnumerator()));
 
-            mockSet.As<IQueryable<Users>>()
+            mockSet.As<IQueryable<User>>()
                 .Setup(m => m.Provider)
-                .Returns(new TestAsyncQueryProvider<Users>(UsrData.Provider));
+                .Returns(new TestAsyncQueryProvider<User>(UsrData.Provider));
 
-            mockSet.As<IQueryable<Users>>().Setup(m => m.Expression).Returns(UsrData.Expression);
-            mockSet.As<IQueryable<Users>>().Setup(m => m.ElementType).Returns(UsrData.ElementType);
-            mockSet.As<IQueryable<Users>>().Setup(m => m.GetEnumerator()).Returns(() => UsrData.GetEnumerator());
+            mockSet.As<IQueryable<User>>().Setup(m => m.Expression).Returns(UsrData.Expression);
+            mockSet.As<IQueryable<User>>().Setup(m => m.ElementType).Returns(UsrData.ElementType);
+            mockSet.As<IQueryable<User>>().Setup(m => m.GetEnumerator()).Returns(() => UsrData.GetEnumerator());
 
             return mockSet;
 

@@ -1,14 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace WebApp.Models
 {
-    public partial class Users
+    public class User
     {
-        public int IdUser { get; set; }
+        public int Id { get; set; }
         public string Login { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
         public bool Active { get; set; }
+
+        internal Task ToListAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

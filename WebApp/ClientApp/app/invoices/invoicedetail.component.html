@@ -14,20 +14,20 @@
                 <td style="width: 238px">{{selectedinvoi.clientContact}}</td>
                 <td style="width: 23px"></td>
                 <td style="width: 131px">Date Created</td>
-                <td style="width: 146px">{{selectedinvoi.date | date: 'dd/MM/yyyy'}}</td>
+                <td style="width: 146px">{{selectedinvoi.dateCreated | date: 'dd/MM/yyyy'}}</td>
 
             </tr>
             <tr class="tr2">
                 <td style="width: 132px">Status</td>
-                <td style="width: 238px">{{selectedinvoi.status.status}}</td>
+                <td style="width: 238px">{{selectedinvoi.status}}</td>
                 <td style="width: 23px"></td>
                 <td style="width: 131px">GST Number</td>
-                <td style="width: 146px">{{selectedinvoi.gstnumber}}</td>
+                <td style="width: 146px">{{selectedinvoi.gstNumber}}</td>
 
             </tr>
             <tr>
                 <td style="width: 132px">Due Date</td>
-                <td style="width: 238px">{{selectedinvoi.dueDate | date: 'dd/MM/yyyy'}}</td>
+                <td style="width: 238px">{{selectedinvoi.dateDue | date: 'dd/MM/yyyy'}}</td>
                 <td style="width: 23px"></td>
                 <td style="width: 131px">Charities Number</td>
                 <td style="width: 146px">{{selectedinvoi.charitiesNumber}}</td>

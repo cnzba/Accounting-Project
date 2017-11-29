@@ -1,22 +1,23 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using CryptoService;
+using System;
 
 namespace WebApp.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    public class UsersController : Controller
+    public class UserController : Controller
     {
-        private readonly CBAWEBACCOUNTContext _context;
+        private readonly CBAContext _context;
 
         //Dependency Injection
         private readonly ICryptography _crypto;       
 
-        public UsersController(CBAWEBACCOUNTContext context, ICryptography crypto)
+        public UserController(CBAContext context, ICryptography crypto)
         {
             _context = context;
 
@@ -25,16 +26,16 @@ namespace WebApp.Controllers
         }
         
 
-        // GET: api/Users
+        // GET: api/User
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUser()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var users = await _context.Users.ToListAsync();
+            var users = await _context.User.ToListAsync();
 
             if (users == null)
             {
@@ -44,59 +45,73 @@ namespace WebApp.Controllers
             return Ok(users);
         }
 
-        // GET: api/Users/5
+        [HttpGet]
+        internal User GetUser(string Name)
+        {
+            var user = new User();
+
+            try
+            {
+                user = _context.User.Where(a => a.Login.ToLower().Equals(Name.ToLower())).FirstOrDefault();
+               
+            }
+            catch (Exception e)
+            {
+                var x = e;
+            }
+            return user;
+        }
+
+
+        // GET: api/User/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUsers([FromRoute] int id)
+        public async Task<IActionResult> GetUser([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var users = await _context.Users.SingleOrDefaultAsync(m => m.IdUser == id);
+            var user = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
 
-            if (users == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return Ok(users);
+            return Ok(user);
         }
 
-        // PUT: api/Users/5
+        // PUT: api/User/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsers([FromRoute] int id, [FromBody] Users users)
+        public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != users.IdUser)
+            if (id != user.Id)
             {
                 return BadRequest("Invalid ID");
             }
 
-            if(LoginExists(users.Login))
+            if (LoginExists(user.Login))
             {
-                return BadRequest("Invalid Login");
+                user.Password = _crypto.HashMD5(user.Password);
+                _context.Entry(user).State = EntityState.Modified;
             }
-
-
-
-             users.Password = _crypto.HashMD5(users.Password);
-            _context.Entry(users).State = EntityState.Modified;
 
             try
             {
-                _context.Entry(users).State = EntityState.Modified;
+                _context.Entry(user).State = EntityState.Modified;
 
 
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UsersExists(id))
+                if (!UserExists(id))
                 {
                     return NotFound();
                 }
@@ -109,9 +124,9 @@ namespace WebApp.Controllers
             return NoContent();
         }
 
-        // POST: api/Users
+        // POST: api/User
         [HttpPost]
-        public async Task<IActionResult> PostUsers([FromBody] Users users)
+        public async Task<IActionResult> PostUser([FromBody] User user)
         {
 
 
@@ -120,48 +135,48 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (LoginExists(users.Login))
+            if (LoginExists(user.Login))
             {
                 return BadRequest("Login Invalid");
             }
 
 
-            users.Password = _crypto.HashMD5(users.Password);
-            _context.Users.Add(users);
+            user.Password = _crypto.HashMD5(user.Password);
+            _context.User.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUsers", new { id = users.IdUser }, users);
+            return CreatedAtAction("GetUsers", new { id = user.Id }, user);
         }
 
-        // DELETE: api/Users/5
+        // DELETE: api/User/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUsers([FromRoute] int id)
+        public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var users = await _context.Users.SingleOrDefaultAsync(m => m.IdUser == id);
-            if (users == null)
+            var user = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
+            if (user == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(users);
+            _context.User.Remove(user);
             await _context.SaveChangesAsync();
 
-            return Ok(users);
+            return Ok(user);
         }
 
-        private bool UsersExists(int id)
+        private bool UserExists(int id)
         {
-            return _context.Users.Any(e => e.IdUser == id);
+            return _context.User.Any(e => e.Id == id);
         }
 
         private bool LoginExists(string login)
         {
-            return _context.Users.Any(e => e.Login.ToLower().Equals(login.ToLower().Trim()));
+            return _context.User.Any(e => e.Login.ToLower().Equals(login.ToLower().Trim()));
         }
 
     }
