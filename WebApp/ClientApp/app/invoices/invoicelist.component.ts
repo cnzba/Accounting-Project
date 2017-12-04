@@ -1,6 +1,7 @@
-﻿import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { InvoiceService } from "./invoice.service";
 import { IInvoice } from "./invoice";
+import { AlertService } from "../alert/alert.service";
 
 @Component({
   selector: 'app-invoicelist',
@@ -16,19 +17,18 @@ export class InvoicelistComponent implements OnInit {
     errorMessage: string;
 
     // inject InvoiceService
-    constructor(private invoiceService: InvoiceService) {
+    constructor(private invoiceService: InvoiceService, private alertService: AlertService) {
     }
     getInvoices(): void {
         this.invoiceService.getInvoices().subscribe(invoices => {
             this.invo = invoices;
-        });
+            this.alertService.success("");
+        }, error => this.alertService.error(error));
     }
 
     ngOnInit(): void {
+        this.alertService.success("Getting invoices...");
         this.getInvoices();
-
-  
-              error => this.errorMessage = <any>error;
       }
 
      // onSelect(inv: IInvoice): void {

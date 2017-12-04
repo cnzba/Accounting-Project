@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { InvoiceService } from "./invoices/invoice.service";
 import { User } from "./users/user";
+import { AuthenticationService } from "./login/authentication.service";
 
 @Component({
   selector: 'app-root',
@@ -12,8 +13,8 @@ import { User } from "./users/user";
 export class AppComponent {
     title = 'CBA Invoicing';
     currentUser: User;
-
+    constructor(private authenticationService: AuthenticationService) { }
     ngDoCheck() {
-        this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.currentUser = this.authenticationService.getCurrentUser();
     }
 }
