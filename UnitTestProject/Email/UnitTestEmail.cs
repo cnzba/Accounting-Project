@@ -24,7 +24,7 @@ namespace UnitTestProject
            // email.Cc.Add("kgelsey@gmail.com"); 
            // email.Cc.Add("taz@cbanewzealand.org.nz"); 
             email.Body = "Hi There, <br/><p>This is a test email from <b>Account<b/> software</p><br/><p> Kind regards <br/> Canterbury & New Zealand Business Association </p>";
-            email.Attachment.Add(@"c:\Test\TestAttachment.png");
+           // email.Attachment.Add(@"c:\Test\TestAttachment.png");
            
 
 
