@@ -1,0 +1,151 @@
+﻿<head>
+    <title>Editable Invoice</title>
+   <script>
+       var app = angular.module("myapp", []);
+       app.controller("mycont", ['$scope', function ($scope) {
+           $scope.invoiceitems = [
+
+               {
+                   'description': 'web marketing',
+                   'amount': 50
+               },
+               {
+                   'description': 'web',
+                   'amount': 60
+               }
+
+
+       }];
+       $scope.addNew = function (invoiceitems) {
+           $scope.invoiceitems.push({
+               'description': "",
+                   'amount': "",
+           });
+       };
+       $scope.remove = function () {
+           var newDataList = [];
+           $scope.selectedAll = false;
+           angular.forEach($scope.invoiceitems, function (selected) {
+               if (!selected.selected) {
+                   newDataList.push(selected);
+               }
+           });
+           $scope.invoiceitems = newDataList;
+       };
+       $scope.checkAll = function () {
+           if (!$scope.selectedAll) {
+               $scope.selectedAll = true;
+           } else {
+               $scope.selectedAll = false;
+           }
+           angular.forEach($scope.invoiceitems, function (item) {
+               item.selected = $scope.selectedAll;
+           });
+       };    
+    
+    
+}]);
+       
+
+    </script>
+</head>
+<body ng-app="myapp" ng-controller="mycont">
+    <h2>Editable Invoice</h2>
+    <table class="t1">
+        <tr class="tr1">
+            <td style="height: 46px;width: 132px">Client Name</td>
+            <td style="height: 46px;width: 238px">
+                <input type="text" ng-model="client_name" name="{{selectedinvoi.issueeOrganization}}" />
+
+            </td>
+            <td style="height: 46px;width: 23px"></td>
+            <td style="height: 46px;width: 131px">Invoice Number</td>
+            <td style="height: 46px;width: 146px">{{selectedinvoi.invoiceNumber}}</td>
+        </tr>
+        <tr>
+            <td style="width: 132px">Client Contact</td>
+            <td style="width: 238px">
+                <input type="text" ng-model="client_contact" name="{{selectedinvoi.clientContact}}" />
+            </td>
+            <td style="width: 23px"></td>
+            <td style="width: 131px">Date Created</td>
+            <td style="width: 146px">{{selectedinvoi.date | date: 'dd/MM/yyyy'}}</td>
+
+        </tr>
+        <tr class="tr2">
+            <td style="width: 132px">Status</td>
+            <td style="width: 238px">
+                <input type="text" ng-model="status" name="{{selectedinvoi.status.status}}" />
+            </td>
+            <td style="width: 23px"></td>
+            <td style="width: 131px">GST Number</td>
+            <td style="width: 146px">{{selectedinvoi.gstnumber}}</td>
+
+        </tr>
+        <tr>
+            <td style="width: 132px">Due Date</td>
+            <td style="width: 238px"><input type="text" ng-model="due_date" name="{{selectedinvoi.dueDate | date: 'dd/MM/yyyy'}}" /></td>
+            <td style="width: 23px"></td>
+            <td style="width: 131px">Charities Number</td>
+            <td style="width: 146px">{{selectedinvoi.charitiesNumber}}</td>
+
+        </tr>
+        </table>
+    <form ng-submit="addNew()">
+        <table>
+            <thead>
+                <tr>
+                    <th><input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" /></th>
+                    <th colspan="3">
+                        Description
+                    </th>
+                    <th colspan="3">
+                        amount
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in invoiceitems">
+                    <td>
+                        <input type="checkbox" ng-model="selectedinvoi.selected" />
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="form-control" ng-model="item.description" required />
+                    </td>
+                    <td colspan="3">
+                        <input type="text" class="form-control" ng-model="item.amount" required />
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input ng-hide="!personalDetails.length" type="button" class="btn btn-danger pull-right" ng-click="remove()" value="Remove">
+                            <input type="submit" class="btn btn-primary addnew pull-right" value="Add New">
+                        </div>
+                    </td>
+                </tr>
+
+
+
+                <tr>
+                    <td colspan="4" style="text-align:right">Sub Total</td>
+                    <td style="width:146px">{{selectedinvoi.subTotal}}</td>
+                </tr>
+
+                <tr *ngIf="selectedinvoi.gst>0">
+                    <td colspan="4" style="text-align:right">GST Amount</td>
+                    <td style="width:146px">{{selectedinvoi.gst}}</td>
+                </tr>
+
+                <tr class="tr2">
+                    <td colspan="4" style="text-align:right">Grand Total</td>
+                    <td style="width:146px">{{selectedinvoi.grandTotal}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </form>
+
+</body>
