@@ -7,8 +7,7 @@ namespace ServiceUtil.Email
         List<string> Attachment { get; set; }
         string Body { get; set; }
         List<string> Cc { get; set; }
-        List<string> Bco { get; set; }
-        IEmailConfig EmailConfig { get; set; }
+        List<string> Bco { get; set; }        
         string Subject { get; set; }
         string To { get; set; }
     }

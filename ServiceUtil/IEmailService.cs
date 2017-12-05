@@ -4,6 +4,7 @@ namespace ServiceUtil.Email
 {
     public interface IEmailService
     {
-        Task<bool> SendEmail(IEmail email);
+        Task<bool> SendEmail(IEmailConfig emailConfig, IEmail email);
+        
     }
 }
