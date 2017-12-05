@@ -8,13 +8,12 @@ namespace ServiceUtil.Email
     {
         public Email()
         {
-            EmailConfig = new EmailConfig();
             Attachment = new List<string>();
             Cc = new List<string>();
             Bco = new List<string>();
         }
 
-        public IEmailConfig EmailConfig { get; set; }
+
         public string To { get; set; }
         public List<string> Cc { get; set; }
         public List<string> Bco { get; set; }

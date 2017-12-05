@@ -6,15 +6,15 @@ namespace ServiceUtil.Email
 {
     public class EmailConfig : IEmailConfig
     {
-        public String FromName { get; set; }
-        public String FromAddress { get; set; }
+        public string FromName { get; set; }
+        public string FromAddress { get; set; }
 
-        public String LocalDomain { get; set; }
+        public string LocalDomain { get; set; }
 
-        public String MailServerAddress { get; set; }
-        public int MailServerPort { get; set; }
+        public string MailServerAddress { get; set; }
+        public string MailServerPort { get; set; }
 
-        public String UserId { get; set; }
-        public String UserPassword { get; set; }
+        public string UserId { get; set; }
+        public string UserPassword { get; set; }
     }
 }

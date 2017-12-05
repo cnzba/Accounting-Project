@@ -10,6 +10,7 @@ using CryptoService;
 using Newtonsoft.Json;
 using System;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using ServiceUtil.Email;
 
 namespace WebApp
 {
@@ -26,7 +27,12 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CBAContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CBA_Database")));
+           
+
             services.AddScoped<ICryptography, Cryptography>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddTransient<IEmail, Email>();
+            //services.AddSingleton<IEmailConfig, EmailConfig>();
             services.AddTransient<CBASeeder>();
             services.AddScoped<IInvoiceService, InvoiceService>();
 
@@ -47,8 +53,12 @@ namespace WebApp
                 c.SwaggerDoc("v1", new Info { Title = "Account WEB/API", Version = "v1" });
             });
 
+
             services.AddOptions();
             services.Configure<CBAOptions>(Configuration);
+            services.Configure<EmailConfig>(Configuration.GetSection("EmailConfig"));
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

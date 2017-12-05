@@ -10,19 +10,19 @@ namespace ServiceUtil.Email
 {
     public class EmailService : IEmailService
     {
-        public async Task<bool> SendEmail(IEmail email)
+        public async Task<bool> SendEmail(IEmailConfig emailConfig, IEmail email)
         {
             try
             {
-                MimeMessage emailMessage = CreateEmailBody(email);
+                MimeMessage emailMessage = CreateEmailBody(email, emailConfig);
 
                 using (var client = new SmtpClient())
                 {
-                    client.LocalDomain = email.EmailConfig.LocalDomain;
+                    client.LocalDomain = emailConfig.LocalDomain;
                     client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-                    await client.ConnectAsync(email.EmailConfig.MailServerAddress, Convert.ToInt32(email.EmailConfig.MailServerPort), SecureSocketOptions.StartTls).ConfigureAwait(false);
+                    await client.ConnectAsync(emailConfig.MailServerAddress, Convert.ToInt32(emailConfig.MailServerPort), SecureSocketOptions.StartTls).ConfigureAwait(false);
 
-                    await client.AuthenticateAsync(new NetworkCredential(email.EmailConfig.UserId, email.EmailConfig.UserPassword));
+                    await client.AuthenticateAsync(new NetworkCredential(emailConfig.UserId, emailConfig.UserPassword));
                    await client.SendAsync(emailMessage).ConfigureAwait(false);
                     await client.DisconnectAsync(true).ConfigureAwait(false);
                 }
@@ -34,12 +34,12 @@ namespace ServiceUtil.Email
             return true;
         }
 
-        private MimeMessage CreateEmailBody(IEmail email)
+        private MimeMessage CreateEmailBody(IEmail email, IEmailConfig emailConfig)
         {
             var emailMessage = new MimeMessage();
             var builder = new BodyBuilder();
 
-            emailMessage.From.Add(new MailboxAddress(email.EmailConfig.FromName, email.EmailConfig.FromAddress));
+            emailMessage.From.Add(new MailboxAddress(emailConfig.FromName, address: emailConfig.FromAddress));
             emailMessage.To.Add(new MailboxAddress(email.To ?? string.Empty));
             emailMessage.Subject = email.Subject ?? string.Empty;
 
