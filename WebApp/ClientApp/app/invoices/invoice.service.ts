@@ -28,16 +28,40 @@ export class InvoiceService {
             .catch(this.handleError);
     }
 
-    createInvoice(invoice: IInvoice): Observable<IInvoice> {
+    createNewInvoice(): IInvoice {
+        var today = new Date();
+        var fakeInvoiceNumber = today.getFullYear()
+            + ("0" + (today.getMonth() + 1)).slice(-2)
+            + ("0" + today.getDate()).slice(-2)
+            + "-xxx";
+
+        return {invoiceNumber: fakeInvoiceNumber, issueeOrganization: "", issueeCareOf: "", clientContact: "", dateDue: null, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": null, subTotal: 0, grandTotal: 0 };
+    }
+
+    saveDraftInvoice(invoice: IInvoice): Observable<IInvoice> {
+        var response: Observable<IInvoice>;
+
+        if (this.isSaved(invoice)) response = this.updateInvoice(invoice);
+        else response = this.createInvoice(invoice);
+
+        return response;
+    }
+
+    private createInvoice(invoice: IInvoice): Observable<IInvoice> {
         return this.http.post<IInvoice>(this.invoiceUrl, invoice)
-            .do(data => console.log('Create: ' + JSON.stringify(data)))
+            .do(data => console.log('Post: ' + JSON.stringify(data)))
             .catch(this.handleError);
     }
 
-    updateInvoice(invoice: IInvoice): Observable<IInvoice> {
+    private updateInvoice(invoice: IInvoice): Observable<IInvoice> {
         return this.http.put<IInvoice>(this.invoiceUrl + '/' + invoice.invoiceNumber, invoice)
-            .do(data => console.log('Update: ' + JSON.stringify(data)))
+            .do(data => console.log('Put: ' + JSON.stringify(data)))
             .catch(this.handleError);
+    }
+
+    private isSaved(invoice: IInvoice) {
+        if (invoice.invoiceNumber.search("xxx") == -1) return true;
+        else return false;
     }
 
     private handleError(err: HttpErrorResponse) {
