@@ -28,14 +28,14 @@ export class InvoiceService {
             .catch(this.handleError);
     }
 
-    createNewInvoice(): IInvoice {
+    createNewInvoice(): Observable<IInvoice> {
         var today = new Date();
         var fakeInvoiceNumber = today.getFullYear()
             + ("0" + (today.getMonth() + 1)).slice(-2)
             + ("0" + today.getDate()).slice(-2)
             + "-xxx";
 
-        return {invoiceNumber: fakeInvoiceNumber, issueeOrganization: "", issueeCareOf: "", clientContact: "", dateDue: null, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": null, subTotal: 0, grandTotal: 0 };
+        return Observable.of({invoiceNumber: fakeInvoiceNumber, issueeOrganization: "", issueeCareOf: "", clientContact: "", dateDue: null, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": null, subTotal: 0, grandTotal: 0 });
     }
 
     saveDraftInvoice(invoice: IInvoice): Observable<IInvoice> {

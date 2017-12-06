@@ -34,7 +34,8 @@ describe('Invoice service', () => {
     }));
 
     it("createNewInvoice should provide fake invoice number ending in -xxx", async(() => {
-        var fake = service.createNewInvoice().invoiceNumber;
+        var fake;
+        service.createNewInvoice().subscribe((invoice: IInvoice) => fake = invoice.invoiceNumber);
         expect(fake.search("xxx") != -1).toEqual(true);
     }));
 
