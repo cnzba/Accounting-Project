@@ -11,6 +11,11 @@ import { IInvoice } from './invoice';
 
 @Injectable()
 export class InvoiceService {
+    createInvoice: any;
+    modifyInvoice: any;
+    push(arg0: any): any {
+        throw new Error("Method not implemented.");
+    }
     // private _invoiceUrl = 'assets/mockapi/invoices/invoices.json';
     private _invoiceUrl = 'api/invoice';
 

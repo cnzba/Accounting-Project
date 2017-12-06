@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { NgForm } from '@angular/forms';
 import 'rxjs/add/operator/map';
 
 import { AppComponent } from './app.component';
@@ -19,6 +20,7 @@ import { MockBackend } from "@angular/http/testing";
 import { BaseRequestOptions, HttpModule } from "@angular/http";
 import { InvoicelistComponent } from "./invoices/invoicelist.component";
 import { InvoicedetailComponent } from "./invoices/invoicedetail.component";
+import { InvoiceEditComponent } from "./invoices/invoice-edit.component";
 import { InvoiceService } from "./invoices/invoice.service";
 
 
@@ -30,7 +32,8 @@ import { InvoiceService } from "./invoices/invoice.service";
         LogintestComponent,
         RegisterComponent,
         InvoicelistComponent,
-        InvoicedetailComponent
+        InvoicedetailComponent,
+        InvoiceEditComponent
     ],
     imports: [
         BrowserModule,
@@ -41,9 +44,12 @@ import { InvoiceService } from "./invoices/invoice.service";
             { path: 'login', component: LoginComponent },
             { path: 'invoices', component: InvoicelistComponent, canActivate: [AuthGuard] },
             { path: "invoices/:id", component: InvoicedetailComponent, canActivate: [AuthGuard] },
-
+            { path: "invoice/edit/:id", component: InvoiceEditComponent },
+            { path: "invoice/new", component: InvoiceEditComponent },
+            { path: "invoices", component: InvoicelistComponent, canActivate: [AuthGuard] },
+            { path: "invoices", component: InvoicelistComponent, canActivate: [AuthGuard] }
             // otherwise redirect to the invoice list
-            { path: '**', redirectTo: 'invoices' }            
+          //  { path: '**', redirectTo: 'invoices' }            
         ])
     ],
     providers: [
