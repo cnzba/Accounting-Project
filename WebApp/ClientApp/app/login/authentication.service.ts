@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map'
+import { User } from "../users/user";
 
 @Injectable()
 export class AuthenticationService {
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) { }
 
-    isLoggedIn() : boolean {
+    isLoggedIn(): boolean {
         if (localStorage.getItem('currentUser')) {
             // logged in so return true
             return true;
@@ -15,17 +16,26 @@ export class AuthenticationService {
         else return false;
     }
 
-    login(username: string, password: string) {
-        return this.http.post('/api/authenticate', JSON.stringify({ username: username, password: password }))
-            .map((response: Response) => {
-                // login successful if there's a jwt token in the response
-                let user = response.json();
-                if (user && user.token) {
-                    // store user details and jwt token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                }
+    getCurrentUser(): User {
+        if (!this.isLoggedIn()) return null;
+        else return { id: 0, firstName: '', lastName: 'guest', username: 'guest', password: 'guest' };
+    }
 
-                return user;
+    login(username: string, password: string) {
+        const url: string = '/api/Account';
+        let params: HttpParams = new HttpParams().set('username', username).set('password', password);
+
+        return this.http.post<string>(url, "", { params: params })
+            .map(data => {
+                localStorage.setItem('currentUser', "loggedin");
+                return "1"; // dummy data; doesn't matter
+            })
+            .catch((err: HttpErrorResponse) => {
+                if (err.status == 200) {
+                    localStorage.setItem('currentUser', "loggedin")
+                    return "1"; // dummy data; doesn't matter
+                }
+                else throw err;
             });
     }
 

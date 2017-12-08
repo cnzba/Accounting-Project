@@ -53,12 +53,12 @@ namespace WebApp.Controllers
         }
 
 
-        //[HttpPost]
-        //public async Task<IActionResult> Logout()
-        //{
-        //    await HttpContext.SignOutAsync();
-        //    return Ok();
-        //}
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return Ok();
+        }
 
         private bool LoginUser(string username, string password)
         {
