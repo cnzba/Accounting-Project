@@ -24,7 +24,7 @@ namespace UnitTestProject
                 FromName = "Unit Test Email",
                 LocalDomain = "cbanewzealand.onmicrosoft.com",
                 MailServerAddress = "smtp.office365.com",
-                MailServerPort = "587",
+                MailServerPort = 587,
                 UserId = "testuser@cbanewzealand.org.nz",
                 UserPassword = "123@change"
             };
