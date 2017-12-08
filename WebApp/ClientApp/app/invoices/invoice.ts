@@ -1,25 +1,23 @@
 export interface IInvoice {
-    id: number;
     invoiceNumber: string;
-    dateCreated: Date;
     dateDue: Date;
     issueeOrganization: string;
     issueeCareOf: string;
-    gstNumber: string;
-    charitiesNumber: string;
     clientContact: string;
-   
-    grandTotal: number;
-    subTotal: number;
-    gst: number; 
-
     status: string;
+
+    dateCreated?: Date;
+    gstNumber?: string;
+    charitiesNumber?: string;
+    gstRate?: number;
+    subTotal?: number;
+    grandTotal?: number;
+    
     invoiceLine: IInvoiceLine[];
 }
 
 export interface IInvoiceLine {
-    id: number; // needed to order the lines
-    invoiceId: number;
+    itemOrder: number; 
     description: string;
     amount: number;
 }

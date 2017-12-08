@@ -17,24 +17,57 @@ export class InvoiceService {
         throw new Error("Method not implemented.");
     }
     // private _invoiceUrl = 'assets/mockapi/invoices/invoices.json';
-    private _invoiceUrl = 'api/invoice';
+    private invoiceUrl = 'api/invoice';
 
-    constructor(private _http: HttpClient) { }
+    constructor(private http: HttpClient) { }
 
     getInvoices(): Observable<IInvoice[]> {
-        return this._http.get<IInvoice[]>(this._invoiceUrl)
-            .do(data => console.log('All: ' + JSON.stringify(data)))
+        return this.http.get<IInvoice[]>(this.invoiceUrl)
+            .do(data => console.log('GetAll: ' + JSON.stringify(data)))
             .catch(this.handleError);
     }
 
-  getInvoice(invoiceNumber: string): Observable<IInvoice> {
-        // needs to change get specific invoice from Web API
-        // need to get by invoice number, not invoice ID
-        return this.getInvoices()
-           .map((invoices: IInvoice[]) => invoices.find(i => i.invoiceNumber === invoiceNumber));
+    getInvoice(invoiceNumber: string): Observable<IInvoice> {
+        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber)
+            .do(data => console.log('Get1: ' + JSON.stringify(data)))
+            .catch(this.handleError);
+    }
 
-     }
-    
+    createNewInvoice(): Observable<IInvoice> {
+        var today = new Date();
+        var fakeInvoiceNumber = today.getFullYear()
+            + ("0" + (today.getMonth() + 1)).slice(-2)
+            + ("0" + today.getDate()).slice(-2)
+            + "-xxx";
+
+        return Observable.of({invoiceNumber: fakeInvoiceNumber, issueeOrganization: "", issueeCareOf: "", clientContact: "", dateDue: null, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": null, subTotal: 0, grandTotal: 0 });
+    }
+
+    saveDraftInvoice(invoice: IInvoice): Observable<IInvoice> {
+        var response: Observable<IInvoice>;
+
+        if (this.isSaved(invoice)) response = this.updateInvoice(invoice);
+        else response = this.createInvoice(invoice);
+
+        return response;
+    }
+
+    private createInvoice(invoice: IInvoice): Observable<IInvoice> {
+        return this.http.post<IInvoice>(this.invoiceUrl, invoice)
+            .do(data => console.log('Post: ' + JSON.stringify(data)))
+            .catch(this.handleError);
+    }
+
+    private updateInvoice(invoice: IInvoice): Observable<IInvoice> {
+        return this.http.put<IInvoice>(this.invoiceUrl + '/' + invoice.invoiceNumber, invoice)
+            .do(data => console.log('Put: ' + JSON.stringify(data)))
+            .catch(this.handleError);
+    }
+
+    private isSaved(invoice: IInvoice) {
+        if (invoice.invoiceNumber.search("xxx") == -1) return true;
+        else return false;
+    }
 
     private handleError(err: HttpErrorResponse) {
         // in a real world app, we may send the server to some remote logging infrastructure
@@ -51,5 +84,5 @@ export class InvoiceService {
         console.error(errorMessage);
         return Observable.throw(errorMessage);
     }
-   
+
 }
