@@ -44,10 +44,8 @@ import { InvoiceService } from "./invoices/invoice.service";
             { path: "invoices/:id", component: InvoicedetailComponent, canActivate: [AuthGuard] },
             { path: "invoice/edit/:id", component: InvoiceEditComponent },
             { path: "invoice/new", component: InvoiceEditComponent },
-            { path: "invoices", component: InvoicelistComponent, canActivate: [AuthGuard] },
-            { path: "invoices", component: InvoicelistComponent, canActivate: [AuthGuard] }
             // otherwise redirect to the invoice list
-          //  { path: '**', redirectTo: 'invoices' }            
+            { path: '**', redirectTo: 'invoices' }            
         ])
     ],
     providers: [
