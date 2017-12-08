@@ -8,11 +8,12 @@ using WebApp.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using CryptoService;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Account")]
+    [Route("api/Account/")]
     public class AccountController : Controller
     {
         private readonly CBAContext _context;
@@ -47,7 +48,9 @@ namespace WebApp.Controllers
 
                 //Just redirect to our index after logging in. 
                 //return Redirect("/");
-                return Ok();
+
+                System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+                return Ok(value: currentUser.Identity.Name);
             }
             return View();
         }
@@ -60,6 +63,31 @@ namespace WebApp.Controllers
             return Ok();
         }
 
+
+        [Authorize]
+        [HttpGet()]
+        [Route("api/Account/GetUserLogged")]
+        public async Task<IActionResult> GetUserLogged()
+        {
+            UserController DbUser = new UserController(_context, _crypto);
+            ClaimsPrincipal currentUser = this.User;
+
+            var user = await DbUser.GetUserByLogin(currentUser.Identity.Name);
+
+            if (user != null)
+            {
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+            }
+
+            var SafeUserToReturn = new User() { Login = user.Login, Name = user.Name, Active = user.Active };
+            return Ok(SafeUserToReturn);
+        }
+
+
         private bool LoginUser(string username, string password)
         {
             UserController DbUser = new UserController(_context, _crypto);
@@ -67,10 +95,9 @@ namespace WebApp.Controllers
             var User = DbUser.GetUser(username);
 
             if (User.Login.Equals(username) && User.Password.Equals(_crypto.HashMD5(password)))
-            {
                 return true;
-            }
-            else { return false; }
+            else
+                return false;
         }
     }
 }

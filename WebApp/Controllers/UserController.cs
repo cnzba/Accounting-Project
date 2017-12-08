@@ -5,11 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using CryptoService;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
+    
     public class UserController : Controller
     {
         private readonly CBAContext _context;
@@ -167,6 +169,23 @@ namespace WebApp.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(user);
+        }
+
+        
+        internal async Task<User> GetUserByLogin(string login)
+        {
+            var user = new User();
+
+            try
+            {
+                user = await _context.User.SingleOrDefaultAsync(a => a.Login.ToLower().Equals(login.ToLower().Trim()));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return user;
+
         }
 
         private bool UserExists(int id)
