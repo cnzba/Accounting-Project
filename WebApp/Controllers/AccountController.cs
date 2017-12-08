@@ -8,11 +8,12 @@ using WebApp.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using CryptoService;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Account")]
+    [Route("api/Account/")]
     public class AccountController : Controller
     {
         private readonly CBAContext _context;
@@ -32,8 +33,9 @@ namespace WebApp.Controllers
         public async Task<IActionResult> Login(Login loginModel)
         {
 
+            var (LoginOk, userName) = LoginUser(loginModel.Username, loginModel.Password);
 
-            if (LoginUser(loginModel.Username, loginModel.Password))
+            if (LoginOk)
             {
                 var claims = new List<Claim>
             {
@@ -47,7 +49,9 @@ namespace WebApp.Controllers
 
                 //Just redirect to our index after logging in. 
                 //return Redirect("/");
-                return Ok();
+
+
+                return Ok(value: userName);
             }
             return View();
         }
@@ -60,17 +64,38 @@ namespace WebApp.Controllers
             return Ok();
         }
 
-        private bool LoginUser(string username, string password)
+
+        [Authorize]
+        [HttpGet()]
+        [Route(template: "api/Account/GetUserLogged")]
+        public async Task<IActionResult> GetUserLogged()
+        {
+            UserController DbUser = new UserController(_context, _crypto);
+            ClaimsPrincipal currentUser = this.User;
+
+            var user = await DbUser.GetUserByLogin(currentUser.Identity.Name);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+
+            var SafeUserToReturn = new User() { Login = user.Login, Name = user.Name, Active = user.Active };
+            return Ok(SafeUserToReturn);
+        }
+
+
+        private (bool, string) LoginUser(string username, string password)
         {
             UserController DbUser = new UserController(_context, _crypto);
 
             var User = DbUser.GetUser(username);
 
             if (User.Login.Equals(username) && User.Password.Equals(_crypto.HashMD5(password)))
-            {
-                return true;
-            }
-            else { return false; }
+                return (true, User.Name);
+            else
+                return (false, string.Empty);
         }
     }
 }
