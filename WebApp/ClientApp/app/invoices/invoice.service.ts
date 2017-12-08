@@ -6,16 +6,12 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/of';
 
 import { IInvoice } from './invoice';
 
 @Injectable()
 export class InvoiceService {
-    createInvoice: any;
-    modifyInvoice: any;
-    push(arg0: any): any {
-        throw new Error("Method not implemented.");
-    }
     // private _invoiceUrl = 'assets/mockapi/invoices/invoices.json';
     private invoiceUrl = 'api/invoice';
 

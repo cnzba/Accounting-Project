@@ -36,7 +36,10 @@ export class InvoiceEditComponent implements OnInit {
 
     onSubmit() {
         this.submitted = true;
-        alert(`saved!!!`);
+        //alert(`saved!!!`);
+
+        console.log(this.modifyInvoice);
+        // invoiceService.saveDraftInvoice(modifyInvoice);
     }
     //modify(): void {
     //    this.route.paramMap
@@ -52,9 +55,9 @@ export class InvoiceEditComponent implements OnInit {
 
     //}
 
-
     ngOnInit() {
-        this.invoiceService.createInvoice()
+        this.invoiceService.createNewInvoice().subscribe(
+            (invoice: IInvoice) => this.modifyInvoice = invoice);
     }
 }
 

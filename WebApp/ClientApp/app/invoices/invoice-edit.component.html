@@ -3,18 +3,19 @@
    
     <a [routerLink]="['/invoices']">Back To List</a>
     <a [routerLink]="['/invoices']">Cancel</a>
-   <button (click)="create()">Create an Invoice</button>
-    <button (click)="modify()">Edit an Invoice</button>
+   
+   <!--button (click)="create()">Create an Invoice</!--button>
+    <button (click)="modify()">Edit an Invoice</button-->
     <table class="t1">
         <tr class="tr1">
             <td style="height: 46px;width: 132px">Client Name</td>
             <td style="height: 46px;width: 238px">
-                <input type="text" [(ngModel)]="modifyInvoice.clientname" name="clientname" requied/>
+                <input type="text" [(ngModel)]="modifyInvoice.clientName" name="clientname" required/>
 
             </td>
             <td style="height: 46px;width: 23px"></td>
             <td style="height: 46px;width: 131px">Invoice Number</td>
-            <td style="height: 46px;width: 146px">{{selectedinvoi.invoiceNumber}}</td>
+            <td style="height: 46px;width: 146px">{{modifyInvoice.invoiceNumber}}</td>
         </tr>
         
 
@@ -25,7 +26,7 @@
             </td>
             <td style="width: 23px"></td>
             <td style="width: 131px">Date Created</td>
-            <td style="width: 146px">{{selectedinvoi.date | date: 'dd/MM/yyyy'}}</td>
+            <td style="width: 146px">{{modifyInvoice.date | date: 'dd/MM/yyyy'}}</td>
 
         </tr>
         <tr class="tr2">
@@ -39,7 +40,7 @@
             </td>
             <td style="width: 23px"></td>
             <td style="width: 131px">GST Number</td>
-            <td style="width: 146px">{{selectedinvoi.gstnumber}}</td>
+            <td style="width: 146px">{{modifyInvoice.gstnumber}}</td>
 
         </tr>
         <tr>
@@ -51,7 +52,7 @@
 
         </tr>
 
-        <tr>
+        <!--tr>
             <td colspan="4" style="height: 46px; width:146px">Description</td>
 
             <td style="height: 46px; width: 146px">Amount</td>
@@ -101,13 +102,13 @@
         <tr class="tr2">
             <td colspan="4" style="text-align:right">Grand Total</td>
             <td style="width:146px">{{selectedinvoi.grandTotal}}</td>
-        </tr>
+        </tr-->
 
 
     </table>
    
     <button type="submit" class=" btn-submit" (click)="onSubmit()">Submit</button>
-    <input type="text" #myinput />
+    <!--input type="text" #myinput /-->
     <button (click)="reset(myinput)">Reset</button>
 </form>
 
