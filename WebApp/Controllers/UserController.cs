@@ -11,13 +11,13 @@ namespace WebApp.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    
+
     public class UserController : Controller
     {
         private readonly CBAContext _context;
 
         //Dependency Injection
-        private readonly ICryptography _crypto;       
+        private readonly ICryptography _crypto;
 
         public UserController(CBAContext context, ICryptography crypto)
         {
@@ -26,10 +26,10 @@ namespace WebApp.Controllers
             //Dependency Injection
             _crypto = crypto;
         }
-        
 
         // GET: api/User
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetUser()
         {
             if (!ModelState.IsValid)
@@ -47,26 +47,9 @@ namespace WebApp.Controllers
             return Ok(users);
         }
 
-        [HttpGet]
-        internal User GetUser(string Name)
-        {
-            var user = new User();
-
-            try
-            {
-                user = _context.User.Where(a => a.Login.ToLower().Equals(Name.ToLower())).FirstOrDefault();
-               
-            }
-            catch (Exception e)
-            {
-                var x = e;
-            }
-            return user;
-        }
-
-
         // GET: api/User/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetUser([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -86,6 +69,7 @@ namespace WebApp.Controllers
 
         // PUT: api/User/5
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
         {
             if (!ModelState.IsValid)
@@ -128,6 +112,7 @@ namespace WebApp.Controllers
 
         // POST: api/User
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> PostUser([FromBody] User user)
         {
 
@@ -152,6 +137,7 @@ namespace WebApp.Controllers
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -171,7 +157,22 @@ namespace WebApp.Controllers
             return Ok(user);
         }
 
-        
+        internal User GetUser(string Name)
+        {
+            var user = new User();
+
+            try
+            {
+                user = _context.User.Where(a => a.Login.ToLower().Equals(Name.ToLower())).FirstOrDefault();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return user;
+        }
+
         internal async Task<User> GetUserByLogin(string login)
         {
             var user = new User();

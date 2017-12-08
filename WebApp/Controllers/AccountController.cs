@@ -81,8 +81,8 @@ namespace WebApp.Controllers
             }
 
 
-            var SafeUserToReturn = new User() { Login = user.Login, Name = user.Name, Active = user.Active };
-            return Ok(SafeUserToReturn);
+           
+            return Ok(user);
         }
 
 
@@ -92,10 +92,15 @@ namespace WebApp.Controllers
 
             var User = DbUser.GetUser(username);
 
+            if(User == null)
+            {
+                return (false, string.Empty);
+            }
+
             if (User.Login.Equals(username) && User.Password.Equals(_crypto.HashMD5(password)))
                 return (true, User.Name);
             else
-                return (false, string.Empty);
+                return (false, "");
         }
     }
 }
