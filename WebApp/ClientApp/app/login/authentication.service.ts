@@ -1,46 +1,72 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { IUser } from "../users/user";
+
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map'
-import { User } from "../users/user";
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/mergeMap';
+
 
 @Injectable()
 export class AuthenticationService {
-    constructor(private http: HttpClient) { }
+    private accountUrl = 'api/account';
+    private getUserUrl = 'api/user/';
+    private userSubject = new ReplaySubject<IUser>(1);
 
-    isLoggedIn(): boolean {
-        if (localStorage.getItem('currentUser')) {
-            // logged in so return true
-            return true;
-        }
-        else return false;
-    }
+    constructor(private http: HttpClient) {
+        let login: string = localStorage.getItem('LoginId');
 
-    getCurrentUser(): User {
-        if (!this.isLoggedIn()) return null;
-        else return { id: 0, firstName: '', lastName: 'guest', username: 'guest', password: 'guest' };
-    }
-
-    login(username: string, password: string) {
-        const url: string = '/api/Account';
-        let params: HttpParams = new HttpParams().set('username', username).set('password', password);
-
-        return this.http.post<string>(url, "", { params: params })
-            .map(data => {
-                localStorage.setItem('currentUser', "loggedin");
-                return "1"; // dummy data; doesn't matter
-            })
-            .catch((err: HttpErrorResponse) => {
-                if (err.status == 200) {
-                    localStorage.setItem('currentUser', "loggedin")
-                    return "1"; // dummy data; doesn't matter
+        if (login) this.http.get<IUser>(this.getUserUrl + login)
+            .catch((err: HttpErrorResponse, caught: Observable<IUser>) => {
+                if (err.status == 404) {
+                    localStorage.removeItem('LoginId');
+                    return Observable.of(null);
                 }
                 else throw err;
+            })
+            .subscribe(data => this.userSubject.next(data));
+        else this.userSubject.next(null);
+    }
+
+    isLoggedIn(): Observable<boolean> {
+        return this.getCurrentUser()
+            .map((data: IUser) => {
+                if (data != null) return true;
+                else return false;
             });
     }
 
+    getCurrentUser(): Observable<IUser> {
+        return this.userSubject.asObservable();
+    }
+
+    login(username: string, password: string) {
+        let params: HttpParams = new HttpParams().set('username', username).set('password', password);
+
+        return this.http.post<string>(this.accountUrl, "", { params: params })
+            .do(data => localStorage.setItem('LoginId', data))
+            .flatMap(login => this.http.get<IUser>(this.getUserUrl + login))
+            .do(data => this.userSubject.next(data));
+    }
+
     logout() {
-        // remove user from local storage to log user out
-        localStorage.removeItem('currentUser');
+        return this.http.get(this.accountUrl)
+            // fix for Angular 4.4.6
+            .catch((err: HttpErrorResponse) => {
+                if (err.status == 200) {
+                    return "1"; // dummy data; doesn't matter
+                }
+                else throw err;
+            })
+            .do(data => {
+                localStorage.removeItem('LoginId');
+                this.userSubject.next(null);
+            });
     }
 }

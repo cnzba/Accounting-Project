@@ -3,7 +3,7 @@ import { InvoiceService } from './invoice.service';
 import { InvoicelistComponent } from './invoicelist.component';
 import { RouterTestingModule } from '@angular/router/testing';
 
-describe('InvoicelistComponent', () => {
+xdescribe('InvoicelistComponent', () => {
     let component: InvoicelistComponent;
     let fixture: ComponentFixture<InvoicelistComponent>;
 

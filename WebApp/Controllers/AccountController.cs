@@ -64,33 +64,11 @@ namespace WebApp.Controllers
             return Ok();
         }
 
-
-        [Authorize]
-        [HttpGet()]
-        [Route(template: "api/Account/GetUserLogged")]
-        public async Task<IActionResult> GetUserLogged()
-        {
-            UserController DbUser = new UserController(_context, _crypto);
-            ClaimsPrincipal currentUser = this.User;
-
-            var user = await DbUser.GetUserByLogin(currentUser.Identity.Name);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-
-           
-            return Ok(user);
-        }
-
-
         private (bool, string) LoginUser(string username, string password)
         {
             UserController DbUser = new UserController(_context, _crypto);
 
-            var User = DbUser.GetUser(username);
+            var User = DbUser.FindUser(username);
 
             if(User == null)
             {

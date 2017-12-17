@@ -48,16 +48,16 @@ namespace WebApp.Controllers
         }
 
         // GET: api/User/5
-        [HttpGet("{id}")]
+        [HttpGet("{login}")]
         [Authorize]
-        public async Task<IActionResult> GetUser([FromRoute] int id)
+        public async Task<IActionResult> GetUser([FromRoute] string login)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
+            var user = await _context.User.SingleOrDefaultAsync(m => m.Login.Equals(login));
 
             if (user == null)
             {
@@ -157,7 +157,7 @@ namespace WebApp.Controllers
             return Ok(user);
         }
 
-        internal User GetUser(string Name)
+        internal User FindUser(string Name)
         {
             var user = new User();
 

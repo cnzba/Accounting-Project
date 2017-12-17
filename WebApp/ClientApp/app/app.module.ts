@@ -9,8 +9,6 @@ import { HttpClientModule } from "@angular/common/http";
 import { AlertComponent } from './alert/alert.component';
 import { AlertService } from "./alert/alert.service";
 import { LoginComponent } from './login/login.component';
-import { LogintestComponent } from './logintest/logintest.component';
-import { RegisterComponent } from './logintest/register.component';
 import { AuthGuard } from "./login/auth.guard";
 import { AuthenticationService } from "./login/authentication.service";
 import { UserService } from "./users/user.service";
@@ -18,6 +16,7 @@ import { HttpModule } from "@angular/http";
 import { InvoicelistComponent } from "./invoices/invoicelist.component";
 import { InvoicedetailComponent } from "./invoices/invoicedetail.component";
 import { InvoiceService } from "./invoices/invoice.service";
+import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
 
 
 @NgModule({
@@ -25,8 +24,6 @@ import { InvoiceService } from "./invoices/invoice.service";
         AppComponent,
         AlertComponent,
         LoginComponent,
-        LogintestComponent,
-        RegisterComponent,
         InvoicelistComponent,
         InvoicedetailComponent
     ],
@@ -37,15 +34,19 @@ import { InvoiceService } from "./invoices/invoice.service";
         HttpModule,
         RouterModule.forRoot([
             { path: 'login', component: LoginComponent },
-            { path: 'invoices', component: InvoicelistComponent, canActivate: [AuthGuard] },
+            {
+                path: 'invoices', component: InvoicelistComponent, canActivate: [AuthGuard],
+                resolve: { invoices: InvoiceListResolver }
+            },
             { path: "invoices/:id", component: InvoicedetailComponent, canActivate: [AuthGuard] },
 
             // otherwise redirect to the invoice list
-            { path: '**', redirectTo: 'invoices' }            
-        ])
+            { path: '**', redirectTo: 'invoices' }
+        ], { enableTracing: true })
     ],
     providers: [
         InvoiceService,
+        InvoiceListResolver,
         AuthGuard,
         AlertService,
         AuthenticationService,
