@@ -24,7 +24,7 @@
                     <a [routerLink]="['/invoices', inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
                 </td>
                 <td style="height: 46px; width:50px">
-               <button (click)="modify()">Modify</button>
+              <a [routerLink]="['/invoices/edit/',inv.invoiceNumber]">Modify</a>
                 </td>
 
                 <td style="height: 46px; width: 50px">{{inv.dateCreated | date: 'dd/MM/yyyy'}}</td>

@@ -17,21 +17,23 @@ export class InvoiceEditComponent implements OnInit {
         private location: Location
     ) { }
 
-    private modifyInvoice: IInvoice;
-   // private selectedinvoiinvoiceLine: Array<any> = [];
-  //  private newAttribute: any = {};
+   private modifyInvoice: IInvoice;
+    
+   // private modifyInvoice: any[] = [];
+    
+ //< private newAttribute: any = {};
 
-    //addFieldValue() {
-    //    this.selectedinvoiinvoiceLine.push(this.newAttribute)
-    //    this.newAttribute = {};
-    //}
+ // addFieldValue() {
+     // this.modifyInvoice.push(this.newAttribute)
+    //   this.newAttribute = {};
+   // }
 
-    //deleteFieldValue(index) {
-    //    this.selectedinvoiinvoiceLine.splice(index, 1);
-    //}
-    //reset(input: HTMLInputElement) {
-    //    input.value = '';
-    //}
+   // deleteFieldValue(index) {
+  //      this.modifyInvoice.splice(index, 1);
+  //  }
+   // reset(input: HTMLInputElement) {
+       // input.value = '';
+   // }
     submitted = false;
 
     onSubmit() {
@@ -39,25 +41,22 @@ export class InvoiceEditComponent implements OnInit {
         //alert(`saved!!!`);
 
         console.log(this.modifyInvoice);
-        // invoiceService.saveDraftInvoice(modifyInvoice);
+       // this.invoiceService.saveDraftInvoice(this.modifyInvoice).subscribe(invoices =>  console.log(invoices) );
     }
-    //modify(): void {
-    //    this.route.paramMap
-    //        .switchMap((params: ParamMap) => this.invoiceService.getInvoice(params.get('id')))
-    //        .subscribe(invoices => {
-    //            this.modifyInvoice = invoices;
-    //        });
-    //    this.invoiceService.modifyInvoice(this.modifyInvoice);
-    //}
-    //create(): void {
-
-    //    this.invoiceService.createInvoice(this.modifyInvoice);
-
-    //}
-
+   
     ngOnInit() {
+       // if (this.route.snapshot.url[1] == "edit")
+            
         this.invoiceService.createNewInvoice().subscribe(
             (invoice: IInvoice) => this.modifyInvoice = invoice);
+
+        console.log(this.route.snapshot);
+        this.route.paramMap
+            .switchMap((params: ParamMap) => this.invoiceService.getInvoice(params.get('id')))
+           .subscribe(invoices => {
+               this.modifyInvoice = invoices;
+           });
+       this.invoiceService.this.modifyInvoice(this.modifyInvoice);
     }
 }
 

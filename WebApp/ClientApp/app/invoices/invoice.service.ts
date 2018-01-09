@@ -12,6 +12,7 @@ import { IInvoice } from './invoice';
 
 @Injectable()
 export class InvoiceService {
+    [x: string]: any;
     // private _invoiceUrl = 'assets/mockapi/invoices/invoices.json';
     private invoiceUrl = 'api/invoice';
 
