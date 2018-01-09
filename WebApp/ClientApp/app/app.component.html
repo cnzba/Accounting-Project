@@ -12,6 +12,7 @@
 
         <div id="menu" class="collapse navbar-collapse">
             <ul *ngIf="currentUser" class="nav navbar-nav">
+                <li *ngIf="currentUser"><a [routerLink]="['/change-password']">Change Password</a></li>
                 <li *ngIf="currentUser"><a [routerLink]="['/login']">Logout</a></li>
             </ul>
         </div>

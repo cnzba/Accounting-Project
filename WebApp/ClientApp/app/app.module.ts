@@ -17,6 +17,8 @@ import { InvoicelistComponent } from "./invoices/invoicelist.component";
 import { InvoicedetailComponent } from "./invoices/invoicedetail.component";
 import { InvoiceService } from "./invoices/invoice.service";
 import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
+import { ForgotPasswordComponent } from './login/forgot-password.component';
+import { ChangePasswordComponent } from './login/change-password.component';
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
         AlertComponent,
         LoginComponent,
         InvoicelistComponent,
-        InvoicedetailComponent
+        InvoicedetailComponent,
+        ForgotPasswordComponent,
+        ChangePasswordComponent
     ],
     imports: [
         BrowserModule,
@@ -39,7 +43,8 @@ import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
                 resolve: { invoices: InvoiceListResolver }
             },
             { path: "invoices/:id", component: InvoicedetailComponent, canActivate: [AuthGuard] },
-
+            { path: "forgot-password", component: ForgotPasswordComponent },
+            { path: "change-password", component: ChangePasswordComponent },
             // otherwise redirect to the invoice list
             { path: '**', redirectTo: 'invoices' }
         ], { enableTracing: true })
