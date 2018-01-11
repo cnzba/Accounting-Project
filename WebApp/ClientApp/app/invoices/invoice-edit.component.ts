@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Location } from '@angular/common';
 import 'rxjs/add/operator/switchMap';
+import { Observable } from 'rxjs/Observable';
 import { InvoiceService } from "./invoice.service";
 import { IInvoice } from "./invoice";
 
@@ -17,46 +18,42 @@ export class InvoiceEditComponent implements OnInit {
         private location: Location
     ) { }
 
-   private modifyInvoice: IInvoice;
-    
-   // private modifyInvoice: any[] = [];
-    
- //< private newAttribute: any = {};
+    private modifyInvoice: IInvoice;
 
- // addFieldValue() {
-     // this.modifyInvoice.push(this.newAttribute)
+    // private modifyInvoice: any[] = [];
+
+    //< private newAttribute: any = {};
+
+    // addFieldValue() {
+    // this.modifyInvoice.push(this.newAttribute)
     //   this.newAttribute = {};
-   // }
+    // }
 
-   // deleteFieldValue(index) {
-  //      this.modifyInvoice.splice(index, 1);
-  //  }
-   // reset(input: HTMLInputElement) {
-       // input.value = '';
-   // }
+    // deleteFieldValue(index) {
+    //      this.modifyInvoice.splice(index, 1);
+    //  }
+    // reset(input: HTMLInputElement) {
+    // input.value = '';
+    // }
     submitted = false;
 
     onSubmit() {
         this.submitted = true;
-        //alert(`saved!!!`);
-
         console.log(this.modifyInvoice);
-       // this.invoiceService.saveDraftInvoice(this.modifyInvoice).subscribe(invoices =>  console.log(invoices) );
+        // this.invoiceService.saveDraftInvoice(this.modifyInvoice).subscribe(invoices =>  console.log(invoices) );
     }
-   
-    ngOnInit() {
-       // if (this.route.snapshot.url[1] == "edit")
-            
-        this.invoiceService.createNewInvoice().subscribe(
-            (invoice: IInvoice) => this.modifyInvoice = invoice);
 
-        console.log(this.route.snapshot);
-        this.route.paramMap
-            .switchMap((params: ParamMap) => this.invoiceService.getInvoice(params.get('id')))
-           .subscribe(invoices => {
-               this.modifyInvoice = invoices;
-           });
-       this.invoiceService.this.modifyInvoice(this.modifyInvoice);
+    ngOnInit() {
+        // select between creating a new invoice or modifying existing invoice depending on the url (route)
+        this.route.paramMap.switchMap((params: ParamMap) => {
+            let id = params.get('id');
+            let data: Observable<IInvoice>;
+
+            if (id == null) data = this.invoiceService.createNewInvoice();
+            else data = this.invoiceService.getInvoice(id);
+
+            return data;
+        }).subscribe( (invoice : IInvoice) => this.modifyInvoice = invoice);
     }
 }
 

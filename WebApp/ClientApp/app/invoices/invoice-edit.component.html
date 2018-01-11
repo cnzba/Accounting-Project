@@ -6,11 +6,11 @@
    
    <!--button (click)="create()">Create an Invoice</!--button>
     <button (click)="modify()">Edit an Invoice</button-->
-    <table class="t1">
+        <table class="t1">
         <tr class="tr1">
             <td style="height: 46px;width: 132px">Client Name</td>
             <td style="height: 46px;width: 238px">
-                <input type="text" [(ngModel)]="modifyInvoice.clientName" name="clientname" required />
+                <input type="text" [(ngModel)]="modifyInvoice.issueeOrganization" name="clientname" required />
 
             </td>
             <td style="height: 46px;width: 23px"></td>
@@ -22,7 +22,7 @@
         <tr>
             <td style="width: 132px">Client Contact</td>
             <td style="width: 238px">
-                <input type="text" [(ngModel)]="modifyInvoice.clientcontact" name="clientcontact" />
+                <input type="text" [(ngModel)]="modifyInvoice.clientContact" name="clientcontact" />
             </td>
             <td style="width: 23px"></td>
             <td style="width: 131px">Date Created</td>
@@ -32,7 +32,7 @@
         <tr class="tr2">
             <td style="width: 132px">Status</td>
             <td style="width: 238px">
-                <select requied>
+                <select required>
                     <option value="New">New</option>
                     <option value="Sent">Sent</option>
                     <option value="Paid">Paid</option>
@@ -45,7 +45,7 @@
         </tr>
         <tr>
             <td style="width: 132px">Due Date</td>
-            <td style="width: 238px"><input type="text" [(ngModel)]="modifyInvoice.duedate" name="duedate" /></td>
+            <td style="width: 238px"><input type="text" [(ngModel)]="modifyInvoice.dateDue" name="duedate" /></td>
             <td style="width: 23px"></td>
             <td style="width: 131px">Charities Number</td>
             <td style="width: 146px">{{modifyInvoice.charitiesNumber}}</td>
@@ -61,10 +61,10 @@
 
         <tr *ngFor='let invoiceLine of modifyInvoice.invoiceLine'>
         <td colspan="4" style="height: 46px; width:146px">
-            <input [(ngModel)]="modifyInvoice.description" class="form-control" type="text" name="description" />
+            <input [(ngModel)]="invoiceLine.description" class="form-control" type="text" name="description" />
         </td>
         <td style="height: 46px; width: 146px">
-            <input [(ngModel)]="modifyInvoice.amount" class="form-control" type="text" name="amount" />
+            <input [(ngModel)]="invoiceLine.amount" class="form-control" type="text" name="amount" />
         </td>
 
         <!--td>

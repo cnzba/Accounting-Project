@@ -19,15 +19,11 @@ export class InvoiceService {
     constructor(private http: HttpClient) { }
 
     getInvoices(): Observable<IInvoice[]> {
-        return this.http.get<IInvoice[]>(this.invoiceUrl)
-            .do(data => console.log('GetAll: ' + JSON.stringify(data)))
-            .catch(this.handleError);
+        return this.http.get<IInvoice[]>(this.invoiceUrl).catch(this.handleError);
     }
 
     getInvoice(invoiceNumber: string): Observable<IInvoice> {
-        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber)
-            .do(data => console.log('Get1: ' + JSON.stringify(data)))
-            .catch(this.handleError);
+        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber).catch(this.handleError);
     }
 
     createNewInvoice(): Observable<IInvoice> {
