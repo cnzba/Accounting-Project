@@ -1,7 +1,5 @@
-export class User {
-    id: number;
-    username: string;
-    password: string;
-    firstName: string;
-    lastName: string;
+export interface IUser {
+    login: string;
+    name: string;
+    active: boolean;
 }

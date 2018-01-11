@@ -12,7 +12,7 @@ namespace ServiceUtil.Email
         public string LocalDomain { get; set; }
 
         public string MailServerAddress { get; set; }
-        public string MailServerPort { get; set; }
+        public int MailServerPort { get; set; }
 
         public string UserId { get; set; }
         public string UserPassword { get; set; }

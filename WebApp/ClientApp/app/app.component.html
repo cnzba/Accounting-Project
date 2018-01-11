@@ -1,9 +1,32 @@
-<h1>{{title}}</h1>
-<P *ngIf="!currentUser">Log in with username/password: guest/guest</P>
-<P *ngIf="currentUser">Logged in as {{currentUser.firstName+' '+currentUser.lastName}} (<a [routerLink]="['/login']">Logout</a>)</P>
+<span class="glyphicon glyphicon-refresh glyphicon-spin spinner" *ngIf="loading"></span>
 
-<alert></alert>
-<router-outlet></router-outlet>
+<div class="navbar navbar-inverse">
+    <header class="container-fluid">
+
+        <div class="navbar-header">
+            <span class="navbar-brand">CBANZ</span>
+            <span class="navbar-brand" *ngIf="!currentUser && showUser">Log in with Username/Password: guest/guest</span>
+            <span class="navbar-brand" *ngIf="currentUser">Logged in as {{currentUser.name}}</span>
+            <button class="navbar-toggle" data-toggle="collapse" data-target="#menu">&#9776;</button>
+        </div>
+
+        <div id="menu" class="collapse navbar-collapse">
+            <ul *ngIf="currentUser" class="nav navbar-nav">
+                <li *ngIf="currentUser"><a [routerLink]="['/login']">Logout</a></li>
+            </ul>
+        </div>
+
+    </header>
+</div>
+
+<section class="container-fluid">
+    <alert></alert>
+    <router-outlet></router-outlet>
+</section>
+
+<footer class="container-fluid">
+    <div class="text-center">Copyright 2017 Canterbury New Zealand Business Association</div>
+</footer>
 
 
 

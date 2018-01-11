@@ -5,17 +5,19 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using CryptoService;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
+
     public class UserController : Controller
     {
         private readonly CBAContext _context;
 
         //Dependency Injection
-        private readonly ICryptography _crypto;       
+        private readonly ICryptography _crypto;
 
         public UserController(CBAContext context, ICryptography crypto)
         {
@@ -24,10 +26,10 @@ namespace WebApp.Controllers
             //Dependency Injection
             _crypto = crypto;
         }
-        
 
         // GET: api/User
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetUser()
         {
             if (!ModelState.IsValid)
@@ -45,34 +47,17 @@ namespace WebApp.Controllers
             return Ok(users);
         }
 
-        [HttpGet]
-        internal User GetUser(string Name)
-        {
-            var user = new User();
-
-            try
-            {
-                user = _context.User.Where(a => a.Login.ToLower().Equals(Name.ToLower())).FirstOrDefault();
-               
-            }
-            catch (Exception e)
-            {
-                var x = e;
-            }
-            return user;
-        }
-
-
         // GET: api/User/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser([FromRoute] int id)
+        [HttpGet("{login}")]
+        [Authorize]
+        public async Task<IActionResult> GetUser([FromRoute] string login)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
+            var user = await _context.User.SingleOrDefaultAsync(m => m.Login.Equals(login));
 
             if (user == null)
             {
@@ -84,6 +69,7 @@ namespace WebApp.Controllers
 
         // PUT: api/User/5
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
         {
             if (!ModelState.IsValid)
@@ -126,6 +112,7 @@ namespace WebApp.Controllers
 
         // POST: api/User
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> PostUser([FromBody] User user)
         {
 
@@ -150,6 +137,7 @@ namespace WebApp.Controllers
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -167,6 +155,38 @@ namespace WebApp.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(user);
+        }
+
+        internal User FindUser(string Name)
+        {
+            var user = new User();
+
+            try
+            {
+                user = _context.User.Where(a => a.Login.ToLower().Equals(Name.ToLower())).FirstOrDefault();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return user;
+        }
+
+        internal async Task<User> GetUserByLogin(string login)
+        {
+            var user = new User();
+
+            try
+            {
+                user = await _context.User.SingleOrDefaultAsync(a => a.Login.ToLower().Equals(login.ToLower().Trim()));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return user;
+
         }
 
         private bool UserExists(int id)
