@@ -6,26 +6,24 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/of';
 
 import { IInvoice } from './invoice';
 
 @Injectable()
 export class InvoiceService {
+    [x: string]: any;
     // private _invoiceUrl = 'assets/mockapi/invoices/invoices.json';
     private invoiceUrl = 'api/invoice';
 
     constructor(private http: HttpClient) { }
 
     getInvoices(): Observable<IInvoice[]> {
-        return this.http.get<IInvoice[]>(this.invoiceUrl)
-            .do(data => console.log('GetAll: ' + JSON.stringify(data)))
-            .catch(this.handleError);
+        return this.http.get<IInvoice[]>(this.invoiceUrl).catch(this.handleError);
     }
 
     getInvoice(invoiceNumber: string): Observable<IInvoice> {
-        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber)
-            .do(data => console.log('Get1: ' + JSON.stringify(data)))
-            .catch(this.handleError);
+        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber).catch(this.handleError);
     }
 
     createNewInvoice(): Observable<IInvoice> {
