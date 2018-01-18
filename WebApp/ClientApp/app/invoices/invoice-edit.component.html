@@ -34,8 +34,12 @@
             <td style="width: 238px">
                 <select required>
                     <option value="New">New</option>
+                    <option value="Draft">Draft</option>
                     <option value="Sent">Sent</option>
                     <option value="Paid">Paid</option>
+                    <option value="Cancelled">Cancelled</option>
+
+
                 </select>
             </td>
             <td style="width: 23px"></td>
@@ -96,7 +100,7 @@
 
         <tr *ngIf="modifyInvoice.gst>0">
             <td colspan="4" style="text-align:right">GST Amount</td>
-            <td style="width:146px">{{modifyInvoice.gst}}</td>
+            <td style="width:146px">{{modifyInvoice.gstRate}}</td>
         </tr>
 
         <tr class="tr2">

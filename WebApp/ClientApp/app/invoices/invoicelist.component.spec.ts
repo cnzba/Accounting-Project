@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { InvoiceService } from './invoice.service';
 import { InvoicelistComponent } from './invoicelist.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('InvoicelistComponent', () => {
   let component: InvoicelistComponent;
@@ -8,7 +9,9 @@ describe('InvoicelistComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InvoicelistComponent ]
+        declarations: [InvoicelistComponent],
+         providers: [InvoiceService],
+        imports: [RouterTestingModule]
     })
     .compileComponents();
   }));
