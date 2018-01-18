@@ -20,12 +20,9 @@
         </thead>
 
         <tbody>
-            <tr *ngFor="let inv of invo" >
-                
-            
-                   <td *ngIf="inv.status==='Paid'|| inv.status==='Sent'" style="height: 46px; width:50px" class="badge" >
-                        <a [routerLink]="['/invoices', inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
-                   
+            <tr *ngFor="let inv of invo">
+                <td *ngIf="inv.status==='Sent'||inv.status==='Paid'" style="height: 46px; width:50px" class="badge">
+                    <a [routerLink]="['/invoices', inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
                 </td>
 
                 
@@ -36,7 +33,7 @@
 
                 <td style="height: 46px; width: 50px">{{inv.dateCreated | date: 'dd/MM/yyyy'}}</td>
                 <td style="height: 46px; width: 50px">{{inv.issueeOrganization}} </td>
-                <td style="height: 46px; width: 50px">${{inv.amount|number:'.2'}}</td>
+                <td style="height: 46px; width: 50px">${{inv.grandTotal||number:'.2-2'}}</td>
                 <td style="height: 46px; width: 50px">{{inv.dateDue}}</td>
                 <td style="height: 46px; width: 50px">{{inv.status}}</td>
                 
