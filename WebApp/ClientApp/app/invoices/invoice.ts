@@ -5,7 +5,7 @@ export interface IInvoice {
     issueeCareOf: string;
     clientContact: string;
     status: string;
-
+   
     dateCreated?: Date;
     gstNumber?: string;
     charitiesNumber?: string;

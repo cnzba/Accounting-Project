@@ -3,26 +3,26 @@ import { InvoiceService } from './invoice.service';
 import { InvoicelistComponent } from './invoicelist.component';
 import { RouterTestingModule } from '@angular/router/testing';
 
-xdescribe('InvoicelistComponent', () => {
-    let component: InvoicelistComponent;
-    let fixture: ComponentFixture<InvoicelistComponent>;
+describe('InvoicelistComponent', () => {
+  let component: InvoicelistComponent;
+  let fixture: ComponentFixture<InvoicelistComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [InvoicelistComponent],
-            providers: [InvoiceService],
-            imports: [RouterTestingModule]
-        })
-            .compileComponents();
-    }));
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+        declarations: [InvoicelistComponent],
+         providers: [InvoiceService],
+        imports: [RouterTestingModule]
+    })
+    .compileComponents();
+  }));
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(InvoicelistComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(InvoicelistComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    xit('should create', () => {
-        expect(component).toBeTruthy();
-    });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });
