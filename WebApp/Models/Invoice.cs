@@ -8,9 +8,9 @@ using System.Linq;
 
 namespace WebApp.Models
 {
-    public enum InvoiceStatus { New = 0, Sent = 1, Paid = 2 }
+    public enum InvoiceStatus { New = 0, Draft = 1, Sent = 2, Paid = 3, Cancelled = 4 }
 
-    public class Invoice
+    public class Invoice : IInvoiceHeader
     {
         public Invoice()
         {
@@ -18,13 +18,14 @@ namespace WebApp.Models
         }
 
         #region Properties
-        [JsonIgnore] [BindNever]
+        [JsonIgnore]
+        [BindNever]
         public int Id { get; set; } // the PK is not visible to the client
         public string InvoiceNumber { get; set; } // the alternate key is used instead
 
         // read/write for the client
-        public string IssueeOrganization { get; set; }
-        public string IssueeCareOf { get; set; }
+        public string ClientName { get; set; }
+        public string ClientContactPerson { get; set; }
         public string ClientContact { get; set; }
         public DateTime DateDue { get; set; }
 
@@ -66,7 +67,7 @@ namespace WebApp.Models
         {
             get
             {
-                return SubTotal + SubTotal*GstRate;
+                return SubTotal + SubTotal * GstRate;
             }
         }
         #endregion

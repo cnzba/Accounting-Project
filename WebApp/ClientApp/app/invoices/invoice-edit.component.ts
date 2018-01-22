@@ -40,7 +40,7 @@ export class InvoiceEditComponent implements OnInit {
     onSubmit() {
         this.submitted = true;
         console.log(this.modifyInvoice);
-        // this.invoiceService.saveDraftInvoice(this.modifyInvoice).subscribe(invoices =>  console.log(invoices) );
+        this.invoiceService.saveDraftInvoice(this.modifyInvoice).subscribe(invoices =>  console.log(invoices) );
     }
 
     ngOnInit() {

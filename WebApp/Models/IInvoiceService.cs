@@ -8,6 +8,7 @@ namespace WebApp
         bool CreateInvoice(Invoice invoice);
         string GenerateInvoiceNumber();
         IEnumerable<Invoice> GetAllInvoices();
+        IEnumerable<IInvoiceHeader> GetInvoiceHeaders();
         Invoice GetInvoice(string invoiceNumber);
         bool InvoiceExists(string invoiceNumber);
         bool ModifyInvoice(Invoice invoice);

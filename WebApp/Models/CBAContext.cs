@@ -30,7 +30,7 @@ namespace WebApp.Models
                 entity.Property(e => e.DateDue).HasColumnType("date");
 
                 entity.Property(e => e.InvoiceNumber).IsRequired();
-                entity.Property(e => e.IssueeOrganization).IsRequired();
+                entity.Property(e => e.ClientName).IsRequired();
 
                 entity.Property(e => e.GstNumber).IsRequired();
                 entity.Property(e => e.CharitiesNumber).IsRequired();
@@ -45,7 +45,7 @@ namespace WebApp.Models
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.Login).IsRequired();
+                entity.Property(e => e.Email).IsRequired();
                 entity.Property(e => e.Name).IsRequired();
                 entity.Property(e => e.Password).IsRequired();
             });
