@@ -38,8 +38,8 @@ namespace UnitTestProject
             var service = new InvoiceService(context, options);
             var invoice = new Invoice()
             {
-                IssueeOrganization = "Electrocal Commission",
-                IssueeCareOf = "Glen Clarke",
+                ClientName = "Electrocal Commission",
+                ClientContactPerson = "Glen Clarke",
                 ClientContact = "530/546A Memorial Ave\\r\\nChristchurch Airport\\r\\nChristchurch 8053",
                 InvoiceLine = new List<InvoiceLine>()
                     {

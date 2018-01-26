@@ -24,7 +24,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public IActionResult GetInvoice()
         {
-            var invoices = service.GetAllInvoices();
+            var invoices = service.GetInvoiceHeaders();
 
             if (invoices == null)
             {

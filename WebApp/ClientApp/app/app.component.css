@@ -9,7 +9,7 @@
     z-index: 10;
 }
 
-.glyphicon-spin {
+.oi-spin {
     -webkit-animation: spin 1000ms infinite linear;
     animation: spin 1000ms infinite linear;
 }

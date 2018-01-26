@@ -47,10 +47,6 @@ namespace WebApp.Controllers
                 ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
                 await HttpContext.SignInAsync(principal);
 
-                //Just redirect to our index after logging in. 
-                //return Redirect("/");
-
-
                 return Ok(value: userName);
             }
             return View();
@@ -75,8 +71,8 @@ namespace WebApp.Controllers
                 return (false, string.Empty);
             }
 
-            if (User.Login.Equals(username) && User.Password.Equals(_crypto.HashMD5(password)))
-                return (true, User.Name);
+            if (User.Email.Equals(username) && User.Password.Equals(_crypto.HashMD5(password)))
+                return (true, User.Email);
             else
                 return (false, "");
         }

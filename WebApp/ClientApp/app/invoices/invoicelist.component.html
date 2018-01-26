@@ -1,28 +1,55 @@
-    <h2>View Invoice List</h2>
-    
-        <table style="height: 138px; width: 639px" class="invoices" align="center">
-            <thead>
-                <tr>
-                    <td style="height: 46px; width: 160px">Invoice Number</td>
-                    <td style="height: 46px; width: 160px">Date</td>
-                    <td style="height: 46px; width: 160px">Client</td>
-                    <td style="height: 46px; width: 160px">Amount</td>
+<h2>View Invoice List</h2>
+<form>
+    <a [routerLink]="['/invoice/new']">
+        Create New Invoice
+    </a>
+    <table style="height: 138px; width: 639px" class="invoices" align="center">
+        <thead>
+            <tr>
+                <td style="height: 46px; width: 160px">Invoice Number</td>
+                
+                <td style="height: 46px; width: 160px">Date Created</td>
+                <td style="height: 46px; width: 160px">Client Name</td>
+                <td style="height: 46px; width: 160px">Amount</td>
+                <td style="height: 46px; width: 160px">Due Date</td>
+                <td style="height: 46px; width: 160px">Status</td>
 
-                </tr>
 
-            </thead>
+            </tr>
 
-            <tbody>
-                <tr *ngFor="let inv of invo">
-                    <td style="height: 46px; width:50px">
-                    <a [routerLink]="['/invoices', inv.invoiceNumber]">{{inv.invoiceNumber}}</a></td>
-                        <td style="height: 46px; width: 50px">{{inv.dateCreated | date: 'dd/MM/yyyy'}}</td>
-                        <td style="height: 46px; width: 50px">{{inv.issueeOrganization}} </td>
-                        <td style="height: 46px; width: 50px">{{0//inv.amount}}</td>
+        </thead>
 
-</tr>
-            </tbody>
+        <tbody>
+            <tr *ngFor="let inv of invo">
+                <td *ngIf="inv.status==='Sent'||inv.status==='Paid'" style="height: 46px; width:50px" class="badge">
+                    <a [routerLink]="['/invoices', inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
+                </td>
 
-        </table>
-   
-<a href="Editable Invoice"> Editable Invoice</a>
+                
+      <td *ngIf="inv.status==='New'||inv.status==='Draft'" style="height: 46px; width:50px" class="badge">
+          <a [routerLink]="['/invoices/edit/',inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
+      </td>
+      
+
+                <td style="height: 46px; width: 50px">{{inv.dateCreated | date: 'dd/MM/yyyy'}}</td>
+                <td style="height: 46px; width: 50px">{{inv.clientName}} </td>
+                <td style="height: 46px; width: 50px">${{inv.grandTotal|number:'.2-2'}}</td>
+                <td style="height: 46px; width: 50px">{{inv.dateDue}}</td>
+                <td style="height: 46px; width: 50px">{{inv.status}}</td>
+                
+                <td *ngIf="inv.status==='Draft'" style="height: 46px; width: 50px">
+                    <button class="btn btn-default" type="button" (click)="deleteFieldValue(i)">Delete</button>
+                </td>
+                    
+
+            </tr>
+
+
+        </tbody>
+
+    </table>
+</form>
+
+
+
+

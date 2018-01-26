@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { NgForm } from '@angular/forms';
 import 'rxjs/add/operator/map';
 
 import { AppComponent } from './app.component';
@@ -15,6 +16,7 @@ import { UserService } from "./users/user.service";
 import { HttpModule } from "@angular/http";
 import { InvoicelistComponent } from "./invoices/invoicelist.component";
 import { InvoicedetailComponent } from "./invoices/invoicedetail.component";
+import { InvoiceEditComponent } from "./invoices/invoice-edit.component";
 import { InvoiceService } from "./invoices/invoice.service";
 import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
 import { ForgotPasswordComponent } from './login/forgot-password.component';
@@ -28,6 +30,7 @@ import { ChangePasswordComponent } from './login/change-password.component';
         LoginComponent,
         InvoicelistComponent,
         InvoicedetailComponent,
+        InvoiceEditComponent,
         ForgotPasswordComponent,
         ChangePasswordComponent
     ],
@@ -43,6 +46,8 @@ import { ChangePasswordComponent } from './login/change-password.component';
                 resolve: { invoices: InvoiceListResolver }
             },
             { path: "invoices/:id", component: InvoicedetailComponent, canActivate: [AuthGuard] },
+            { path: "invoices/edit/:id", component: InvoiceEditComponent },
+            { path: "invoice/new", component: InvoiceEditComponent },
             { path: "forgot-password", component: ForgotPasswordComponent },
             { path: "change-password", component: ChangePasswordComponent },
             // otherwise redirect to the invoice list

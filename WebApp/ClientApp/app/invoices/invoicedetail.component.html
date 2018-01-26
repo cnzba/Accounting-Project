@@ -1,10 +1,10 @@
 <section class="sec">
     <div class="cont" *ngIf="selectedinvoi">
-        <h2>Detail View of {{selectedinvoi.id}} </h2>
+        <h2>Detail View of {{selectedinvoi.invoiceNumber}} </h2>
         <table class="t1">
             <tr class="tr1">
                 <td style="height: 46px;width: 132px">Client Name</td>
-                <td style="height: 46px;width: 238px">{{selectedinvoi.issueeOrganization}}</td>
+                <td style="height: 46px;width: 238px">{{selectedinvoi.clientName}}</td>
                 <td style="height: 46px;width: 23px"></td>
                 <td style="height: 46px;width: 131px">Invoice Number</td>
                 <td style="height: 46px;width: 146px">{{selectedinvoi.invoiceNumber}}</td>
@@ -15,7 +15,6 @@
                 <td style="width: 23px"></td>
                 <td style="width: 131px">Date Created</td>
                 <td style="width: 146px">{{selectedinvoi.dateCreated | date: 'dd/MM/yyyy'}}</td>
-
             </tr>
             <tr class="tr2">
                 <td style="width: 132px">Status</td>
@@ -23,7 +22,6 @@
                 <td style="width: 23px"></td>
                 <td style="width: 131px">GST Number</td>
                 <td style="width: 146px">{{selectedinvoi.gstNumber}}</td>
-
             </tr>
             <tr>
                 <td style="width: 132px">Due Date</td>
@@ -31,7 +29,6 @@
                 <td style="width: 23px"></td>
                 <td style="width: 131px">Charities Number</td>
                 <td style="width: 146px">{{selectedinvoi.charitiesNumber}}</td>
-
             </tr>
             <tr class="tr1">
                 <td colspan="4" style="height: 46px; width:146px">Description</td>
@@ -45,17 +42,14 @@
                 <td colspan="4"></td>
                 <td style="width: 146px"></td>
             </tr>
-
             <tr class="tr2" *ngIf="selectedinvoi.gst>0">
                 <td colspan="4" style="text-align:right">Sub Total</td>
                 <td style="width:146px">{{selectedinvoi.subTotal}}</td>
             </tr>
-
             <tr *ngIf="selectedinvoi.gst>0">
                 <td colspan="4" style="text-align:right">GST Amount</td>
                 <td style="width:146px">{{selectedinvoi.gst}}</td>
             </tr>
-
             <tr class="tr2">
                 <td colspan="4" style="text-align:right">Grand Total</td>
                 <td style="width:146px">{{selectedinvoi.grandTotal}}</td>

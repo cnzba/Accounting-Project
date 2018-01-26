@@ -6,26 +6,24 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/of';
 
 import { IInvoice } from './invoice';
 
 @Injectable()
 export class InvoiceService {
+    [x: string]: any;
     // private _invoiceUrl = 'assets/mockapi/invoices/invoices.json';
     private invoiceUrl = 'api/invoice';
 
     constructor(private http: HttpClient) { }
 
     getInvoices(): Observable<IInvoice[]> {
-        return this.http.get<IInvoice[]>(this.invoiceUrl)
-            .do(data => console.log('GetAll: ' + JSON.stringify(data)))
-            .catch(this.handleError);
+        return this.http.get<IInvoice[]>(this.invoiceUrl).catch(this.handleError);
     }
 
     getInvoice(invoiceNumber: string): Observable<IInvoice> {
-        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber)
-            .do(data => console.log('Get1: ' + JSON.stringify(data)))
-            .catch(this.handleError);
+        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber).catch(this.handleError);
     }
 
     createNewInvoice(): Observable<IInvoice> {
@@ -35,7 +33,7 @@ export class InvoiceService {
             + ("0" + today.getDate()).slice(-2)
             + "-xxx";
 
-        return Observable.of({invoiceNumber: fakeInvoiceNumber, issueeOrganization: "", issueeCareOf: "", clientContact: "", dateDue: null, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": null, subTotal: 0, grandTotal: 0 });
+        return Observable.of({invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: null, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": null, subTotal: 0, grandTotal: 0 });
     }
 
     saveDraftInvoice(invoice: IInvoice): Observable<IInvoice> {

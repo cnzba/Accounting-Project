@@ -41,7 +41,7 @@ namespace UnitTestProject
             Assert.AreEqual(lstUsers.Count, 3);
            
             // Test values
-            Assert.AreEqual(lstUsers[0].Login, CreateMoqUsersData().Where(a=> a.Id == lstUsers[0].Id).Select(a=> a.Login).FirstOrDefault());
+            Assert.AreEqual(lstUsers[0].Email, CreateMoqUsersData().Where(a=> a.Id == lstUsers[0].Id).Select(a=> a.Email).FirstOrDefault());
             Assert.AreEqual(lstUsers[0].Name, CreateMoqUsersData().Where(a => a.Id == lstUsers[0].Id).Select(a => a.Name).FirstOrDefault());
             Assert.AreEqual(lstUsers[0].Password, CreateMoqUsersData().Where(a => a.Id == lstUsers[0].Id).Select(a => a.Password).FirstOrDefault());
 
@@ -54,9 +54,9 @@ namespace UnitTestProject
         {
             return new List<User>
             {
-                new User { Id = 1, Active = true, Login = "Teste User001", Name = "test name1", Password = "123" },
-                new User { Id = 2, Active = true, Login = "Teste User002", Name = "test name2", Password = "123" },
-                new User { Id = 3, Active = true, Login = "Teste User003", Name = "test name3", Password = "123" },
+                new User { Id = 1, Active = true, Email = "Teste User001", Name = "test name1", Password = "123" },
+                new User { Id = 2, Active = true, Email = "Teste User002", Name = "test name2", Password = "123" },
+                new User { Id = 3, Active = true, Email = "Teste User003", Name = "test name3", Password = "123" },
 
             }.AsQueryable();
         }

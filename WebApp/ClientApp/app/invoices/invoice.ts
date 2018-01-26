@@ -1,11 +1,11 @@
 export interface IInvoice {
     invoiceNumber: string;
     dateDue: Date;
-    issueeOrganization: string;
-    issueeCareOf: string;
+    clientName: string;
+    clientContactPerson: string;
     clientContact: string;
     status: string;
-
+   
     dateCreated?: Date;
     gstNumber?: string;
     charitiesNumber?: string;

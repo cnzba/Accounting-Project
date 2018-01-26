@@ -11,9 +11,10 @@ using WebApp.Models;
 namespace WebApp.Migrations
 {
     [DbContext(typeof(CBAContext))]
-    partial class CBAContextModelSnapshot : ModelSnapshot
+    [Migration("20180122041121_forcepasswordchange")]
+    partial class forcepasswordchange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

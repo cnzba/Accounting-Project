@@ -6,16 +6,16 @@ import { InvoiceService } from "./invoice.service";
 import { IInvoice } from "./invoice";
 
 @Component({
-  selector: 'app-invoicedetail',
-  templateUrl: './invoicedetail.component.html',
-  styleUrls: ['./invoicedetail.component.css']
+    selector: 'app-invoicedetail',
+    templateUrl: './invoicedetail.component.html',
+    styleUrls: ['./invoicedetail.component.css']
 })
 export class InvoicedetailComponent implements OnInit {
     title: string = 'CBA Invoicing';
-    
+
     selectedinvoi: IInvoice;
     errorMessage: string;
-  
+
     constructor(
         private invoiceService: InvoiceService,
         private route: ActivatedRoute,
@@ -27,9 +27,10 @@ export class InvoicedetailComponent implements OnInit {
             .subscribe(invoices => {
                 this.selectedinvoi = invoices;
             });
-       
+
     }
     goBack(): void {
         this.location.back();
     }
 }
+

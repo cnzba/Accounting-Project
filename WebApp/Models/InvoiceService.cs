@@ -24,6 +24,11 @@ namespace WebApp
             return context.Invoice.Include("InvoiceLine").OrderBy(i => i.DateCreated).ToList();
         }
 
+        public IEnumerable<IInvoiceHeader> GetInvoiceHeaders()
+        {
+            return context.Invoice.Include("InvoiceLine").OrderBy(i => i.DateCreated).ToList();
+        }
+
         public Invoice GetInvoice(string invoiceNumber)
         {
             var invoice = context.Invoice.Include("InvoiceLine")
@@ -54,8 +59,8 @@ namespace WebApp
         {
             var invoiceToUpdate = context.Invoice.SingleOrDefault(n => n.InvoiceNumber == invoice.InvoiceNumber);
 
-            invoiceToUpdate.IssueeCareOf = invoice.IssueeCareOf;
-            invoiceToUpdate.IssueeOrganization = invoice.IssueeOrganization;
+            invoiceToUpdate.ClientContactPerson = invoice.ClientContactPerson;
+            invoiceToUpdate.ClientName = invoice.ClientName;
             invoiceToUpdate.ClientContact = invoice.ClientContact;
             invoiceToUpdate.DateDue = invoice.DateDue;
             invoiceToUpdate.Status = invoice.Status;

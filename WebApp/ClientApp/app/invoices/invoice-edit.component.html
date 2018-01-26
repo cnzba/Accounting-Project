@@ -1,97 +1,119 @@
-﻿<h2>Editable Invoice</h2>
-<table class="t1">
-    <tr class="tr1">
-        <td style="height: 46px;width: 132px">Client Name</td>
-        <td style="height: 46px;width: 238px">
-            <input type="text" ng-model="client_name" name="{{selectedinvoi.issueeOrganization}}" />
+<h2>Editable Invoice</h2>
+<form (ngSubmit)="onSubmit()" #invoice="ngForm">
+   
+    <a [routerLink]="['/invoices']">Back To List</a>
+    <a [routerLink]="['/invoices']">Cancel</a>
+   
+   <!--button (click)="create()">Create an Invoice</!--button>
+    <button (click)="modify()">Edit an Invoice</button-->
+        <table class="t1">
+        <tr class="tr1">
+            <td style="height: 46px;width: 132px">Client Name</td>
+            <td style="height: 46px;width: 238px">
+                <input type="text" [(ngModel)]="modifyInvoice.clientName" name="clientname" required />
 
-        </td>
-        <td style="height: 46px;width: 23px"></td>
-        <td style="height: 46px;width: 131px">Invoice Number</td>
-        <td style="height: 46px;width: 146px">{{selectedinvoi.invoiceNumber}}</td>
-    </tr>
+            </td>
+            <td style="height: 46px;width: 23px"></td>
+            <td style="height: 46px;width: 131px">Invoice Number</td>
+            <td style="height: 46px;width: 146px">{{modifyInvoice.invoiceNumber}}</td>
+        </tr>
 
-    <tr>
-        <td style="width: 132px">Client Contact</td>
-        <td style="width: 238px">
-            <input type="text" ng-model="client_contact" name="{{selectedinvoi.clientContact}}" />
-        </td>
-        <td style="width: 23px"></td>
-        <td style="width: 131px">Date Created</td>
-        <td style="width: 146px">{{selectedinvoi.date | date: 'dd/MM/yyyy'}}</td>
 
-    </tr>
-    <tr class="tr2">
-        <td style="width: 132px">Status</td>
-        <td style="width: 238px">
-            <input type="text" ng-model="status" name="{{selectedinvoi.status.status}}" />
-        </td>
-        <td style="width: 23px"></td>
-        <td style="width: 131px">GST Number</td>
-        <td style="width: 146px">{{selectedinvoi.gstnumber}}</td>
+        <tr>
+            <td style="width: 132px">Client Contact</td>
+            <td style="width: 238px">
+                <input type="text" [(ngModel)]="modifyInvoice.clientContact" name="clientcontact" />
+            </td>
+            <td style="width: 23px"></td>
+            <td style="width: 131px">Date Created</td>
+            <td style="width: 146px">{{modifyInvoice.dateCreated | date: 'dd/MM/yyyy'}}</td>
 
-    </tr>
-    <tr>
-        <td style="width: 132px">Due Date</td>
-        <td style="width: 238px"><input type="text" ng-model="due_date" name="{{selectedinvoi.dueDate | date: 'dd/MM/yyyy'}}" /></td>
-        <td style="width: 23px"></td>
-        <td style="width: 131px">Charities Number</td>
-        <td style="width: 146px">{{selectedinvoi.charitiesNumber}}</td>
+        </tr>
+        <tr class="tr2">
+            <td style="width: 132px">Status</td>
+            <td style="width: 238px">
+                <select required>
+                    <option value="New">New</option>
+                    <option value="Draft">Draft</option>
+                    <option value="Sent">Sent</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Cancelled">Cancelled</option>
 
-    </tr>
 
-    <tr>
-        <td colspan="4" style="height: 46px; width:146px">Description</td>
+                </select>
+            </td>
+            <td style="width: 23px"></td>
+            <td style="width: 131px">GST Number</td>
+            <td style="width: 146px">{{modifyInvoice.gstNumber}}</td>
 
-        <td style="height: 46px; width: 146px">Amount</td>
+        </tr>
+        <tr>
+            <td style="width: 132px">Due Date</td>
+            <td style="width: 238px"><input type="text" [(ngModel)]="modifyInvoice.dateDue" name="duedate" /></td>
+            <td style="width: 23px"></td>
+            <td style="width: 131px">Charities Number</td>
+            <td style="width: 146px">{{modifyInvoice.charitiesNumber}}</td>
 
-    </tr>
+        </tr>
 
-    <tr *ngFor='let invoiceLine of selectedinvoiinvoiceLine'>
+        <tr>
+            <td colspan="4" style="height: 46px; width:146px">Description</td>
+
+            <td style="height: 46px; width: 146px">Amount</td>
+
+        </tr>
+
+        <tr *ngFor='let invoiceLine of modifyInvoice.invoiceLine'>
         <td colspan="4" style="height: 46px; width:146px">
-            <input ng-model="invoiceLine.description" class="form-control" type="text" name="{{invoiceLine.description}}" />
+            <input [(ngModel)]="invoiceLine.description" class="form-control" type="text" name="description" />
         </td>
         <td style="height: 46px; width: 146px">
-            <input ng-model="invoiceLine.amount" class="form-control" type="text" name="{{invoiceLine.amount}}" />
+            <input [(ngModel)]="invoiceLine.amount" class="form-control" type="text" name="amount" />
         </td>
 
-        <td>
+        <!--td>
             <button class="btn btn-default" type="button" (click)="deleteFieldValue(i)">Delete</button>
         </td>
 
     </tr>
     <tr>
         <td colspan="4" style="height: 46px; width:146px">
-            <input class="form-control" type="text" id="newAttributedescription" ng-model="newAttribute.description" name="newAttributedescription" />
+            <input class="form-control" type="text" id="newAttributedescription"  [(ngModel)]="newAttribute.description" name="newAttributedescription" />
         </td>
         <td style="height: 46px; width: 146px">
-            <input class="form-control" type="text" id="newAttributeamount" ng-model="newAttribute.amount" name="newAttributeamount" />
+            <input class="form-control" type="text" id="newAttributeamount"  [(ngModel)]="newAttribute.amount" name="newAttributeamount" />
         </td>
 
         <td>
             <button class="btn btn-default" type="button" (click)="addFieldValue()">Add</button>
         </td>
-    </tr>
-    <tr>
-        <td colspan="4"></td>
-        <td style="width: 146px"></td>
-    </tr>
+    </tr-->
+        <tr>
+            <td colspan="4"></td>
+            <td style="width: 146px"></td>
+        </tr>
 
-    <tr class="tr2" *ngIf="selectedinvoi.gst>0">
-        <td colspan="4" style="text-align:right">Sub Total</td>
-        <td style="width:146px">{{selectedinvoi.subTotal}}</td>
-    </tr>
+        <tr class="tr2" *ngIf="modifyInvoice.gst>0">
+            <td colspan="4" style="text-align:right">Sub Total</td>
+            <td style="width:146px">{{modifyInvoice.subTotal}}</td>
+        </tr>
 
-    <tr *ngIf="selectedinvoi.gst>0">
-        <td colspan="4" style="text-align:right">GST Amount</td>
-        <td style="width:146px">{{selectedinvoi.gst}}</td>
-    </tr>
+        <tr *ngIf="modifyInvoice.gst>0">
+            <td colspan="4" style="text-align:right">GST Amount</td>
+            <td style="width:146px">{{modifyInvoice.gstRate}}</td>
+        </tr>
 
-    <tr class="tr2">
-        <td colspan="4" style="text-align:right">Grand Total</td>
-        <td style="width:146px">{{selectedinvoi.grandTotal}}</td>
-    </tr>
+        <tr class="tr2">
+            <td colspan="4" style="text-align:right">Grand Total</td>
+            <td style="width:146px">{{modifyInvoice.grandTotal}}</td>
+        </tr>
 
-</table>
+
+    </table>
+   
+    <button type="submit" class=" btn-submit" >Submit</button>
+    <!--input type="text" #myinput /-->
+    <button (click)="reset(myinput)">Reset</button>
+</form>
 
 
