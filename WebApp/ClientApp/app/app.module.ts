@@ -21,6 +21,7 @@ import { InvoiceService } from "./invoices/invoice.service";
 import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
 import { ForgotPasswordComponent } from './login/forgot-password.component';
 import { ChangePasswordComponent } from './login/change-password.component';
+import { ForgotPasswordService } from './login/forgot-password.service';
 
 
 @NgModule({
@@ -61,6 +62,7 @@ import { ChangePasswordComponent } from './login/change-password.component';
         AlertService,
         AuthenticationService,
         UserService,
+        ForgotPasswordService
     ],
     bootstrap: [AppComponent]
 })

@@ -116,8 +116,17 @@ namespace WebApp.Models
                     Active = true
                 };
 
+                var user3 = new User()
+                {
+                    Email = "j.george@cbanewzealand.org.nz",
+                    Name = "John George",
+                    Password = _cryptography.HashMD5("john"),
+                    Active = true
+                };
+
                 _context.User.Add(user1);
                 _context.User.Add(user2);
+                _context.User.Add(user3);
 
                 _context.SaveChanges();
             }
