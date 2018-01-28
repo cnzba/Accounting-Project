@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ComponentModel.DataAnnotations;
 
 namespace UnitTestProject
 {
@@ -20,10 +21,13 @@ namespace UnitTestProject
         public InvoiceService_CreateInvoiceShould()
         {
             var ioptions = new Mock<IOptions<CBAOptions>>();
-            var cbaoptions = new Mock<CBAOptions>().Object;
+            var cbaoptions = new Mock<CBAOptions>();
 
+            cbaoptions.SetupAllProperties();
+            cbaoptions.Object.CharitiesNumber = "1234567";
+            cbaoptions.Object.GSTNumber = "11-111-111";
 
-            ioptions.Setup(s => s.Value).Returns(cbaoptions);
+            ioptions.Setup(s => s.Value).Returns(cbaoptions.Object);
             options = ioptions.Object;
 
             dboptions = new DbContextOptionsBuilder<CBAContext>()
@@ -36,7 +40,7 @@ namespace UnitTestProject
             // arrange
             var context = new CBAContext(dboptions);
             var service = new InvoiceService(context, options);
-            var invoice = new Invoice()
+            var invoice = new DraftInvoice()
             {
                 ClientName = "Electrocal Commission",
                 ClientContactPerson = "Glen Clarke",
@@ -64,6 +68,34 @@ namespace UnitTestProject
             var cleancontext = new CBAContext(dboptions);
             Assert.IsTrue(context.Invoice.Any());
             Assert.IsTrue(context.Invoice.FirstOrDefault().InvoiceLine.Count() == 2);
+        }
+
+        [TestMethod]
+        public void CreateInvoiceShould_RequireProperties()
+        {
+            // arrange
+            var context = new CBAContext(dboptions);
+            var service = new InvoiceService(context, options);
+            var invoice = new DraftInvoice()
+            {
+                ClientName = "",
+                ClientContactPerson = "Glen Clarke",
+                ClientContact = "530/546A Memorial Ave\\r\\nChristchurch Airport\\r\\nChristchurch 8053",
+                InvoiceLine = null
+            };
+
+            // act
+            bool success = false; 
+
+            try { 
+                var result = service.CreateInvoice(invoice);
+            }
+            catch(ValidationException ve)
+            {
+                success = true;
+            }
+            // assert
+            Assert.IsTrue(success);
         }
 
     }

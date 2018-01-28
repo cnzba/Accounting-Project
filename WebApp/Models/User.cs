@@ -11,7 +11,7 @@ namespace WebApp.Models
     {
         [JsonIgnore] [BindNever]
         public int Id { get; set; }
-        [DataType(DataType.EmailAddress)]
+        [EmailAddress]
         public string Email { get; set; }
         public string Name { get; set; }
         [JsonIgnore] [BindNever]

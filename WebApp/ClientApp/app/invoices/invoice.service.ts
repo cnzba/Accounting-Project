@@ -19,11 +19,13 @@ export class InvoiceService {
     constructor(private http: HttpClient) { }
 
     getInvoices(): Observable<IInvoice[]> {
-        return this.http.get<IInvoice[]>(this.invoiceUrl).catch(this.handleError);
+        return this.http.get<IInvoice[]>(this.invoiceUrl)
+            .catch(this.handleError);
     }
 
     getInvoice(invoiceNumber: string): Observable<IInvoice> {
-        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber).catch(this.handleError);
+        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber)
+            .catch(this.handleError);
     }
 
     createNewInvoice(): Observable<IInvoice> {
@@ -33,7 +35,7 @@ export class InvoiceService {
             + ("0" + today.getDate()).slice(-2)
             + "-xxx";
 
-        return Observable.of({invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: null, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": null, subTotal: 0, grandTotal: 0 });
+        return Observable.of({ invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: null, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": null, subTotal: 0, grandTotal: 0 });
     }
 
     saveDraftInvoice(invoice: IInvoice): Observable<IInvoice> {
@@ -65,15 +67,25 @@ export class InvoiceService {
     private handleError(err: HttpErrorResponse) {
         // in a real world app, we may send the server to some remote logging infrastructure
         // instead of just logging it to the console
+
         let errorMessage = '';
         if (err.error instanceof Error) {
             // A client-side or network error occurred. Handle it accordingly.
             errorMessage = `An error occurred: ${err.error.message}`;
         } else {
             // The backend returned an unsuccessful response code.
-            // The response body may contain clues as to what went wrong,
-            errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`;
+            // The response body may contain clues as to what went wrong
+            if (err.status == 400) {
+                let tmpMessage: string = '';
+
+                tmpMessage = Object.keys(err.error)[0] + ': ' + err.error[Object.keys(err.error)[0]];
+                if (tmpMessage[0] == '0') tmpMessage = err.error;
+
+                errorMessage = `${tmpMessage}`;
+            }
+            else errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`;
         }
+
         console.error(errorMessage);
         return Observable.throw(errorMessage);
     }

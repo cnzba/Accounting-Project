@@ -43,13 +43,11 @@ namespace UnitTestProject
 
             var service = new InvoiceService(context, options);
             var originalInvoice = context.Invoice.Include("InvoiceLine")
-                .SingleOrDefault(t => t.InvoiceNumber == "INV-00050");
+                .SingleOrDefault(t => t.InvoiceNumber == "20171005-001");
 
-            var modifiedInvoice = new Invoice()
+            var modifiedInvoice = new DraftInvoice()
             {
-                InvoiceNumber = "INV-00050",
-                DateCreated = new DateTime(2017, 12, 31),
-                Status = InvoiceStatus.Sent,
+                InvoiceNumber = "20171005-001",
                 InvoiceLine = new List<InvoiceLine>()
                     {
                         new InvoiceLine()

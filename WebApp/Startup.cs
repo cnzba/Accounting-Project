@@ -45,7 +45,7 @@ namespace WebApp
                 options.LoginPath = "/Account/Login/";
                 options.Cookie.Name = "InvoiceCbaNZ";
                 // Controls how much time the authentication ticket stored in the cookie will remain valid from the point it is created.
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(240);
             });
 
             services.AddSwaggerGen(c =>

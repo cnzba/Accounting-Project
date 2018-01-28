@@ -25,10 +25,10 @@ namespace UnitTestProject
             var controller = new InvoiceController(service.Object, logger);
 
             controller.ModelState.AddModelError("fake", "required");
-            service.Setup(s => s.ModifyInvoice(It.IsAny<Invoice>())).Returns(true);
+            service.Setup(s => s.ModifyInvoice(It.IsAny<DraftInvoice>())).Returns(true);
 
             //act
-            var result = controller.ModifyInvoice("", new Invoice() { InvoiceNumber = "" });
+            var result = controller.ModifyInvoice("", new DraftInvoice() { InvoiceNumber = "" });
 
             //assert
             Assert.IsTrue(result is BadRequestObjectResult);
@@ -41,10 +41,10 @@ namespace UnitTestProject
             var service = new Mock<IInvoiceService>();
             var controller = new InvoiceController(service.Object, logger);
 
-            service.Setup(s => s.ModifyInvoice(It.IsAny<Invoice>())).Returns(true);
+            service.Setup(s => s.ModifyInvoice(It.IsAny<DraftInvoice>())).Returns(true);
 
             //act
-            var result = controller.ModifyInvoice("", new Invoice() { InvoiceNumber = "" });
+            var result = controller.ModifyInvoice("", new DraftInvoice() { InvoiceNumber = "" });
 
             //assert
             Assert.IsTrue(result is OkObjectResult);
@@ -57,10 +57,10 @@ namespace UnitTestProject
             var service = new Mock<IInvoiceService>();
             var controller = new InvoiceController(service.Object, logger);
 
-            service.Setup(s => s.ModifyInvoice(It.IsAny<Invoice>())).Returns(false);
+            service.Setup(s => s.ModifyInvoice(It.IsAny<DraftInvoice>())).Returns(false);
 
             //act
-            var result = controller.ModifyInvoice("", new Invoice() { InvoiceNumber = "" });
+            var result = controller.ModifyInvoice("", new DraftInvoice() { InvoiceNumber = "" });
 
             //assert
             Assert.IsTrue(result is BadRequestObjectResult);
@@ -74,7 +74,7 @@ namespace UnitTestProject
             var controller = new InvoiceController(service.Object, logger);
 
             //act
-            var result = controller.ModifyInvoice("", new Invoice() { InvoiceNumber = "x" });
+            var result = controller.ModifyInvoice("", new DraftInvoice() { InvoiceNumber = "x" });
 
             //assert
             Assert.IsTrue(result is BadRequestResult);

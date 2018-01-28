@@ -32,15 +32,7 @@
         <tr class="tr2">
             <td style="width: 132px">Status</td>
             <td style="width: 238px">
-                <select required>
-                    <option value="New">New</option>
-                    <option value="Draft">Draft</option>
-                    <option value="Sent">Sent</option>
-                    <option value="Paid">Paid</option>
-                    <option value="Cancelled">Cancelled</option>
-
-
-                </select>
+              {{modifyInvoice.status}}
             </td>
             <td style="width: 23px"></td>
             <td style="width: 131px">GST Number</td>
@@ -49,7 +41,7 @@
         </tr>
         <tr>
             <td style="width: 132px">Due Date</td>
-            <td style="width: 238px"><input type="text" [(ngModel)]="modifyInvoice.dateDue" name="duedate" /></td>
+            <td style="width: 238px"><input type="date" [ngModel] ="modifyInvoice.dateDue | date:'yyyy-MM-dd'" (ngModelChange)="modifyInvoice.dateDue = $event" name="duedate" /></td>
             <td style="width: 23px"></td>
             <td style="width: 131px">Charities Number</td>
             <td style="width: 146px">{{modifyInvoice.charitiesNumber}}</td>
@@ -111,9 +103,8 @@
 
     </table>
    
-    <button type="submit" class=" btn-submit" >Submit</button>
-    <!--input type="text" #myinput /-->
-    <button (click)="reset(myinput)">Reset</button>
+    <button type="submit" class="btn btn-success" >Submit</button>
+    <button type="button" class="btn btn-secondary" (click)="onReset()">Reset</button>
 </form>
 
 
