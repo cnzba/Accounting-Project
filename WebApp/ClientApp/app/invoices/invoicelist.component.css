@@ -1,89 +1,42 @@
+
+table,tr,td{
+    border: double;
+}
 .selected {
     background-color: #CFD8DC !important;
     color: black;
 }
+a {
+    font-family: 'Times New Roman', Times, serif;
+
+}
 
 .invoices {
-    margin: 0 0 2em 0;
-    list-style-type: none;
-    padding: 0;
-    width: 15em;
-}
-
-
-table {
-    border: double;
-}
-
-h1 {
-    color: blue;
-}
-
-.invoices li {
     cursor: pointer;
     position: relative;
     left: 0;
-    background-color: red;
-    margin: .5em;
+    font-family: 'Times New Roman', Times, serif;
+    // margin: .5em;
     padding: .3em 0;
-    height: 1.6em;
     border-radius: 4px;
+    text-align: center;
 }
 
-    .invoices li.selected:hover {
+    .invoices .selected:hover {
         background-color: gray !important;
         color: white;
     }
-
-    .invoices li:hover {
+    .invoices tr:hover {
         color: #607D8B;
         background-color: #DDD;
         left: .1em;
     }
-
-.invoices .text {
-    position: relative;
-    top: -3px;
-}
-
-table, th, td {
-    border: 1px dotted black;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 5px;
-    text-align: left;
-}
-
-.tr1 {
-    background-color: gainsboro;
-    border-top: 2px solid black;
-}
-
-.t1 {
-    border-bottom: 2px solid black;
-}
+    thead {
+        font-weight:bold;
+       text-align:center;
+        font-family:'Times New Roman', Times, serif;
+    }
+   
 
 
 
-.tr2 {
-    background-color: gainsboro;
-}
-
-thead {
-    width: 100%;
-    background-color: gainsboro;
-}
-
-.invoices .badge {
-    font-size: small;
-    color: black;
-    padding: 0.8em 0.7em 0 0.7em;
-    line-height: 1em;
-    position: relative;
-    left: -1px;
-    top: -4px;
-    height: 1.8em;
-    margin-right: .8em;
-}
