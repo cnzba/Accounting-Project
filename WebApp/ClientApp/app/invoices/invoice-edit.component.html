@@ -1,12 +1,10 @@
 <h2>Editable Invoice</h2>
 <form (ngSubmit)="onSubmit()" #invoice="ngForm">
-   
-    <a [routerLink]="['/invoices']">Back To List</a>
-    <a [routerLink]="['/invoices']">Cancel</a>
-   
-   <!--button (click)="create()">Create an Invoice</!--button>
-    <button (click)="modify()">Edit an Invoice</button-->
-        <table class="t1">
+
+    <a class="btn btn-secondary" role="button" [routerLink]="['/invoices']">Back To List</a>
+    <a class="btn btn-secondary" role="button" [routerLink]="['/invoices']">Cancel</a>
+
+    <table class="table">
         <tr class="tr1">
             <td style="height: 46px;width: 132px">Client Name</td>
             <td style="height: 46px;width: 238px">
@@ -32,7 +30,7 @@
         <tr class="tr2">
             <td style="width: 132px">Status</td>
             <td style="width: 238px">
-              {{modifyInvoice.status}}
+                {{modifyInvoice.status}}
             </td>
             <td style="width: 23px"></td>
             <td style="width: 131px">GST Number</td>
@@ -41,7 +39,7 @@
         </tr>
         <tr>
             <td style="width: 132px">Due Date</td>
-            <td style="width: 238px"><input type="date" [ngModel] ="modifyInvoice.dateDue | date:'yyyy-MM-dd'" (ngModelChange)="modifyInvoice.dateDue = $event" name="duedate" /></td>
+            <td style="width: 238px"><input type="date" [ngModel]="modifyInvoice.dateDue | date:'yyyy-MM-dd'" (ngModelChange)="modifyInvoice.dateDue = $event" name="duedate" /></td>
             <td style="width: 23px"></td>
             <td style="width: 131px">Charities Number</td>
             <td style="width: 146px">{{modifyInvoice.charitiesNumber}}</td>
@@ -55,56 +53,44 @@
 
         </tr>
 
-        <tr *ngFor='let invoiceLine of modifyInvoice.invoiceLine'>
-        <td colspan="4" style="height: 46px; width:146px">
-            <input [(ngModel)]="invoiceLine.description" class="form-control" type="text" name="description" />
-        </td>
-        <td style="height: 46px; width: 146px">
-            <input [(ngModel)]="invoiceLine.amount" class="form-control" type="text" name="amount" />
-        </td>
-
-        <!--td>
-            <button class="btn btn-default" type="button" (click)="deleteFieldValue(i)">Delete</button>
-        </td>
-
-    </tr>
-    <tr>
-        <td colspan="4" style="height: 46px; width:146px">
-            <input class="form-control" type="text" id="newAttributedescription"  [(ngModel)]="newAttribute.description" name="newAttributedescription" />
-        </td>
-        <td style="height: 46px; width: 146px">
-            <input class="form-control" type="text" id="newAttributeamount"  [(ngModel)]="newAttribute.amount" name="newAttributeamount" />
-        </td>
-
-        <td>
-            <button class="btn btn-default" type="button" (click)="addFieldValue()">Add</button>
-        </td>
-    </tr-->
+        <tr *ngFor='let il of modifyInvoice.invoiceLine; index as i; first as isFirst; last as isLast'>
+            <td colspan="4" style="height: 46px; width:146px">
+                <input [(ngModel)]="il.description" class="form-control" type="text" name="description{{i}}" />
+            </td>
+            <td style="height: 46px; width: 146px">
+                <input [ngModel]="il.amount" (ngModelChange)="il.amount=$event"
+                       class="form-control" type="text" name="amount{{i}}" />
+            </td>
+            <td>
+                <button class="btn btn-danger" type="button" (click)="deleteLineItem(i)">Delete</button>
+            </td>
+            <td>
+                <button *ngIf="!isFirst" class="btn btn-secondary" type="button" (click)="moveItemUp(i)">Up</button>
+            </td>
+            <td>
+                <button *ngIf="!isLast" class="btn btn-secondary" type="button" (click)="moveItemDown(i)">Down</button>
+            </td>
+        </tr>
         <tr>
             <td colspan="4"></td>
             <td style="width: 146px"></td>
         </tr>
 
-        <tr class="tr2" *ngIf="modifyInvoice.gst>0">
-            <td colspan="4" style="text-align:right">Sub Total</td>
-            <td style="width:146px">{{modifyInvoice.subTotal}}</td>
-        </tr>
-
-        <tr *ngIf="modifyInvoice.gst>0">
-            <td colspan="4" style="text-align:right">GST Amount</td>
-            <td style="width:146px">{{modifyInvoice.gstRate}}</td>
-        </tr>
-
+   
         <tr class="tr2">
             <td colspan="4" style="text-align:right">Grand Total</td>
-            <td style="width:146px">{{modifyInvoice.grandTotal}}</td>
+            <td style="width:146px">{{invoiceService.computeTotal(modifyInvoice) |number:'.2-2'}}</td>
+        </tr>
+        <tr class="tr2">
+            <td colspan="4" style="text-align:right">Includes GST of</td>
+            <td style="width:146px">{{invoiceService.computeGST(modifyInvoice) |number:'.2-2'}}</td>
         </tr>
 
-
     </table>
-   
-    <button type="submit" class="btn btn-success" >Submit</button>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
     <button type="button" class="btn btn-secondary" (click)="onReset()">Reset</button>
+    <button type="button" class="btn btn-success" (click)="addLineItem()">Add</button>
 </form>
 
 

@@ -90,7 +90,7 @@ namespace UnitTestProject
             try { 
                 var result = service.CreateInvoice(invoice);
             }
-            catch(ValidationException ve)
+            catch(ValidationException)
             {
                 success = true;
             }

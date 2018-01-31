@@ -5,7 +5,7 @@ import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import { InvoiceService } from "./invoice.service";
-import { IInvoice } from "./invoice";
+import { Invoice, IInvoice, IInvoiceLine, InvoiceLine } from "./invoice";
 import { AlertService } from "../alert/alert.service";
 
 @Component({
@@ -20,40 +20,44 @@ export class InvoiceEditComponent implements OnInit {
         private location: Location,
         private alertService: AlertService) { }
 
-    private modifyInvoice: IInvoice;
+    private modifyInvoice: IInvoice = new Invoice();
     private resetInvoice: IInvoice;
 
-    // private modifyInvoice: any[] = [];
+    private addLineItem() {
+        this.modifyInvoice.invoiceLine.push(new InvoiceLine());
+     }
 
-    //< private newAttribute: any = {};
+    private deleteLineItem(i : number) {
+        this.modifyInvoice.invoiceLine.splice(i, 1);
+    }
 
-    // addFieldValue() {
-    // this.modifyInvoice.push(this.newAttribute)
-    //   this.newAttribute = {};
-    // }
+    private moveItemUp(i : number){
+        if(i<=0) return;
+        let il = this.modifyInvoice.invoiceLine;
 
-    // deleteFieldValue(index) {
-    //      this.modifyInvoice.splice(index, 1);
-    //  }
-    // reset(input: HTMLInputElement) {
-    // input.value = '';
-    // }
-    submitted = false;
+        [il[i-1], il[i]] = [il[i], il[i-1]];
+    }
 
-    onSubmit() {
-        this.submitted = true;
-        console.log(this.modifyInvoice);
-        this.invoiceService.saveDraftInvoice(this.modifyInvoice)
-            .subscribe(invoice => {
-                this.resetInvoice = this.deepCopyInvoice(invoice);
-                this.alertService.success("Invoice saved");
-                console.log(invoice);
-            },
-            ((err: string) => this.alertService.error(err)));
+    private moveItemDown(i : number){
+        let il = this.modifyInvoice.invoiceLine;
+        if(i>= (il.length-1))return;
+
+        [il[i+1], il[i]] = [il[i], il[i+1]];
     }
 
     private deepCopyInvoice(invoice: IInvoice) : IInvoice {
         return JSON.parse(JSON.stringify(invoice));
+    }
+
+    onSubmit() {
+        this.invoiceService.saveDraftInvoice(this.modifyInvoice)
+            .subscribe(invoice => {
+                this.resetInvoice = this.deepCopyInvoice(invoice);
+                this.modifyInvoice = invoice;
+                this.alertService.success("Invoice saved");
+                console.log(invoice);
+            },
+            ((err: string) => this.alertService.error(err)));
     }
 
     onReset() {

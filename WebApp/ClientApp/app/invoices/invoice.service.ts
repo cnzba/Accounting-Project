@@ -8,7 +8,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 
-import { IInvoice } from './invoice';
+import { IInvoice, IInvoiceLine } from './invoice';
 
 @Injectable()
 export class InvoiceService {
@@ -19,13 +19,12 @@ export class InvoiceService {
     constructor(private http: HttpClient) { }
 
     getInvoices(): Observable<IInvoice[]> {
-        return this.http.get<IInvoice[]>(this.invoiceUrl)
-            .catch(this.handleError);
+        return this.http.get<IInvoice[]>(this.invoiceUrl).catch(this.handleError);
     }
 
     getInvoice(invoiceNumber: string): Observable<IInvoice> {
         return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber)
-            .catch(this.handleError);
+              .catch(this.handleError);
     }
 
     createNewInvoice(): Observable<IInvoice> {
@@ -41,21 +40,40 @@ export class InvoiceService {
     saveDraftInvoice(invoice: IInvoice): Observable<IInvoice> {
         var response: Observable<IInvoice>;
 
+        // ensure line items remain in the correct order
+        for (var i = 0; i < invoice.invoiceLine.length; i++) {
+            invoice.invoiceLine[i].itemOrder = i;
+        }
+
         if (this.isSaved(invoice)) response = this.updateInvoice(invoice);
         else response = this.createInvoice(invoice);
 
         return response;
     }
 
+    computeGST(invoice: IInvoice): number
+    {
+        let total: number = this.computeTotal(invoice);
+        return total - total / (1 + invoice.gstRate);
+    }
+
+    computeTotal(invoice: IInvoice) : number
+    {
+        return invoice.invoiceLine.reduce<number>(
+            (acc: number, elem: IInvoiceLine): number => acc + +elem.amount, 0);
+    }
+
     private createInvoice(invoice: IInvoice): Observable<IInvoice> {
+        console.log('Post (send): ' + JSON.stringify(invoice));
         return this.http.post<IInvoice>(this.invoiceUrl, invoice)
-            .do(data => console.log('Post: ' + JSON.stringify(data)))
+            .do(data => console.log('Post (receive): ' + JSON.stringify(data)))
             .catch(this.handleError);
     }
 
     private updateInvoice(invoice: IInvoice): Observable<IInvoice> {
+        console.log('Put (send): ' + JSON.stringify(invoice));
         return this.http.put<IInvoice>(this.invoiceUrl + '/' + invoice.invoiceNumber, invoice)
-            .do(data => console.log('Put: ' + JSON.stringify(data)))
+            .do(data => console.log('Put (receive): ' + JSON.stringify(data)))
             .catch(this.handleError);
     }
 
@@ -83,7 +101,7 @@ export class InvoiceService {
 
                 errorMessage = `${tmpMessage}`;
             }
-            else errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`;
+            else errorMessage = `Server returned code: ${err.status}, error message is: ${err.error}`;
         }
 
         console.error(errorMessage);

@@ -58,13 +58,12 @@ namespace WebApp.Models
         public ICollection<InvoiceLine> InvoiceLine { get; set; }
         #endregion
 
-        #region Computed fields
+        #region Computed fields. Assumes line item amounts GST inclusive.
         public decimal SubTotal
         {
             get
             {
-                if (InvoiceLine == null) return 0;
-                else return (from il in InvoiceLine select il.Amount).Sum();
+                return Math.Round(GrandTotal / (1+GstRate));
             }
         }
 
@@ -72,7 +71,8 @@ namespace WebApp.Models
         {
             get
             {
-                return SubTotal + SubTotal * GstRate;
+                if (InvoiceLine == null) return 0;
+                else return (from il in InvoiceLine select il.Amount).Sum();
             }
         }
         #endregion
