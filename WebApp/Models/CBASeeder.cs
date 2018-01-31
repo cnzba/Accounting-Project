@@ -27,6 +27,7 @@ namespace WebApp.Models
                 {
                     InvoiceNumber = "20171005-001",
                     DateCreated = new DateTime(2017, 10, 5),
+                    DateDue = new DateTime(2017, 10, 17),
                     ClientName = "Electrocal Commission",
                     ClientContactPerson = "Glen Clarke",
                     ClientContact = "530/546A Memorial Ave\\r\\nChristchurch Airport\\r\\nChristchurch 8053",
