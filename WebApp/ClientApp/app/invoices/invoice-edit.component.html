@@ -1,158 +1,192 @@
-<div id="main">
-    <div id="header">
-        <div id="logo">
-            <nav>
-                <ul id="menu">
-                    <li><a class="btn btn-secondary" role="button" [routerLink]="['/invoices']">Back To List</a></li>
-                </ul>
-            </nav>
+<div id="invoicelistscreen">
+    <div class="row">
+        <div class="col-8">
+            <a class="btn btn-secondary" role="button" [routerLink]="['/invoices']">Back To List</a>
         </div>
-        <div id="menubar">
-            <nav>
-                <ul id="menu">
-                    <!-- put class="current" in the li tag for the selected page - to highlight which page you're on -->
-                    <li class="current"><a class="btn btn-secondary" role="button" [routerLink]="['/invoices']">Cancel</a></li>
-                    <li><button type="button" class="btn btn-secondary" (click)="onReset()">Reset</button></li>
-                    <li><button type="submit" class="btn btn-primary">Submit</button></li>
-                </ul>
-            </nav>
+        <div class="col-3">
+            <div class="float-right">
+                <button type="button" class="btn btn-warning" (click)="onReset()">Reset</button>
+                <button type="submit" class="btn btn-primary" (click)="onSubmit()">Save Draft</button>
+            </div>
         </div>
     </div>
+
     <form (ngSubmit)="onSubmit()" #invoice="ngForm">
-        <div class="invoice">
-            <div id="client">
-                <table class="t1">
-                    <tr class="tr1">
-                        <td>
-                            <b>Due Date</b>
-                            <input type="date" [ngModel]="modifyInvoice.dateDue | date:'yyyy-MM-dd'" (ngModelChange)="modifyInvoice.dateDue = $event" name="duedate" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><b>Client Name</b></td>
-                    </tr>
-                    <tr>
-                        <td> <input type="text" [(ngModel)]="modifyInvoice.clientName" name="clientname" required /></td>
-                    </tr>
-                    <tr>
-                        <td><b>Client Email</b></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="email" name="email">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><a href="#">Add Contact</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="#">Add Address</a></td>
-                    </tr>
-                    <tr>
-                        <td><b>Client Contact Person</b></td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" [(ngModel)]="modifyInvoice.clientContactPerson" name="clientcontactperson" /></td>
-                        <td>
-                            <button type="button" class="btn btn-default">
-                                <span class="oi oi-x"></span>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><b>Client Address</b></td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" [(ngModel)]="modifyInvoice.clientContact" name="clientcontact" /></td>
-                        <td>
-                            <button type="button" class="btn btn-default">
-                                <span class="oi oi-x"></span>
-                            </button>
-                        </td>
-                    </tr>
-                </table>
+        <div class="row">
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-4">
+                        <b>Due Date</b>
+                    </div>
+                    <div class="col-7">
+                        <input type="date" [ngModel]="modifyInvoice.dateDue | date:'yyyy-MM-dd'" (ngModelChange)="modifyInvoice.dateDue = $event" name="duedate" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <b>Client Name</b>
+                    </div>
+                    <div class="col-7">
+                        <input type="text" [(ngModel)]="modifyInvoice.clientName" name="clientname" required />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <b>Client Email</b>
+                    </div>
+                    <div class="col-7">
+                        <input type="email" name="email">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <a href="#">Add Contact</a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <a href="#">Add Address</a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <b>Client Contact Person</b>
+                    </div>
+                    <div class="col-7">
+                        <input type="text" [(ngModel)]="modifyInvoice.clientContactPerson" name="clientcontactperson" />
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn btn-outline-danger btn-sm">
+                            <span class="oi oi-x"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <b>Client Address</b>
+                    </div>
+                    <div class="col-7">
+                        <textarea rows="3" type="text" [(ngModel)]="modifyInvoice.clientContact" name="clientcontact"></textarea>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn btn-outline-danger btn-sm">
+                            <span class="oi oi-x"></span>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div id="exp">
-                <div id="client1">
-                    <table class="t1">
-                        <tr>
-                            <td><b>Invoice Number</b></td>
-                            <td>{{modifyInvoice.invoiceNumber}}</td>
-                        </tr>
-                        <tr>
-                            <td><b>Date</b></td>
-                            <td>{{modifyInvoice.dateCreated | date: 'dd/MM/yyyy'}}</td>
-                        </tr>
-                        <tr>
-                            <td><b>TOTAL</b></td>
-                            <td>{{invoiceService.computeTotal(modifyInvoice) |number:'.2-2'}}</td>
-                        </tr>
-                        <tr>
-                            <td><b>Amount includes GST of</b></td>
-                            <td>{{invoiceService.computeGST(modifyInvoice) |number:'.2-2'}}</td>
-                        </tr>
-                        <tr>
-                            <td><b>Status   </b></td>
-                            <td>{{modifyInvoice.status}}</td>
-                        </tr>
-                    </table>
+            <div class="col-4">
+                <div class="row">
+                    <div class="col-6">
+                        <b>Invoice Number</b>
+                    </div>
+                    <div class="col-6">
+                        {{modifyInvoice.invoiceNumber}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <b>Date</b>
+                    </div>
+                    <div class="col-6">
+                        {{modifyInvoice.dateCreated | date: 'dd/MM/yyyy'}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <b>Total</b>
+                    </div>
+                    <div class="col-6">
+                        {{invoiceService.computeTotal(modifyInvoice) |number:'.2-2'}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <b>Includes GST of</b>
+                    </div>
+                    <div class="col-6">
+                        {{invoiceService.computeGST(modifyInvoice) |number:'.2-2'}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <b>Status</b>
+                    </div>
+                    <div class="col-6">
+                        {{modifyInvoice.status}}
+                    </div>
                 </div>
             </div>
         </div>
-        <div>
-            <div id="table1">
-                <table id="tr2" border="1">
 
-                    <tr class="tr1">
-                        <td class="td1">
-                            <b>Description</b>
-                        </td>
-                        <td class="td2">
-                            <b>Amount</b>
-                        </td>
-                    </tr>
-                    <tr class="tr1" *ngFor='let il of modifyInvoice.invoiceLine; index as i; first as isFirst; last as isLast'>
-                        <td class="td1">
-                            <input [(ngModel)]="il.description" class="form-control" type="text" name="description{{i}}" />
-                        </td>
-                        <td class="td2">
-                            <input [ngModel]="il.amount" (ngModelChange)="il.amount=$event"
-                                   class="form-control" type="text" name="amount{{i}}" />
-                        </td>
-                    </tr>
-                </table>
+        <div class="row">
+            <div class="col-6">
+                <b>Description</b>
             </div>
-            <div id="updown">
-                <button (click)="deleteLineItem(i)" type="button" class="btn btn-default">
+            <div class="col-2">
+                <b>Amount</b>
+            </div>
+        </div>
+        <div class="row" *ngFor='let il of modifyInvoice.invoiceLine; index as i; first as isFirst; last as isLast'>
+            <div class="col-6">
+                <input [(ngModel)]="il.description" class="form-control" type="text" name="description{{i}}" />
+            </div>
+            <div class="col-2">
+                <input [ngModel]="il.amount" (ngModelChange)="il.amount=$event"
+                       class="form-control" type="text" name="amount{{i}}" />
+            </div>
+            <div class="col-4">
+                <button (click)="deleteLineItem(i)" type="button" class="btn btn-outline-danger btn-sm">
                     <span class="oi oi-x"></span>
                 </button>
-                <button *ngIf="!isFirst" (click)="moveItemUp(i)" type="button" class="btn btn-default" aria-label="Left Align">
+                <button *ngIf="!isFirst" (click)="moveItemUp(i)" type="button" class="btn btn-outline-secondary btn-sm" aria-label="Left Align">
                     <span class="oi oi-arrow-circle-top" aria-hidden="true"></span>
                 </button>
-                <button *ngIf="!isLast" (click)="moveItemDown(i)" type="button" class="btn btn-default">
+                <button *ngIf="isFirst" style="visibility:hidden" type="button" class="btn btn-outline-secondary btn-sm" aria-label="Left Align">
+                    <span class="oi oi-arrow-circle-top" aria-hidden="true"></span>
+                </button>
+                <button *ngIf="!isLast" (click)="moveItemDown(i)" type="button" class="btn btn-outline-secondary btn-sm">
+                    <span class="oi oi-arrow-circle-bottom" aria-hidden="true"></span>
+                </button>
+                <button *ngIf="isLast" style="visibility:hidden" type="button" class="btn btn-outline-secondary btn-sm">
                     <span class="oi oi-arrow-circle-bottom" aria-hidden="true"></span>
                 </button>
             </div>
         </div>
-        <div id="table2">
-            <div style="float:left;width:500px; padding-top:20px">
-                <button type="button" class="btn btn-success" (click)="addLineItem()">Add</button>
-            </div>
-            <div style="float:right;width:300px; padding-top:20px">
-                <table>
-                    <tr>
-                        <td><b>Total</b></td>
-                        <td>{{invoiceService.computeTotal(modifyInvoice) |number:'.2-2'}}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Includes GST of</b></td>
-                        <td>{{invoiceService.computeGST(modifyInvoice) |number:'.2-2'}}</td>
-                    </tr>
-                </table>
+        <div class="row">
+            <div class="col-8">
+                <div class="float-right">
+                    <button type="button" class="btn btn-success btn-sm" (click)="addLineItem()">Add Item</button>
+                </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-6">
+                <b>Total</b>
+            </div>
+            <div class="col-2">
+                {{invoiceService.computeTotal(modifyInvoice) |number:'.2-2'}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <b>Includes GST of</b>
+            </div>
+            <div class="col-2">
+                {{invoiceService.computeGST(modifyInvoice) |number:'.2-2'}}
+            </div>
+        </div>
+
     </form>
 </div>
+
+
 
 
 
