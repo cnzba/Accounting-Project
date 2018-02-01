@@ -1,42 +1,6 @@
-
-table,tr,td{
-    border: double;
+.btn {
+    margin: 20px;
 }
-.selected {
-    background-color: #CFD8DC !important;
-    color: black;
+.invoices{
+    //margin-top:20px;
 }
-a {
-    font-family: 'Times New Roman', Times, serif;
-
-}
-
-.invoices {
-    cursor: pointer;
-    position: relative;
-    left: 0;
-    font-family: 'Times New Roman', Times, serif;
-    // margin: .5em;
-    padding: .3em 0;
-    border-radius: 4px;
-    text-align: center;
-}
-
-    .invoices .selected:hover {
-        background-color: gray !important;
-        color: white;
-    }
-    .invoices tr:hover {
-        color: #607D8B;
-        background-color: #DDD;
-        left: .1em;
-    }
-    thead {
-        font-weight:bold;
-       text-align:center;
-        font-family:'Times New Roman', Times, serif;
-    }
-   
-
-
-

@@ -1,18 +1,18 @@
 
 <form class="form1" >
-    <a [routerLink]="['/invoice/new']">
+    <a class="btn btn-lg btn-success" [routerLink]="['/invoice/new']">
         Create New Invoice
     </a>
-    <table style="width: 65%" class="invoices" >
-       <thead>
+    <table style="width: 65%" class="invoices table-bordered table-striped table-hover table-dark " >
+       <thead class="thead-light">
             <tr>
-                <td style="width:10%" >Invoice Number</td>
+                <th style="width:10%" >Invoice Number</th>
 
-                <td style="width: 10%">Date Created</td>
-                <td style="width: 10%">Client Name</td>
-                <td style="width: 10%">Amount</td>
-                <td style="width: 15%">Due Date</td>
-                <td style="width: 10%">Status</td>
+                <th style="width: 10%">Date Created</th>
+                <th style="width: 10%">Client Name</th>
+                <th style="width: 10%">Amount</th>
+                <th style="width: 10%">Due Date</th>
+                <th style="width: 10%">Status</th>
 
 
             </tr>
@@ -34,7 +34,7 @@
                 <td style="width: 10%">{{inv.dateCreated | date: 'dd/MM/yyyy'}}</td>
                 <td style="width: 10%">{{inv.issueeOrganization}} </td>
                 <td style="width: 10%">${{inv.grandTotal|number:'.2-2'}}</td>
-                <td style="width: 15%">{{inv.dateDue}}</td>
+                <td style="width: 10%">{{inv.dateDue| date: 'dd/MM/yyyy'}}</td>
                 <td style="width: 10%">{{inv.status}}</td>
 
                 <td *ngIf="inv.status==='Draft'" style="width: 10%">
@@ -48,7 +48,7 @@
 
         </tbody>
     </table>
-        <a [routerLink]="['/invoice/new']">
+        <a class="btn btn-lg btn-success"[routerLink]="['/invoice/new']">
             Create New Invoice
         </a>
         
