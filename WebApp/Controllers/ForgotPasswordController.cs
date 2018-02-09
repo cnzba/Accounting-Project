@@ -27,7 +27,7 @@ namespace WebApp.Controllers
         }
 
         // POST: api/ForgotPassword
-        // Body: "email @email.com"
+        // Body: { "email" : "email@email.com" }
         [HttpPost]
         public async Task<IActionResult> PostForgotPassword([FromBody] EmailModel emailModel)
         {

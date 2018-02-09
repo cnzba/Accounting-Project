@@ -22,6 +22,7 @@ import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
 import { ForgotPasswordComponent } from './login/forgot-password.component';
 import { ChangePasswordComponent } from './login/change-password.component';
 import { ForgotPasswordService } from './login/forgot-password.service';
+import { ChangePasswordService } from './login/change-password.service';
 
 
 @NgModule({
@@ -50,7 +51,7 @@ import { ForgotPasswordService } from './login/forgot-password.service';
             { path: "invoices/edit/:id", component: InvoiceEditComponent },
             { path: "invoice/new", component: InvoiceEditComponent },
             { path: "forgot-password", component: ForgotPasswordComponent },
-            { path: "change-password", component: ChangePasswordComponent },
+            { path: "change-password", component: ChangePasswordComponent, canActivate: [AuthGuard] },
             // otherwise redirect to the invoice list
             { path: '**', redirectTo: 'invoices' }
         ], { enableTracing: true })
@@ -62,7 +63,8 @@ import { ForgotPasswordService } from './login/forgot-password.service';
         AlertService,
         AuthenticationService,
         UserService,
-        ForgotPasswordService
+        ForgotPasswordService,
+        ChangePasswordService
     ],
     bootstrap: [AppComponent]
 })
