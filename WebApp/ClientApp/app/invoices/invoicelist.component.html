@@ -3,8 +3,8 @@
     <a class="btn btn-lg btn-success" [routerLink]="['/invoice/new']">
         Create New Invoice
     </a>
-    <table style="width: 65%" class="invoices table-bordered table-striped table-hover table-dark " >
-       <thead class="thead-light">
+    <table class="table table-bordered table-striped table-hover table-light " >
+       <thead class="thead-dark">
             <tr>
                 <th style="width:10%" >Invoice Number</th>
 
@@ -34,7 +34,7 @@
                 <td style="width: 10%">{{inv.dateCreated | date: 'dd/MM/yyyy'}}</td>
                 <td style="width: 10%">{{inv.issueeOrganization}} </td>
                 <td style="width: 10%">${{inv.grandTotal|number:'.2-2'}}</td>
-                <td style="width: 10%">{{inv.dateDue| date: 'dd/MM/yyyy'}}</td>
+                <td style="width: 10%">{{inv.dateDue | date: 'dd/MM/yyyy'}}</td>
                 <td style="width: 10%">{{inv.status}}</td>
 
                 <td *ngIf="inv.status==='Draft'" style="width: 10%">
