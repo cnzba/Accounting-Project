@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using CryptoService;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -20,13 +18,15 @@ namespace WebApp.Controllers
         private readonly CBAContext _context;
         private readonly IEmailService emailService;
         private readonly IEmailConfig emailConfig;
+        private IHostingEnvironment _env;
 
-        public ChangePasswordController(CBAContext context, ICryptography crypto, IEmailService emailService, IOptions<EmailConfig> emailConfig)
+        public ChangePasswordController(CBAContext context, ICryptography crypto, IEmailService emailService, IOptions<EmailConfig> emailConfig, IHostingEnvironment env)
         {
             _context = context;
             _crypto = crypto;
             this.emailService = emailService;
             this.emailConfig = emailConfig.Value;
+            _env = env;
         }
 
         // POST: api/ChangePassword
@@ -59,16 +59,22 @@ namespace WebApp.Controllers
             }
 
             await _context.SaveChangesAsync();
-            StringBuilder builder = new StringBuilder();
+
+            var pathToFile = _env.WebRootPath
+                            + Path.DirectorySeparatorChar.ToString()
+                            + "EmailTemplates"
+                            + Path.DirectorySeparatorChar.ToString()
+                            + "ChangePasswordTemplate.html";
+
+            StreamReader SourceReader = System.IO.File.OpenText(pathToFile);
+            string htmlBody = SourceReader.ReadToEnd();
+            SourceReader.Close();
 
             Email emailContent = new Email()
             {
                 To = passwordModel.Email,
                 Subject = "Password Change",
-                Body = builder.Append("Dear ").Append(user.Name).Append(",\r\n\r\n\r\n")
-                        .Append("Your password has been changed successfully. If you did not change your password, kindly contact admin@cbanewzealand.org.nz immediately.")
-                        .Append("\r\n\r\n\r\n").Append("Best Regards,\r\n\r\n")
-                        .Append("CBA New Zealand").ToString()
+                Body = string.Format(htmlBody, user.Name)
             };
             await emailService.SendEmail(emailConfig, emailContent);
             return Ok("Password updated successfully");

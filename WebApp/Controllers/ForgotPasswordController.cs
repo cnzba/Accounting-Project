@@ -1,6 +1,7 @@
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using CryptoService;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -17,13 +18,15 @@ namespace WebApp.Controllers
         private readonly CBAContext _context;
         private readonly IEmailService emailService;
         private readonly IEmailConfig emailConfig;
+        private IHostingEnvironment _env;
 
-        public ForgotPasswordController(CBAContext context, ICryptography crypto, IEmailService emailService, IOptions<EmailConfig> emailConfig)
+        public ForgotPasswordController(CBAContext context, ICryptography crypto, IEmailService emailService, IOptions<EmailConfig> emailConfig, IHostingEnvironment env)
         {
             _context = context;
             _crypto = crypto;
             this.emailService = emailService;
             this.emailConfig = emailConfig.Value;
+            _env = env;
         }
 
         // POST: api/ForgotPassword
@@ -49,19 +52,22 @@ namespace WebApp.Controllers
             user.Password = _crypto.HashMD5(tempPassword);
             user.ForcePasswordChange = true;
             await _context.SaveChangesAsync();
-            StringBuilder builder = new StringBuilder();
+
+            var pathToFile = _env.WebRootPath
+                            + Path.DirectorySeparatorChar.ToString()
+                            + "EmailTemplates"
+                            + Path.DirectorySeparatorChar.ToString()
+                            + "ForgotPasswordTemplate.html";
+
+            StreamReader SourceReader = System.IO.File.OpenText(pathToFile);
+            string htmlBody = SourceReader.ReadToEnd();
+            SourceReader.Close();
 
             Email emailContent = new Email()
             {
                 To = emailModel.Email,
                 Subject = "Request for Password Reset",
-                Body = builder.Append("Dear ").Append(user.Name)
-                        .Append(",\r\n\r\n\r\n")
-                        .Append("Your password has been reset. To login, kindly use the temporary password given below.\r\n\r\n")
-                        .Append(tempPassword).Append("\r\n\r\n\r\n")
-                        .Append("Kindly note, this password is valid for 15 days only. It is mandatory that you change your password upon login.")
-                        .Append("\r\n\r\n\r\n").Append("Best Regards,\r\n\r\n")
-                        .Append("CBA New Zealand").ToString()
+                Body = string.Format(htmlBody, user.Name, tempPassword)
             };
             if (!await emailService.SendEmail(emailConfig, emailContent))
             {
