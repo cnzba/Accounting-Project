@@ -43,13 +43,11 @@ namespace UnitTestProject
 
             var service = new InvoiceService(context, options);
             var originalInvoice = context.Invoice.Include("InvoiceLine")
-                .SingleOrDefault(t => t.InvoiceNumber == "INV-00050");
+                .SingleOrDefault(t => t.InvoiceNumber == "20171005-001");
 
-            var modifiedInvoice = new Invoice()
+            var modifiedInvoice = new DraftInvoice()
             {
-                InvoiceNumber = "INV-00050",
-                DateCreated = new DateTime(2017, 12, 31),
-                Status = InvoiceStatus.Sent,
+                InvoiceNumber = "20171005-001",
                 InvoiceLine = new List<InvoiceLine>()
                     {
                         new InvoiceLine()
@@ -78,5 +76,50 @@ namespace UnitTestProject
             Assert.AreEqual(expectedLineCount, lineCount);
         }
 
+        [TestMethod]
+        public void ModifyInvoice_UpdatesInvoiceLines_WhenOnlyInvoiceLinesModified()
+        {
+            // arrange
+            var context = new CBAContext(dboptions);
+            var seeder = new CBASeeder(context, cryptography);
+            seeder.Seed();
+
+            var service = new InvoiceService(context, options);
+            Invoice invoiceToUpdate = context.Invoice.Include("InvoiceLine")
+                .SingleOrDefault(t => t.InvoiceNumber == "20171005-001");
+
+            DraftInvoice invoice = new DraftInvoice()
+            {
+                // all fields should be the same except InvoiceLine
+                InvoiceNumber = invoiceToUpdate.InvoiceNumber,
+                ClientName = invoiceToUpdate.ClientName,
+                ClientContact = invoiceToUpdate.ClientContact,
+                ClientContactPerson = invoiceToUpdate.ClientContactPerson,
+                DateDue = invoiceToUpdate.DateDue
+            };
+
+            invoice.InvoiceLine = new List<InvoiceLine>()
+                    {
+                        new InvoiceLine()
+                        {
+                            Description = "New Dinner",
+                            Amount = 50
+                        },
+                           new InvoiceLine()
+                        {
+                            Description = "New Cookie",
+                            Amount = 10
+                        }
+                    };
+
+            // act
+            var result = service.ModifyInvoice(invoice);
+
+            // assert
+            Assert.IsTrue(result);
+            var cleancontext = new CBAContext(dboptions);
+            Assert.AreEqual(2, cleancontext.Invoice.Include("InvoiceLine")
+                .SingleOrDefault(t => t.InvoiceNumber == "20171005-001").InvoiceLine.Count());
+        }
     }
 }

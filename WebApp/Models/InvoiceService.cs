@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WebApp.Models;
 using WebApp.Options;
@@ -19,7 +20,17 @@ namespace WebApp
             options = optionsAccessor.Value;
         }
 
+        private void validate(Invoice invoice)
+        {
+            Validator.ValidateObject(invoice, new ValidationContext(invoice), true);
+        }
+
         public IEnumerable<Invoice> GetAllInvoices()
+        {
+            return context.Invoice.Include("InvoiceLine").OrderBy(i => i.DateCreated).ToList();
+        }
+
+        public IEnumerable<IInvoiceHeader> GetInvoiceHeaders()
         {
             return context.Invoice.Include("InvoiceLine").OrderBy(i => i.DateCreated).ToList();
         }
@@ -32,17 +43,30 @@ namespace WebApp
             return invoice;
         }
 
-        public bool CreateInvoice(Invoice invoice)
+        public bool CreateInvoice(DraftInvoice draftInvoice)
         {
+            Invoice invoice = new Invoice();
+
+            // copy the information supplied by the client
+            invoice.ClientName = draftInvoice.ClientName;
+            invoice.ClientContactPerson = draftInvoice.ClientContactPerson;
+            invoice.ClientContact = draftInvoice.ClientContact;
+            invoice.DateDue = draftInvoice.DateDue;
+            invoice.InvoiceLine = draftInvoice.InvoiceLine;
+
+            // add the server generated information
             invoice.InvoiceNumber = GenerateInvoiceNumber();
             invoice.CharitiesNumber = options.CharitiesNumber;
             invoice.GstNumber = options.GSTNumber;
             invoice.GstRate = options.GSTRate;
             invoice.DateCreated = DateTime.Now;
-            invoice.Status = InvoiceStatus.New;
-            
+            invoice.Status = InvoiceStatus.Draft;
+
+            validate(invoice);
+
             context.Add<Invoice>(invoice);
-            return context.SaveChanges() > 0;
+            int count = context.SaveChanges();
+            return count > 0;
         }
 
         public string GenerateInvoiceNumber()
@@ -50,21 +74,24 @@ namespace WebApp
             return string.Format("CBA{0:N}", Guid.NewGuid());
         }
 
-        public bool ModifyInvoice(Invoice invoice)
+        public bool ModifyInvoice(DraftInvoice invoice)
         {
-            var invoiceToUpdate = context.Invoice.SingleOrDefault(n => n.InvoiceNumber == invoice.InvoiceNumber);
+            var invoiceToUpdate = GetInvoice(invoice.InvoiceNumber);
 
-            invoiceToUpdate.IssueeCareOf = invoice.IssueeCareOf;
-            invoiceToUpdate.IssueeOrganization = invoice.IssueeOrganization;
+            if(invoiceToUpdate.Status != InvoiceStatus.Draft) throw new ArgumentException($"Invoice {invoice.InvoiceNumber} is not a draft and may not be modified");
+
+            invoiceToUpdate.ClientContactPerson = invoice.ClientContactPerson;
+            invoiceToUpdate.ClientName = invoice.ClientName;
             invoiceToUpdate.ClientContact = invoice.ClientContact;
             invoiceToUpdate.DateDue = invoice.DateDue;
-            invoiceToUpdate.Status = invoice.Status;
 
-            // every time an invoice is modified, its item lines are completely rewritten
+            // every time an invoice is modified, it's item lines are completely rewritten
             invoiceToUpdate.InvoiceLine.Clear();
             invoiceToUpdate.InvoiceLine = invoice.InvoiceLine;
 
-            if (!context.Entry(invoiceToUpdate).State.HasFlag(EntityState.Modified)) return true;
+            validate(invoiceToUpdate);
+
+            if (!context.ChangeTracker.HasChanges()) return true;
             else return context.SaveChanges() > 0;
         }
 

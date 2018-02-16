@@ -46,7 +46,7 @@ import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
             { path: "invoice/new", component: InvoiceEditComponent },
             // otherwise redirect to the invoice list
             { path: '**', redirectTo: 'invoices' }
-        ], { enableTracing: true })
+        ], { enableTracing: false })
     ],
     providers: [
         InvoiceService,

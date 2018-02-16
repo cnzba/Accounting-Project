@@ -1,119 +1,198 @@
-<h2>Editable Invoice</h2>
-<form (ngSubmit)="onSubmit()" #invoice="ngForm">
-   
-    <a [routerLink]="['/invoices']">Back To List</a>
-    <a [routerLink]="['/invoices']">Cancel</a>
-   
-   <!--button (click)="create()">Create an Invoice</!--button>
-    <button (click)="modify()">Edit an Invoice</button-->
-        <table class="t1">
-        <tr class="tr1">
-            <td style="height: 46px;width: 132px">Client Name</td>
-            <td style="height: 46px;width: 238px">
-                <input type="text" [(ngModel)]="modifyInvoice.issueeOrganization" name="clientname" required />
+<div id="invoicelistscreen">
+    <div class="row">
+        <div class="col-8">
+            <a class="btn btn-secondary" role="button" [routerLink]="['/invoices']">Back To List</a>
+        </div>
+        <div class="col-3">
+            <div class="float-right">
+                <button type="button" class="btn btn-warning" (click)="onReset()">Reset</button>
+                <button type="submit" class="btn btn-primary" (click)="onSubmit()">Save Draft</button>
+            </div>
+        </div>
+    </div>
 
-            </td>
-            <td style="height: 46px;width: 23px"></td>
-            <td style="height: 46px;width: 131px">Invoice Number</td>
-            <td style="height: 46px;width: 146px">{{modifyInvoice.invoiceNumber}}</td>
-        </tr>
+    <form (ngSubmit)="onSubmit()" #invoice="ngForm">
+        <div class="row">
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-4">
+                        <b>Due Date</b>
+                    </div>
+                    <div class="col-7">
+                        <input type="date" [ngModel]="modifyInvoice.dateDue | date:'yyyy-MM-dd'" (ngModelChange)="modifyInvoice.dateDue = $event" name="duedate" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <b>Client Name</b>
+                    </div>
+                    <div class="col-7">
+                        <input type="text" [(ngModel)]="modifyInvoice.clientName" name="clientname" required />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <b>Client Email</b>
+                    </div>
+                    <div class="col-7">
+                        <input type="email" name="email">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <a href="#">Add Contact</a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <a href="#">Add Address</a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <b>Client Contact Person</b>
+                    </div>
+                    <div class="col-7">
+                        <input type="text" [(ngModel)]="modifyInvoice.clientContactPerson" name="clientcontactperson" />
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn btn-outline-danger btn-sm">
+                            <span class="oi oi-x"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <b>Client Address</b>
+                    </div>
+                    <div class="col-7">
+                        <textarea rows="3" type="text" [(ngModel)]="modifyInvoice.clientContact" name="clientcontact"></textarea>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn btn-outline-danger btn-sm">
+                            <span class="oi oi-x"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="col-6">
+                        <b>Invoice Number</b>
+                    </div>
+                    <div class="col-6">
+                        {{modifyInvoice.invoiceNumber}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <b>Date</b>
+                    </div>
+                    <div class="col-6">
+                        {{modifyInvoice.dateCreated | date: 'dd/MM/yyyy'}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <b>Total</b>
+                    </div>
+                    <div class="col-6">
+                        {{invoiceService.computeTotal(modifyInvoice) |number:'.2-2'}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <b>Includes GST of</b>
+                    </div>
+                    <div class="col-6">
+                        {{invoiceService.computeGST(modifyInvoice) |number:'.2-2'}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <b>Status</b>
+                    </div>
+                    <div class="col-6">
+                        {{modifyInvoice.status}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <b>Description</b>
+            </div>
+            <div class="col-2">
+                <b>Amount</b>
+            </div>
+        </div>
+        <div class="row" *ngFor='let il of modifyInvoice.invoiceLine; index as i; first as isFirst; last as isLast'>
+            <div class="col-6">
+                <input [(ngModel)]="il.description" class="form-control" type="text" name="description{{i}}" />
+            </div>
+            <div class="col-2">
+                <input [ngModel]="il.amount" (ngModelChange)="il.amount=$event"
+                       class="form-control" type="text" name="amount{{i}}" />
+            </div>
+            <div class="col-4">
+                <button (click)="deleteLineItem(i)" type="button" class="btn btn-outline-danger btn-sm">
+                    <span class="oi oi-x"></span>
+                </button>
+                <button *ngIf="!isFirst" (click)="moveItemUp(i)" type="button" class="btn btn-outline-secondary btn-sm" aria-label="Left Align">
+                    <span class="oi oi-arrow-circle-top" aria-hidden="true"></span>
+                </button>
+                <button *ngIf="isFirst" style="visibility:hidden" type="button" class="btn btn-outline-secondary btn-sm" aria-label="Left Align">
+                    <span class="oi oi-arrow-circle-top" aria-hidden="true"></span>
+                </button>
+                <button *ngIf="!isLast" (click)="moveItemDown(i)" type="button" class="btn btn-outline-secondary btn-sm">
+                    <span class="oi oi-arrow-circle-bottom" aria-hidden="true"></span>
+                </button>
+                <button *ngIf="isLast" style="visibility:hidden" type="button" class="btn btn-outline-secondary btn-sm">
+                    <span class="oi oi-arrow-circle-bottom" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="float-right">
+                    <button type="button" class="btn btn-success btn-sm" (click)="addLineItem()">Add Item</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <b>Total</b>
+            </div>
+            <div class="col-2">
+                {{invoiceService.computeTotal(modifyInvoice) |number:'.2-2'}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <b>Includes GST of</b>
+            </div>
+            <div class="col-2">
+                {{invoiceService.computeGST(modifyInvoice) |number:'.2-2'}}
+            </div>
+        </div>
+
+    </form>
+</div>
 
 
-        <tr>
-            <td style="width: 132px">Client Contact</td>
-            <td style="width: 238px">
-                <input type="text" [(ngModel)]="modifyInvoice.clientContact" name="clientcontact" />
-            </td>
-            <td style="width: 23px"></td>
-            <td style="width: 131px">Date Created</td>
-            <td style="width: 146px">{{modifyInvoice.dateCreated | date: 'dd/MM/yyyy'}}</td>
-
-        </tr>
-        <tr class="tr2">
-            <td style="width: 132px">Status</td>
-            <td style="width: 238px">
-                <select required>
-                    <option value="New">New</option>
-                    <option value="Draft">Draft</option>
-                    <option value="Sent">Sent</option>
-                    <option value="Paid">Paid</option>
-                    <option value="Cancelled">Cancelled</option>
 
 
-                </select>
-            </td>
-            <td style="width: 23px"></td>
-            <td style="width: 131px">GST Number</td>
-            <td style="width: 146px">{{modifyInvoice.gstNumber}}</td>
-
-        </tr>
-        <tr>
-            <td style="width: 132px">Due Date</td>
-            <td style="width: 238px"><input type="text" [(ngModel)]="modifyInvoice.dateDue" name="duedate" /></td>
-            <td style="width: 23px"></td>
-            <td style="width: 131px">Charities Number</td>
-            <td style="width: 146px">{{modifyInvoice.charitiesNumber}}</td>
-
-        </tr>
-
-        <tr>
-            <td colspan="4" style="height: 46px; width:146px">Description</td>
-
-            <td style="height: 46px; width: 146px">Amount</td>
-
-        </tr>
-
-        <tr *ngFor='let invoiceLine of modifyInvoice.invoiceLine'>
-        <td colspan="4" style="height: 46px; width:146px">
-            <input [(ngModel)]="invoiceLine.description" class="form-control" type="text" name="description" />
-        </td>
-        <td style="height: 46px; width: 146px">
-            <input [(ngModel)]="invoiceLine.amount" class="form-control" type="text" name="amount" />
-        </td>
-
-        <!--td>
-            <button class="btn btn-default" type="button" (click)="deleteFieldValue(i)">Delete</button>
-        </td>
-
-    </tr>
-    <tr>
-        <td colspan="4" style="height: 46px; width:146px">
-            <input class="form-control" type="text" id="newAttributedescription"  [(ngModel)]="newAttribute.description" name="newAttributedescription" />
-        </td>
-        <td style="height: 46px; width: 146px">
-            <input class="form-control" type="text" id="newAttributeamount"  [(ngModel)]="newAttribute.amount" name="newAttributeamount" />
-        </td>
-
-        <td>
-            <button class="btn btn-default" type="button" (click)="addFieldValue()">Add</button>
-        </td>
-    </tr-->
-        <tr>
-            <td colspan="4"></td>
-            <td style="width: 146px"></td>
-        </tr>
-
-        <tr class="tr2" *ngIf="modifyInvoice.gst>0">
-            <td colspan="4" style="text-align:right">Sub Total</td>
-            <td style="width:146px">{{modifyInvoice.subTotal}}</td>
-        </tr>
-
-        <tr *ngIf="modifyInvoice.gst>0">
-            <td colspan="4" style="text-align:right">GST Amount</td>
-            <td style="width:146px">{{modifyInvoice.gstRate}}</td>
-        </tr>
-
-        <tr class="tr2">
-            <td colspan="4" style="text-align:right">Grand Total</td>
-            <td style="width:146px">{{modifyInvoice.grandTotal}}</td>
-        </tr>
 
 
-    </table>
-   
-    <button type="submit" class=" btn-submit" >Submit</button>
-    <!--input type="text" #myinput /-->
-    <button (click)="reset(myinput)">Reset</button>
-</form>
+
+
+
 
 

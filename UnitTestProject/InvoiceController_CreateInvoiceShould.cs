@@ -25,10 +25,10 @@ namespace UnitTestProject
             var controller = new InvoiceController(service.Object, logger);
 
             controller.ModelState.AddModelError("fake", "required");
-            service.Setup(s => s.CreateInvoice(It.IsAny<Invoice>())).Returns(true);
+            service.Setup(s => s.CreateInvoice(It.IsAny<DraftInvoice>())).Returns(true);
 
             //act
-            var result = controller.CreateInvoice(new Invoice());
+            var result = controller.CreateInvoice(new DraftInvoice());
 
             //assert
             Assert.IsTrue(result is BadRequestObjectResult);
@@ -41,17 +41,17 @@ namespace UnitTestProject
             var service = new Mock<IInvoiceService>();
             var controller = new InvoiceController(service.Object, logger);
 
-            service.Setup(s => s.CreateInvoice(It.IsAny<Invoice>())).Returns(true);
+            service.Setup(s => s.CreateInvoice(It.IsAny<DraftInvoice>())).Returns(true);
 
             //act
-            var result = controller.CreateInvoice(new Invoice());
+            var result = controller.CreateInvoice(new DraftInvoice());
 
             //assert
             var createdAtAction = (result is CreatedAtActionResult);
             Assert.IsTrue(createdAtAction);
 
             var created = result as CreatedAtActionResult;
-            Assert.IsTrue(created.Value is Invoice);
+            Assert.IsTrue(created.Value is DraftInvoice);
             Assert.IsTrue(created.StatusCode == 201);
         }
 
@@ -62,10 +62,10 @@ namespace UnitTestProject
             var service = new Mock<IInvoiceService>();
             var controller = new InvoiceController(service.Object, logger);
 
-            service.Setup(s => s.CreateInvoice(It.IsAny<Invoice>())).Returns(false);
+            service.Setup(s => s.CreateInvoice(It.IsAny<DraftInvoice>())).Returns(false);
 
             //act
-            var result = controller.CreateInvoice(new Invoice());
+            var result = controller.CreateInvoice(new DraftInvoice());
 
             //assert
             Assert.IsTrue(result is BadRequestObjectResult);

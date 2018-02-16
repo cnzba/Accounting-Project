@@ -4,13 +4,14 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace WebApp.Models
 {
-    public enum InvoiceStatus { New = 0, Sent = 1, Paid = 2 }
+    public enum InvoiceStatus { New = 0, Draft = 1, Sent = 2, Paid = 3, Cancelled = 4 }
 
-    public class Invoice
+    public class Invoice : IInvoiceHeader, IValidatableObject
     {
         public Invoice()
         {
@@ -18,30 +19,34 @@ namespace WebApp.Models
         }
 
         #region Properties
-        [JsonIgnore] [BindNever]
+        [JsonIgnore]
         public int Id { get; set; } // the PK is not visible to the client
+
+        [Required]
         public string InvoiceNumber { get; set; } // the alternate key is used instead
 
         // read/write for the client
-        public string IssueeOrganization { get; set; }
-        public string IssueeCareOf { get; set; }
+        [MinLength(1, ErrorMessage = "ClientName cannot be empty")]
+        public string ClientName { get; set; }
+        public string ClientContactPerson { get; set; }
         public string ClientContact { get; set; }
+
         public DateTime DateDue { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public InvoiceStatus Status { get; set; } // must be New on create
 
-        // read-only for the client; set by the server when invoice is created
-        [BindNever]
+        [Required]
         public DateTime DateCreated { get; set; }
 
-        [BindNever]
+        [Required]
+        [RegularExpression(@"^(\d)+-(\d)+-(\d)+$")]
         public string GstNumber { get; set; }
 
-        [BindNever]
+        [Required]
+        [RegularExpression(@"^(\d|\w)+$")]
         public string CharitiesNumber { get; set; }
 
-        [BindNever]
         public decimal GstRate { get; set; }
         #endregion
 
@@ -53,12 +58,12 @@ namespace WebApp.Models
         public ICollection<InvoiceLine> InvoiceLine { get; set; }
         #endregion
 
-        #region Computed fields
+        #region Computed fields. Assumes line item amounts GST inclusive.
         public decimal SubTotal
         {
             get
             {
-                return (from il in InvoiceLine select il.Amount).Sum();
+                return Math.Round(GrandTotal / (1+GstRate));
             }
         }
 
@@ -66,7 +71,20 @@ namespace WebApp.Models
         {
             get
             {
-                return SubTotal + SubTotal*GstRate;
+                if (InvoiceLine == null) return 0;
+                else return (from il in InvoiceLine select il.Amount).Sum();
+            }
+        }
+        #endregion
+
+        #region Validation
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!DateDue.Equals(DateTime.MinValue) && DateDue<=DateCreated)
+            {
+                yield return new ValidationResult(
+                    "DateDue: DateDue cannot be in the past",
+                    new[] { "DateDue" });
             }
         }
         #endregion

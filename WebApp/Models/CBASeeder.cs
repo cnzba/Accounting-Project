@@ -25,12 +25,13 @@ namespace WebApp.Models
             {
                 var invoice1 = new Invoice()
                 {
-                    InvoiceNumber = "INV-00050",
+                    InvoiceNumber = "20171005-001",
                     DateCreated = new DateTime(2017, 10, 5),
-                    IssueeOrganization = "Electrocal Commission",
-                    IssueeCareOf = "Glen Clarke",
+                    DateDue = new DateTime(2017, 10, 17),
+                    ClientName = "Electrocal Commission",
+                    ClientContactPerson = "Glen Clarke",
                     ClientContact = "530/546A Memorial Ave\\r\\nChristchurch Airport\\r\\nChristchurch 8053",
-                    Status = InvoiceStatus.New,
+                    Status = InvoiceStatus.Draft,
                     GstRate = .15m,
                     GstNumber = "96-712-561",
                     CharitiesNumber = "CC20097",
@@ -46,10 +47,10 @@ namespace WebApp.Models
 
                 var invoice2 = new Invoice()
                 {
-                    InvoiceNumber = "INV-00051",
+                    InvoiceNumber = "20171113-001",
                     DateCreated = new DateTime(2017, 11, 13),
                     DateDue = new DateTime(2017, 11, 27),
-                    IssueeOrganization = "Jason Carpets",
+                    ClientName = "Jason Carpets",
                     ClientContact = "297 Moorhouse Ave\\r\\nSydenham\\r\\nChristchurch 8011",
                     Status = InvoiceStatus.Sent,
                     GstRate = .15m,
@@ -67,10 +68,10 @@ namespace WebApp.Models
 
                 var invoice3 = new Invoice()
                 {
-                    InvoiceNumber = "INV-00052",
+                    InvoiceNumber = "20170909-001",
                     DateCreated = new DateTime(2017, 9, 9),
                     DateDue = new DateTime(2017, 9, 30),
-                    IssueeOrganization = "Transtellar",
+                    ClientName = "Transtellar",
                     ClientContact = "52 Solmine Ave\\r\\nRiccarton\\r\\nChristchurch 8025",
                     Status = InvoiceStatus.Paid,
                     GstRate = .15m,
@@ -90,7 +91,7 @@ namespace WebApp.Models
                         }
                     }
                 };
-      
+
                 _context.Add(invoice1);
                 _context.Add(invoice2);
                 _context.Add(invoice3);
@@ -102,7 +103,7 @@ namespace WebApp.Models
             {
                 var user1 = new User()
                 {
-                    Login = "guest",
+                    Email = "guest@guest.com",
                     Name = "guest",
                     Password = _cryptography.HashMD5("guest"),
                     Active = true
@@ -110,7 +111,7 @@ namespace WebApp.Models
 
                 var user2 = new User()
                 {
-                    Login = "helersonlage@gmail.com",
+                    Email = "helersonlage@gmail.com",
                     Name = "Helerson Lage",
                     Password = "68eacb97d86f0c4621fa2b0e17cabd8c",
                     Active = true

@@ -57,7 +57,7 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _context.User.SingleOrDefaultAsync(m => m.Login.Equals(login));
+            var user = await _context.User.SingleOrDefaultAsync(m => m.Email.Equals(login));
 
             if (user == null)
             {
@@ -82,7 +82,7 @@ namespace WebApp.Controllers
                 return BadRequest("Invalid ID");
             }
 
-            if (LoginExists(user.Login))
+            if (LoginExists(user.Email))
             {
                 user.Password = _crypto.HashMD5(user.Password);
                 _context.Entry(user).State = EntityState.Modified;
@@ -122,7 +122,7 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (LoginExists(user.Login))
+            if (LoginExists(user.Email))
             {
                 return BadRequest("Login Invalid");
             }
@@ -163,7 +163,7 @@ namespace WebApp.Controllers
 
             try
             {
-                user = _context.User.Where(a => a.Login.ToLower().Equals(Name.ToLower())).FirstOrDefault();
+                user = _context.User.Where(a => a.Email.ToLower().Equals(Name.ToLower())).FirstOrDefault();
 
             }
             catch (Exception)
@@ -179,7 +179,7 @@ namespace WebApp.Controllers
 
             try
             {
-                user = await _context.User.SingleOrDefaultAsync(a => a.Login.ToLower().Equals(login.ToLower().Trim()));
+                user = await _context.User.SingleOrDefaultAsync(a => a.Email.ToLower().Equals(login.ToLower().Trim()));
             }
             catch (Exception)
             {
@@ -196,7 +196,7 @@ namespace WebApp.Controllers
 
         private bool LoginExists(string login)
         {
-            return _context.User.Any(e => e.Login.ToLower().Equals(login.ToLower().Trim()));
+            return _context.User.Any(e => e.Email.ToLower().Equals(login.ToLower().Trim()));
         }
 
     }

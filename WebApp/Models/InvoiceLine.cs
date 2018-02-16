@@ -7,7 +7,7 @@ namespace WebApp.Models
 {
     public class InvoiceLine
     {
-        [JsonIgnore] [BindNever]
+        [JsonIgnore]
         public int Id { get; set; } // the PK is not needed by the client
         public int ItemOrder { get; set; }
         public string Description { get; set; }

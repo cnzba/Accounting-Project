@@ -8,7 +8,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 
-import { IInvoice } from './invoice';
+import { IInvoice, IInvoiceLine } from './invoice';
 
 @Injectable()
 export class InvoiceService {
@@ -23,7 +23,8 @@ export class InvoiceService {
     }
 
     getInvoice(invoiceNumber: string): Observable<IInvoice> {
-        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber).catch(this.handleError);
+        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber)
+              .catch(this.handleError);
     }
 
     createNewInvoice(): Observable<IInvoice> {
@@ -33,11 +34,16 @@ export class InvoiceService {
             + ("0" + today.getDate()).slice(-2)
             + "-xxx";
 
-        return Observable.of({invoiceNumber: fakeInvoiceNumber, issueeOrganization: "", issueeCareOf: "", clientContact: "", dateDue: null, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": null, subTotal: 0, grandTotal: 0 });
+        return Observable.of({ invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: null, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": null, subTotal: 0, grandTotal: 0 });
     }
 
     saveDraftInvoice(invoice: IInvoice): Observable<IInvoice> {
         var response: Observable<IInvoice>;
+
+        // ensure line items remain in the correct order
+        for (var i = 0; i < invoice.invoiceLine.length; i++) {
+            invoice.invoiceLine[i].itemOrder = i;
+        }
 
         if (this.isSaved(invoice)) response = this.updateInvoice(invoice);
         else response = this.createInvoice(invoice);
@@ -45,15 +51,29 @@ export class InvoiceService {
         return response;
     }
 
+    computeGST(invoice: IInvoice): number
+    {
+        let total: number = this.computeTotal(invoice);
+        return total - total / (1 + invoice.gstRate);
+    }
+
+    computeTotal(invoice: IInvoice) : number
+    {
+        return invoice.invoiceLine.reduce<number>(
+            (acc: number, elem: IInvoiceLine): number => acc + +elem.amount, 0);
+    }
+
     private createInvoice(invoice: IInvoice): Observable<IInvoice> {
+        console.log('Post (send): ' + JSON.stringify(invoice));
         return this.http.post<IInvoice>(this.invoiceUrl, invoice)
-            .do(data => console.log('Post: ' + JSON.stringify(data)))
+            .do(data => console.log('Post (receive): ' + JSON.stringify(data)))
             .catch(this.handleError);
     }
 
     private updateInvoice(invoice: IInvoice): Observable<IInvoice> {
+        console.log('Put (send): ' + JSON.stringify(invoice));
         return this.http.put<IInvoice>(this.invoiceUrl + '/' + invoice.invoiceNumber, invoice)
-            .do(data => console.log('Put: ' + JSON.stringify(data)))
+            .do(data => console.log('Put (receive): ' + JSON.stringify(data)))
             .catch(this.handleError);
     }
 
@@ -65,15 +85,25 @@ export class InvoiceService {
     private handleError(err: HttpErrorResponse) {
         // in a real world app, we may send the server to some remote logging infrastructure
         // instead of just logging it to the console
+
         let errorMessage = '';
         if (err.error instanceof Error) {
             // A client-side or network error occurred. Handle it accordingly.
             errorMessage = `An error occurred: ${err.error.message}`;
         } else {
             // The backend returned an unsuccessful response code.
-            // The response body may contain clues as to what went wrong,
-            errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`;
+            // The response body may contain clues as to what went wrong
+            if (err.status == 400) {
+                let tmpMessage: string = '';
+
+                tmpMessage = Object.keys(err.error)[0] + ': ' + err.error[Object.keys(err.error)[0]];
+                if (tmpMessage[0] == '0') tmpMessage = err.error;
+
+                errorMessage = `${tmpMessage}`;
+            }
+            else errorMessage = `Server returned code: ${err.status}, error message is: ${err.error}`;
         }
+
         console.error(errorMessage);
         return Observable.throw(errorMessage);
     }

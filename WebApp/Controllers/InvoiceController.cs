@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApp.Controllers
 {
@@ -24,7 +25,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public IActionResult GetInvoice()
         {
-            var invoices = service.GetAllInvoices();
+            var invoices = service.GetInvoiceHeaders();
 
             if (invoices == null)
             {
@@ -50,7 +51,7 @@ namespace WebApp.Controllers
 
         // POST: api/invoice
         [HttpPost]
-        public IActionResult CreateInvoice([FromBody] Invoice invoice)
+        public IActionResult CreateInvoice([FromBody] DraftInvoice invoice)
         {
             if (!ModelState.IsValid)
             {
@@ -60,23 +61,28 @@ namespace WebApp.Controllers
             try
             {
                 if (service.CreateInvoice(invoice))
-                    return CreatedAtAction("GetInvoice", new { id = invoice.InvoiceNumber }, invoice);
+                    return CreatedAtAction("GetInvoice", new { InvoiceNumber = invoice.InvoiceNumber }, invoice);
             }
-            catch(Exception ex)
+            catch(ValidationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
             {
                 logger.LogError(ex.Message);
             }
 
-            return BadRequest("Failed to save create invoice");
+            return BadRequest("Failed to create new invoice");
         }
 
         // PUT: api/invoice/5
-        [HttpPut("{id}")]
-        public IActionResult ModifyInvoice([FromRoute] string invoiceNumber, [FromBody] Invoice invoice)
+        [HttpPut("{InvoiceNumber}")]
+        public IActionResult ModifyInvoice([FromRoute] string invoiceNumber,
+            [FromBody] DraftInvoice invoice)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+               return BadRequest(ModelState);
             }
 
             if (invoiceNumber != invoice.InvoiceNumber)
@@ -90,7 +96,15 @@ namespace WebApp.Controllers
                 {
                     return BadRequest("Unable to modify invoice.");
                 }
-                else return Ok(invoice);
+                else return Ok(service.GetInvoice(invoice.InvoiceNumber));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
