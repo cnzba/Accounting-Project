@@ -1,18 +1,18 @@
-<h2>View Invoice List</h2>
-<form>
-    <a [routerLink]="['/invoice/new']">
+
+<form class="form1" >
+    <a class="btn btn-lg btn-success" [routerLink]="['/invoice/new']">
         Create New Invoice
     </a>
-    <table style="height: 138px; width: 639px" class="invoices" align="center">
-        <thead>
+    <table class="table table-bordered table-striped table-hover table-light " >
+       <thead class="thead-dark">
             <tr>
-                <td>Invoice Number</td>
+                <th style="width:10%" >Invoice Number</th>
 
-                <td style="height: 46px; width: 160px">Date Created</td>
-                <td style="height: 46px; width: 160px">Client Name</td>
-                <td style="height: 46px; width: 160px">Amount</td>
-                <td style="height: 46px; width: 160px">Due Date</td>
-                <td style="height: 46px; width: 160px">Status</td>
+                <th style="width: 10%">Date Created</th>
+                <th style="width: 10%">Client Name</th>
+                <th style="width: 10%">Amount</th>
+                <th style="width: 10%">Due Date</th>
+                <th style="width: 10%">Status</th>
 
 
             </tr>
@@ -21,22 +21,23 @@
 
         <tbody>
             <tr *ngFor="let inv of invo">
-                <td *ngIf="inv.status==='Sent'||inv.status==='Paid'">
+                <td *ngIf="inv.status==='Sent'||inv.status==='Paid'" style="width:10%" >
                     <a [routerLink]="['/invoices', inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
                 </td>
 
 
-                <td *ngIf="inv.status==='New'||inv.status==='Draft'">
+                <td *ngIf="inv.status==='New'||inv.status==='Draft'" style="width:10%">
                     <a [routerLink]="['/invoices/edit/',inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
                 </td>
 
-                <td style="height: 46px; width: 50px">{{inv.dateCreated | date: 'dd/MM/yyyy'}}</td>
-                <td style="height: 46px; width: 50px">{{inv.clientName}} </td>
-                <td style="height: 46px; width: 50px">${{inv.grandTotal|number:'.2-2'}}</td>
-                <td style="height: 46px; width: 50px">{{inv.dateDue}}</td>
-                <td style="height: 46px; width: 50px">{{inv.status}}</td>
 
-                <td *ngIf="inv.status==='Draft'" style="height: 46px; width: 50px">
+                <td style="width: 10%">{{inv.dateCreated | date: 'dd/MM/yyyy'}}</td>
+                <td style="width: 10%">{{inv.clientName}} </td>
+                <td style="width: 10%">${{inv.grandTotal|number:'.2-2'}}</td>
+                <td style="width: 10%">{{inv.dateDue | date: 'dd/MM/yyyy'}}</td>
+                <td style="width: 10%">{{inv.status}}</td>
+
+                <td *ngIf="inv.status==='Draft'" style="width: 10%">
                     <button class="btn btn-default" type="button" (click)="deleteFieldValue(i)">Delete</button>
                 </td>
 
@@ -44,9 +45,14 @@
             </tr>
 
 
-        </tbody>
 
+        </tbody>
     </table>
+        <a class="btn btn-lg btn-success"[routerLink]="['/invoice/new']">
+            Create New Invoice
+        </a>
+        
+   
 </form>
 
 
