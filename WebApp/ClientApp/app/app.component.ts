@@ -5,24 +5,30 @@ import { AuthenticationService } from "./login/authentication.service";
 import { AlertService } from "./alert/alert.service";
 
 import { Router, Event, NavigationStart, NavigationEnd, NavigationError, NavigationCancel } from '@angular/router';
+import { CallbackService } from './common/callback.service';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    providers: [InvoiceService]
+    providers: [InvoiceService, CallbackService]
 })
 
 export class AppComponent {
     title = 'CBA Invoicing';
     loading: boolean = true;
+    forcePasswordChange: boolean = false;
 
     currentUser: IUser;
     showUser: boolean;
 
     constructor(private authenticationService: AuthenticationService,
-        private alertService: AlertService, private router: Router) {
+        private alertService: AlertService, private router: Router, private callbackService: CallbackService) {
         router.events.subscribe((routerEvent: Event) => this.checkRouterEvent(routerEvent));
+        callbackService.updateNavObs$.subscribe(fpc => {
+            console.log("received fpc: ", fpc);
+            this.forcePasswordChange = fpc;
+        });
     }
 
     ngOnInit() {
@@ -32,6 +38,8 @@ export class AppComponent {
                 this.currentUser = user;
                 this.showUser = true;
             });
+        this.forcePasswordChange = localStorage.getItem("forcePasswordChange") === "true";
+        
     }
 
     checkRouterEvent(routerEvent: Event): void {

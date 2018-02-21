@@ -16,7 +16,8 @@ describe('Authentication service', () => {
     let user: IUser = {
         "login": "guest",
         "name": "guest",
-        "active": true
+        "active": true,
+        "forcePasswordChange": false
     };
 
     beforeEach(() => {
