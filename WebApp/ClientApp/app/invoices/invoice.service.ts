@@ -27,6 +27,11 @@ export class InvoiceService {
               .catch(this.handleError);
     }
 
+    getInvoiceNoAuth(invoiceNumber: string): Observable<IInvoice> {
+        return this.http.get<IInvoice>(this.invoiceUrl + '/p/' + invoiceNumber)
+            .catch(this.handleError);
+    }
+
     createNewInvoice(): Observable<IInvoice> {
         var today = new Date();
         var fakeInvoiceNumber = today.getFullYear()

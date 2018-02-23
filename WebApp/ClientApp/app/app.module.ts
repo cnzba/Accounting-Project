@@ -23,6 +23,8 @@ import { ForgotPasswordComponent } from './login/forgot-password.component';
 import { ChangePasswordComponent } from './login/change-password.component';
 import { ForgotPasswordService } from './login/forgot-password.service';
 import { ChangePasswordService } from './login/change-password.service';
+import { InvoicePaymentComponent } from './payment/invoice-payment.component';
+import { InvoicePaymentService } from './payment/invoice-payment.service';
 
 
 @NgModule({
@@ -34,7 +36,8 @@ import { ChangePasswordService } from './login/change-password.service';
         InvoicedetailComponent,
         InvoiceEditComponent,
         ForgotPasswordComponent,
-        ChangePasswordComponent
+        ChangePasswordComponent,
+        InvoicePaymentComponent
     ],
     imports: [
         BrowserModule,
@@ -52,6 +55,7 @@ import { ChangePasswordService } from './login/change-password.service';
             { path: "invoice/new", component: InvoiceEditComponent },
             { path: "forgot-password", component: ForgotPasswordComponent },
             { path: "change-password", component: ChangePasswordComponent, canActivate: [AuthGuard] },
+            { path: "pay/:id", component: InvoicePaymentComponent },
             // otherwise redirect to the invoice list
             { path: '**', redirectTo: 'invoices' }
         ], { enableTracing: false })
@@ -64,7 +68,8 @@ import { ChangePasswordService } from './login/change-password.service';
         AuthenticationService,
         UserService,
         ForgotPasswordService,
-        ChangePasswordService
+        ChangePasswordService,
+        InvoicePaymentService
     ],
     bootstrap: [AppComponent]
 })

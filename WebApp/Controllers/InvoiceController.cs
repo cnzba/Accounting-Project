@@ -49,6 +49,22 @@ namespace WebApp.Controllers
             return Ok(invoice);
         }
 
+        // GET api/invoice/p/5 for payment without auth
+        [Route("p/{InvoiceNumber}")]
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult GetInvoiceNoAuth([FromRoute] string invoiceNumber)
+        {
+            var invoice = service.GetInvoice(invoiceNumber);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(invoice);
+        }
+
         // POST: api/invoice
         [HttpPost]
         public IActionResult CreateInvoice([FromBody] DraftInvoice invoice)

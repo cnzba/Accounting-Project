@@ -26,8 +26,14 @@ export class AppComponent {
         private alertService: AlertService, private router: Router, private callbackService: CallbackService) {
         router.events.subscribe((routerEvent: Event) => this.checkRouterEvent(routerEvent));
         callbackService.updateNavObs$.subscribe(fpc => {
-            console.log("received fpc: ", fpc);
             this.forcePasswordChange = fpc;
+        });
+        callbackService.paymentNavObs$.subscribe(show => {
+            if (this.showUser)
+                this.showUser = false;
+            if (this.currentUser)
+                this.currentUser = null;
+            this.loading = show;
         });
     }
 
