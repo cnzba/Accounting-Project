@@ -76,9 +76,9 @@ namespace WebApp
 
         public bool ModifyInvoice(DraftInvoice invoice)
         {
-            var invoiceToUpdate = context.Invoice.SingleOrDefault(n => n.InvoiceNumber == invoice.InvoiceNumber);
+            var invoiceToUpdate = GetInvoice(invoice.InvoiceNumber);
 
-            if(invoiceToUpdate.Status != InvoiceStatus.Draft) throw new ArgumentException($"Invoice {invoice.InvoiceNumber} is not a draft and may not be modified");
+            if (invoiceToUpdate.Status != InvoiceStatus.Draft) throw new ArgumentException($"Invoice {invoice.InvoiceNumber} is not a draft and may not be modified");
 
             invoiceToUpdate.ClientContactPerson = invoice.ClientContactPerson;
             invoiceToUpdate.ClientName = invoice.ClientName;
@@ -91,7 +91,7 @@ namespace WebApp
 
             validate(invoiceToUpdate);
 
-            if (!context.Entry(invoiceToUpdate).State.HasFlag(EntityState.Modified)) return true;
+            if (!context.ChangeTracker.HasChanges()) return true;
             else return context.SaveChanges() > 0;
         }
 
