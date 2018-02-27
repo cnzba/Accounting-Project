@@ -10,3 +10,7 @@ input {
 textarea {
     width: 100%;
 }
+
+.hidden {
+    visibility: hidden;
+}

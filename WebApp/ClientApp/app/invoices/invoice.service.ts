@@ -29,12 +29,15 @@ export class InvoiceService {
 
     createNewInvoice(): Observable<IInvoice> {
         var today = new Date();
+        var dueDate = new Date();
+        dueDate.setDate(dueDate.getDate() + 14);
+
         var fakeInvoiceNumber = today.getFullYear()
             + ("0" + (today.getMonth() + 1)).slice(-2)
             + ("0" + today.getDate()).slice(-2)
             + "-xxx";
 
-        return Observable.of({ invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: null, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": null, subTotal: 0, grandTotal: 0 });
+        return Observable.of({ invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": [], subTotal: 0, grandTotal: 0 });
     }
 
     saveDraftInvoice(invoice: IInvoice): Observable<IInvoice> {
@@ -78,7 +81,7 @@ export class InvoiceService {
     }
 
     private isSaved(invoice: IInvoice) {
-        if (invoice.invoiceNumber.search("xxx") == -1) return true;
+        if (invoice.status.search("New") == -1) return true;
         else return false;
     }
 
