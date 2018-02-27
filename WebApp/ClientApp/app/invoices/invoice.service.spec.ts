@@ -42,6 +42,7 @@ describe('Invoice service', () => {
     it("saveDraftInvoice should use HttpClient.post for new invoice",
         async(() => {
             invoice.invoiceNumber = "20171206-xxx";
+            invoice.status = "New";
             service.saveDraftInvoice(invoice).subscribe();
             expect(http.post.calls.count()).toEqual(1);
             expect(http.put.calls.count()).toEqual(0);
