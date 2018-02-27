@@ -1,4 +1,6 @@
-<div class="text-center" style="height: 500px" *ngIf="message">
-    {{message}}<br/>
-    <button *ngIf="amount" type="button" (click)="getToken()" class="btn btn-primary">Pay by Credit/Debit Card</button>
+<div class="text-center" style="height: 50px" *ngIf="message !== ''">
+    {{message}}
+</div>
+<div class="text-center" *ngIf="message && amount">
+    <button type="button" (click)="getToken()" class="btn btn-primary">Pay by Credit/Debit Card</button>
 </div>

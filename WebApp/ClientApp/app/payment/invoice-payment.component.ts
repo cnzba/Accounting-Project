@@ -52,21 +52,20 @@ export class InvoicePaymentComponent implements OnInit, OnDestroy {
     }
 
     verifyInvoice(): void {
-        if (this.invoice) {
-            if (this.invoice.status === "Sent") {
-                this.message = "Valid invoice";
-                this.amount = this.invoice.grandTotal * 100;
-            } else if (this.invoice.status === "Paid" || this.invoice.status === "Canceled" || this.invoice.status === "Cancelled") {
-                this.message = null;
-                this.alertService.error("Invoice has already been paid");
-            } else if (this.invoice.status === "Draft") {
-                this.message = null;
-                this.alertService.error("Invoice has not been sent");
-            } else {
-                this.message = null;
-                this.alertService.error("Invalid invoice number");
-            }
+        if (!this.invoice) {
+            this.message = null;
+            this.alertService.error("Invalid invoice number");
+        } else if (this.invoice.status === "Sent") {
+            this.message = "Valid invoice";
+            this.amount = this.invoice.grandTotal * 100;
+        } else if (this.invoice.status === "Paid" || this.invoice.status === "Cancelled") {
+            this.message = null;
+            this.alertService.error("Invoice has already been paid");
+        } else if (this.invoice.status === "Draft" || this.invoice.status === "New") {
+            this.message = null;
+            this.alertService.error("Invoice has not been sent");
         } else {
+            this.message = null;
             this.alertService.error("Invalid invoice number");
         }
     }
@@ -85,18 +84,31 @@ export class InvoicePaymentComponent implements OnInit, OnDestroy {
 
     pay(token: any) {
         let body = {
-            tokenId: token.id,
-            productName: 'Invoice No - ' + this.invoice.invoiceNumber,
-            amount: this.amount
+            TokenId: token.id,
+            InvoiceNo: this.invoice.invoiceNumber,
+            TokenObj: JSON.stringify(token),
+            Gateway: "stripe",
+            Type: "card"
         };
+        console.log("token===", body);
         this.callbackService.paymentNav(true);
-        this.paymentService.chargeCard(JSON.stringify(body))
+        this.message = "Processing payment....";
+        this.paymentService.chargeCard(body)
                 .subscribe(
                 data => {
                     this.callbackService.paymentNav(false);
-                    this.alertService.success(JSON.parse(data).status);
+                    this.message = "";
+                    console.log("pgresp===", data);
+                    let response = JSON.parse(data);
+                    if (response.status === "succeeded") {
+                        this.alertService.success(response.message);
+                    } else {
+                        this.alertService.error(response.message);
+                    }
                 },
                 error => {
+                    this.message = "";
+                    console.log("pgerr===", error);
                     this.alertService.error(error);
                     this.callbackService.paymentNav(false);
                 });

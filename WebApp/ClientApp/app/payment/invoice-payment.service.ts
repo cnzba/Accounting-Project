@@ -4,12 +4,12 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class InvoicePaymentService {
-    private url: string = "api/ChangePassword";
+    private url: string = "api/Payment";
 
     constructor(private http: HttpClient) { }
 
-    chargeCard(body: string): Observable<string> {
-        return this.http.post<string>(this.url, body, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }).catch(this.handleError);
+    chargeCard(body: any): Observable<string> {
+        return this.http.post<string>(this.url, body).catch(this.handleError);
     }
 
     private handleError(err: HttpErrorResponse) {
