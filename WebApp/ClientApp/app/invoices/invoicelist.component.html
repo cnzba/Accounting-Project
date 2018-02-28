@@ -1,12 +1,26 @@
 
-<form class="form1" >
+
+<form class="form1">
+
+
+
     <a class="btn btn-lg btn-success" [routerLink]="['/invoice/new']">
         Create New Invoice
     </a>
-    <table class="table table-bordered table-striped table-hover table-light " >
-       <thead class="thead-dark">
+
+
+    <div class="row">
+
+
+
+        <app-pagination [offset]="offset" [limit]="limit" [size]="count" (pageChange)="onPageChange($event)"></app-pagination>
+    </div>
+
+
+    <table class="table table-bordered table-striped table-hover table-light">
+        <thead class="thead-dark">
             <tr>
-                <th style="width:10%" >Invoice Number</th>
+                <th style="width:10%">Invoice Number</th>
 
                 <th style="width: 10%">Date Created</th>
                 <th style="width: 10%">Client Name</th>
@@ -21,7 +35,7 @@
 
         <tbody>
             <tr *ngFor="let inv of invo">
-                <td *ngIf="inv.status==='Sent'||inv.status==='Paid'" style="width:10%" >
+                <td *ngIf="inv.status==='Sent'||inv.status==='Paid'" style="width:10%">
                     <a [routerLink]="['/invoices', inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
                 </td>
 
@@ -48,12 +62,18 @@
 
         </tbody>
     </table>
-        <a class="btn btn-lg btn-success"[routerLink]="['/invoice/new']">
-            Create New Invoice
-        </a>
-        
-   
+
+
+
+    <a class="btn btn-lg btn-success" [routerLink]="['/invoice/new']">
+        Create New Invoice
+    </a>
+
+
+
 </form>
+
+
 
 
 

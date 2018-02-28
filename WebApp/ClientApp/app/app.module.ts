@@ -3,6 +3,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgForm } from '@angular/forms';
+//import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+
 import 'rxjs/add/operator/map';
 
 import { AppComponent } from './app.component';
@@ -19,7 +22,7 @@ import { InvoicedetailComponent } from "./invoices/invoicedetail.component";
 import { InvoiceEditComponent } from "./invoices/invoice-edit.component";
 import { InvoiceService } from "./invoices/invoice.service";
 import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
-
+import { PaginationComponent } from './pagination/pagination.component';
 
 @NgModule({
     declarations: [
@@ -28,13 +31,18 @@ import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
         LoginComponent,
         InvoicelistComponent,
         InvoicedetailComponent,
-        InvoiceEditComponent
+        InvoiceEditComponent,
+        PaginationComponent,
+       
+        
+
     ],
     imports: [
         BrowserModule,
         HttpClientModule,
         FormsModule,
         HttpModule,
+       PaginationModule.forRoot(),
         RouterModule.forRoot([
             { path: 'login', component: LoginComponent },
             {
@@ -47,6 +55,7 @@ import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
             // otherwise redirect to the invoice list
             { path: '**', redirectTo: 'invoices' }
         ], { enableTracing: false })
+       
     ],
     providers: [
         InvoiceService,
@@ -55,6 +64,7 @@ import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
         AlertService,
         AuthenticationService,
         UserService,
+        
     ],
     bootstrap: [AppComponent]
 })
