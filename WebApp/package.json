@@ -24,7 +24,7 @@
     "bootstrap": "4.0.0-beta.2",
     "core-js": "^2.5.3",
     "jquery": "^3.2.1",
-    "ngx-bootstrap": "^2.0.2",
+    
     "open-iconic": "^1.1.1",
     "popper.js": "^1.12.9",
     "rxjs": "^5.4.2",

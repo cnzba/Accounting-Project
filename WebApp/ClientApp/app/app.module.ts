@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgForm } from '@angular/forms';
 //import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 import 'rxjs/add/operator/map';
 
@@ -42,7 +41,7 @@ import { PaginationComponent } from './pagination/pagination.component';
         HttpClientModule,
         FormsModule,
         HttpModule,
-       PaginationModule.forRoot(),
+      // PaginationModule.forRoot(),
         RouterModule.forRoot([
             { path: 'login', component: LoginComponent },
             {
