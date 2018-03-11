@@ -1,6 +1,8 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-
+//import 'rxjs/add/operator/map';
+//import 'rxjs/add/operator/filter';
+//import 'rxjs/add/observable/range';
 @Component({
     selector: 'app-pagination',
     templateUrl: './pagination.component.html',
@@ -34,6 +36,9 @@ export class PaginationComponent implements OnInit, OnChanges {
             .filter(page => this.isValidPageNumber(page, this.totalPages))
             .toArray();
     }
+   isValidPageNumber(page: number, totalPages: number): boolean {
+        return page > 0 && page <= totalPages;
+   }
     selectPage(page: number, event) {
         event.preventDefault();
         if (this.isValidPageNumber(page, this.totalPages)) {
