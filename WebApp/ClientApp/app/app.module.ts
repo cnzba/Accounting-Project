@@ -3,8 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgForm } from '@angular/forms';
-//import { PaginationModule } from 'ngx-bootstrap/pagination';
-
 import 'rxjs/add/operator/map';
 
 import { AppComponent } from './app.component';
@@ -21,7 +19,11 @@ import { InvoicedetailComponent } from "./invoices/invoicedetail.component";
 import { InvoiceEditComponent } from "./invoices/invoice-edit.component";
 import { InvoiceService } from "./invoices/invoice.service";
 import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
-import { PaginationComponent } from './pagination/pagination.component';
+import { ForgotPasswordComponent } from './login/forgot-password.component';
+import { ChangePasswordComponent } from './login/change-password.component';
+import { ForgotPasswordService } from './login/forgot-password.service';
+import { ChangePasswordService } from './login/change-password.service';
+
 
 @NgModule({
     declarations: [
@@ -31,17 +33,14 @@ import { PaginationComponent } from './pagination/pagination.component';
         InvoicelistComponent,
         InvoicedetailComponent,
         InvoiceEditComponent,
-        PaginationComponent,
-       
-        
-
+        ForgotPasswordComponent,
+        ChangePasswordComponent
     ],
     imports: [
         BrowserModule,
         HttpClientModule,
         FormsModule,
         HttpModule,
-      // PaginationModule.forRoot(),
         RouterModule.forRoot([
             { path: 'login', component: LoginComponent },
             {
@@ -51,10 +50,11 @@ import { PaginationComponent } from './pagination/pagination.component';
             { path: "invoices/:id", component: InvoicedetailComponent, canActivate: [AuthGuard] },
             { path: "invoices/edit/:id", component: InvoiceEditComponent },
             { path: "invoice/new", component: InvoiceEditComponent },
+            { path: "forgot-password", component: ForgotPasswordComponent },
+            { path: "change-password", component: ChangePasswordComponent, canActivate: [AuthGuard] },
             // otherwise redirect to the invoice list
             { path: '**', redirectTo: 'invoices' }
         ], { enableTracing: false })
-       
     ],
     providers: [
         InvoiceService,
@@ -63,7 +63,8 @@ import { PaginationComponent } from './pagination/pagination.component';
         AlertService,
         AuthenticationService,
         UserService,
-        
+        ForgotPasswordService,
+        ChangePasswordService
     ],
     bootstrap: [AppComponent]
 })

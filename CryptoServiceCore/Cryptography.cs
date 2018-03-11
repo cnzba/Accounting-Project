@@ -9,6 +9,10 @@ namespace CryptoService
 {
     public class Cryptography : ICryptography
     {
+        private const string alphanumericCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+            "abcdefghijklmnopqrstuvwxyz" + 
+            "0123456789";
+
         public Cryptography()
         {
         }
@@ -37,6 +41,20 @@ namespace CryptoService
 
 
 
+        }
+
+        public string GenerateTempPassword(int length)
+        {
+            var characterArray = alphanumericCharacters.Distinct().ToArray();
+            var bytes = new byte[length * 8];
+            new RNGCryptoServiceProvider().GetBytes(bytes);
+            var result = new char[length];
+            for (int i = 0; i < length; i++)
+            {
+                ulong value = BitConverter.ToUInt64(bytes, i * 8);
+                result[i] = characterArray[value % (uint)characterArray.Length];
+            }
+            return new string(result);
         }
     }
 }

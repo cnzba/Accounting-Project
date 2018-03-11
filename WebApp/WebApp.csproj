@@ -33,8 +33,4 @@
     <ProjectReference Include="..\CryptoServiceCore\CryptoServiceCore.csproj" />
     <ProjectReference Include="..\ServiceUtil\ServiceUtil.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
 </Project>

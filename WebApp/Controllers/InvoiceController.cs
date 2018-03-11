@@ -117,8 +117,25 @@ namespace WebApp.Controllers
 
         // DELETE api/invoice/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            try
+            {
+                if (!service.DeleteInvoice(id))
+                {
+                    return BadRequest("Invoice had status other than draft.");
+                }
+                else return Ok("Deletion of draft invoice successful.");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
+                return BadRequest("Unable to delete invoice.");
+            }
         }
     }
 }

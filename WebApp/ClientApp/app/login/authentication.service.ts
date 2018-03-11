@@ -65,7 +65,9 @@ export class AuthenticationService {
                 else throw err;
             })
             .do(data => {
+                //localStorage.removeItem('currentUser');
                 localStorage.removeItem('LoginId');
+                localStorage.removeItem('forcePasswordChange');
                 this.userSubject.next(null);
             });
     }

@@ -41,19 +41,16 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div *ngIf="!showContact" class="row">
                     <div class="col">
-                        <a href="#">Add Contact</a>
+                        <button type="button" class="btn btn-sm btn-link" (click)="addContact()">
+                            Add Contact
+                        </button>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col">
-                        <a href="#">Add Address</a>
-                    </div>
-                </div>
-
-                <div class="row">
+                <div *ngIf="showContact" class="row"
+                     (mouseenter)="contactHover = true" (mouseleave)="contactHover = false">
                     <div class="col-4">
                         <b>Client Contact Person</b>
                     </div>
@@ -61,13 +58,24 @@
                         <input type="text" [(ngModel)]="modifyInvoice.clientContactPerson" name="clientcontactperson" />
                     </div>
                     <div class="col-1">
-                        <button type="button" class="btn btn-outline-danger btn-sm">
+                        <button type="button" [class.hidden]="!contactHover"
+                                (click)="removeContact()" 
+                                class="btn btn-outline-danger btn-sm">
                             <span class="oi oi-x"></span>
                         </button>
                     </div>
                 </div>
 
-                <div class="row">
+                <div *ngIf="!showAddress" class="row">
+                    <div class="col">
+                        <button type="button" class="btn btn-sm btn-link" (click)="addAddress()">
+                            Add Address
+                        </button>
+                    </div>
+                </div>
+
+                <div *ngIf="showAddress" class="row"
+                     (mouseenter)="addressHover = true" (mouseleave)="addressHover = false">
                     <div class="col-4">
                         <b>Client Address</b>
                     </div>
@@ -75,7 +83,9 @@
                         <textarea rows="3" type="text" [(ngModel)]="modifyInvoice.clientContact" name="clientcontact"></textarea>
                     </div>
                     <div class="col-1">
-                        <button type="button" class="btn btn-outline-danger btn-sm">
+                        <button *ngIf="!requireAddress" type="button"
+                                [class.hidden]="!addressHover" (click)="removeAddress()"
+                                class="btn btn-outline-danger btn-sm">
                             <span class="oi oi-x"></span>
                         </button>
                     </div>
@@ -131,9 +141,15 @@
             </div>
             <div class="col-2">
                 <b>Amount</b>
+                <div class="float-right">
+                    <button type="button" class="btn btn-link btn-sm" (click)="addLineItem()">
+                        Add Item
+                    </button>
+                </div>
             </div>
         </div>
-        <div class="row" *ngFor='let il of modifyInvoice.invoiceLine; index as i; first as isFirst; last as isLast'>
+
+        <div class="row" *ngFor='let il of modifyInvoice.invoiceLine; index as i; first as isFirst; last as isLast' (mouseenter)="itemHover = i" (mouseleave)="itemHover = -1">
             <div class="col-6">
                 <input [(ngModel)]="il.description" class="form-control" type="text" name="description{{i}}" />
             </div>
@@ -142,27 +158,31 @@
                        class="form-control" type="text" name="amount{{i}}" />
             </div>
             <div class="col-4">
-                <button (click)="deleteLineItem(i)" type="button" class="btn btn-outline-danger btn-sm">
-                    <span class="oi oi-x"></span>
-                </button>
-                <button *ngIf="!isFirst" (click)="moveItemUp(i)" type="button" class="btn btn-outline-secondary btn-sm" aria-label="Left Align">
-                    <span class="oi oi-arrow-circle-top" aria-hidden="true"></span>
-                </button>
-                <button *ngIf="isFirst" style="visibility:hidden" type="button" class="btn btn-outline-secondary btn-sm" aria-label="Left Align">
-                    <span class="oi oi-arrow-circle-top" aria-hidden="true"></span>
-                </button>
-                <button *ngIf="!isLast" (click)="moveItemDown(i)" type="button" class="btn btn-outline-secondary btn-sm">
-                    <span class="oi oi-arrow-circle-bottom" aria-hidden="true"></span>
-                </button>
-                <button *ngIf="isLast" style="visibility:hidden" type="button" class="btn btn-outline-secondary btn-sm">
-                    <span class="oi oi-arrow-circle-bottom" aria-hidden="true"></span>
-                </button>
+                <div [class.hidden]="i!=itemHover">
+                    <button (click)="deleteLineItem(i)" type="button" class="btn btn-outline-danger btn-sm">
+                        <span class="oi oi-x"></span>
+                    </button>
+                    <button *ngIf="!isFirst" (click)="moveItemUp(i)" type="button" class="btn btn-outline-secondary btn-sm" aria-label="Left Align">
+                        <span class="oi oi-arrow-circle-top" aria-hidden="true"></span>
+                    </button>
+                    <button *ngIf="isFirst" style="visibility:hidden" type="button" class="btn btn-outline-secondary btn-sm" aria-label="Left Align">
+                        <span class="oi oi-arrow-circle-top" aria-hidden="true"></span>
+                    </button>
+                    <button *ngIf="!isLast" (click)="moveItemDown(i)" type="button" class="btn btn-outline-secondary btn-sm">
+                        <span class="oi oi-arrow-circle-bottom" aria-hidden="true"></span>
+                    </button>
+                    <button *ngIf="isLast" style="visibility:hidden" type="button" class="btn btn-outline-secondary btn-sm">
+                        <span class="oi oi-arrow-circle-bottom" aria-hidden="true"></span>
+                    </button>
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="col-8">
                 <div class="float-right">
-                    <button type="button" class="btn btn-success btn-sm" (click)="addLineItem()">Add Item</button>
+                    <button type="button" class="btn btn-link btn-sm" (click)="addLineItem()">
+                        Add Item
+                    </button>
                 </div>
             </div>
         </div>
