@@ -25,7 +25,9 @@ namespace WebApp.Models
         public PaymentResponse ChargeCard(PaymentRequest paymentRequest)
         {
             PaymentResponse response = new PaymentResponse();
-            Invoice invoice = _invoiceService.GetInvoice(paymentRequest.InvoiceNo);
+            Invoice invoice = _invoiceService.GetInvoiceByPaymentId(paymentRequest.PaymentId);
+
+            // TODO add logic for repayment
 
             if (invoice == null)
             {
@@ -41,10 +43,9 @@ namespace WebApp.Models
                 myCharge.SourceTokenOrExistingSourceId = paymentRequest.TokenId;
                 myCharge.Amount = Decimal.ToInt32(invoice.GrandTotal * 100);
                 myCharge.Currency = "nzd";
-                myCharge.Description = "Invoice No - " + paymentRequest.InvoiceNo;
+                myCharge.Description = "Invoice No - " + invoice.InvoiceNumber;
                 myCharge.Metadata = new Dictionary<string, string>();
-                string refId = "STRIPE-" + Guid.NewGuid().ToString();
-                myCharge.Metadata["RefId"] = refId;
+                myCharge.Metadata["PaymentId"] = paymentRequest.PaymentId;
 
                 var chargeService = new StripeChargeService();
                 StripeCharge stripeCharge = chargeService.Create(myCharge);
@@ -60,21 +61,23 @@ namespace WebApp.Models
                     ChargeId = stripeCharge.Id,
                     Type = paymentRequest.Type,
                     Gateway = paymentRequest.Gateway,
-                    InvoiceNo = paymentRequest.InvoiceNo,
+                    InvoiceNo = invoice.InvoiceNumber,
                     Status = stripeCharge.Status,
                     Token = paymentRequest.TokenObj,
                     TokenId = paymentRequest.TokenId,
-                    RefId = refId
+                    PaymentId = paymentRequest.PaymentId,
+                    paymentDate = DateTime.Now
                 };
 
-                _context.Payment.Add(paymentModel);
+                _context.Add<PaymentModel>(paymentModel);
 
                 if (response.Status.Equals("succeeded"))
                 {
-                    // TODO Update invoice status
+                    // TODO Update invoice status, send email
+                    invoice.Status = InvoiceStatus.Paid;
                 }
 
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
             } else if (invoice.Status == InvoiceStatus.Paid || invoice.Status == InvoiceStatus.Cancelled)
             {
                 response.Status = "failed";

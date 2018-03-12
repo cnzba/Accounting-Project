@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
+using System;
 
 namespace WebApp.Models
 {
@@ -15,8 +16,9 @@ namespace WebApp.Models
         public string InvoiceNo { get; set; }
         public string Charge { get; set; }
         public string ChargeId { get; set; }
-        public string RefId { get; set; }
+        public string PaymentId { get; set; }
         public string Type { get; set; }
         public string Gateway { get; set; }
+        public DateTime paymentDate { get; set; }
     }
 }

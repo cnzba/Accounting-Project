@@ -15,7 +15,7 @@ namespace WebApp.Models
         public string TokenObj { get; set; }
 
         [Required]
-        public string InvoiceNo { get; set; }
+        public string PaymentId { get; set; }
 
         [Required]
         public string Type { get; set; }

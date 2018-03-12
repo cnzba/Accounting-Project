@@ -50,12 +50,12 @@ namespace WebApp.Controllers
         }
 
         // GET api/invoice/p/5 for payment without auth
-        [Route("p/{InvoiceNumber}")]
+        [Route("p/{PaymentId}")]
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult GetInvoiceNoAuth([FromRoute] string invoiceNumber)
+        public IActionResult GetInvoiceNoAuth([FromRoute] string paymentId)
         {
-            var invoice = service.GetInvoice(invoiceNumber);
+            var invoice = service.GetInvoiceByPaymentId(paymentId);
 
             if (invoice == null)
             {

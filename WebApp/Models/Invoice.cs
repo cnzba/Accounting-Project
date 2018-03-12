@@ -30,8 +30,13 @@ namespace WebApp.Models
         public string ClientName { get; set; }
         public string ClientContactPerson { get; set; }
         public string ClientContact { get; set; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
 
         public DateTime DateDue { get; set; }
+
+        public string PaymentId { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public InvoiceStatus Status { get; set; } // must be New on create

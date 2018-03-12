@@ -2,5 +2,5 @@
     {{message}}
 </div>
 <div class="text-center" *ngIf="message && amount">
-    <button type="button" (click)="getToken()" class="btn btn-primary">Pay by Credit/Debit Card</button>
+    <button [disabled] = "disablePay" type="button" (click)="getToken()" class="btn btn-primary">Pay by Credit/Debit Card</button>
 </div>

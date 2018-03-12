@@ -9,7 +9,7 @@ export class InvoicePaymentService {
     constructor(private http: HttpClient) { }
 
     chargeCard(body: any): Observable<string> {
-        return this.http.post<string>(this.url, body).catch(this.handleError);
+        return this.http.post(this.url, body).map(res => JSON.stringify(res)).catch(this.handleError);
     }
 
     private handleError(err: HttpErrorResponse) {

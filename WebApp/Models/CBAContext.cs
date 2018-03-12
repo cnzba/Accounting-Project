@@ -57,7 +57,8 @@ namespace WebApp.Models
                 entity.Property(e => e.InvoiceNo).IsRequired();
                 entity.Property(e => e.Status).IsRequired();
                 entity.Property(e => e.Amount).IsRequired();
-                entity.Property(e => e.RefId).IsRequired();
+                entity.Property(e => e.PaymentId).IsRequired();
+                entity.Property(e => e.paymentDate).IsRequired();
             });
         }
     }

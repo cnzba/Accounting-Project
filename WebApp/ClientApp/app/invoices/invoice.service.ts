@@ -27,8 +27,8 @@ export class InvoiceService {
               .catch(this.handleError);
     }
 
-    getInvoiceNoAuth(invoiceNumber: string): Observable<IInvoice> {
-        return this.http.get<IInvoice>(this.invoiceUrl + '/p/' + invoiceNumber)
+    getInvoiceByPaymentId(paymentId: string): Observable<IInvoice> {
+        return this.http.get<IInvoice>(this.invoiceUrl + '/p/' + paymentId)
             .catch(this.handleError);
     }
 
@@ -39,7 +39,7 @@ export class InvoiceService {
             + ("0" + today.getDate()).slice(-2)
             + "-xxx";
 
-        return Observable.of({ invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: null, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": null, subTotal: 0, grandTotal: 0 });
+        return Observable.of({ invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: null, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": null, subTotal: 0, grandTotal: 0 });
     }
 
     saveDraftInvoice(invoice: IInvoice): Observable<IInvoice> {

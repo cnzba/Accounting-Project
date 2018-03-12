@@ -19,6 +19,7 @@ export class InvoicePaymentComponent implements OnInit, OnDestroy {
     subscription: Subscription;
     amount: number;
     handler: any;
+    disablePay: boolean = false;
 
     constructor(
         private invoiceService: InvoiceService,
@@ -33,7 +34,7 @@ export class InvoicePaymentComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.callbackService.paymentNav(true);
         this.route.paramMap
-            .switchMap((params: ParamMap) => this.invoiceService.getInvoiceNoAuth(params.get('id')))
+            .switchMap((params: ParamMap) => this.invoiceService.getInvoiceByPaymentId(params.get('id')))
             .subscribe(
             invoice => {
                 this.invoice = invoice;
@@ -85,11 +86,12 @@ export class InvoicePaymentComponent implements OnInit, OnDestroy {
     pay(token: any) {
         let body = {
             TokenId: token.id,
-            InvoiceNo: this.invoice.invoiceNumber,
+            PaymentId: this.invoice.paymentId,
             TokenObj: JSON.stringify(token),
             Gateway: "stripe",
             Type: "card"
         };
+        this.disablePay = true;
         console.log("token===", body);
         this.callbackService.paymentNav(true);
         this.message = "Processing payment....";
@@ -97,9 +99,9 @@ export class InvoicePaymentComponent implements OnInit, OnDestroy {
                 .subscribe(
                 data => {
                     this.callbackService.paymentNav(false);
-                    this.message = "";
+                    this.message = null;
                     console.log("pgresp===", data);
-                    let response = JSON.parse(data);
+                    var response = JSON.parse(data);
                     if (response.status === "succeeded") {
                         this.alertService.success(response.message);
                     } else {
@@ -107,7 +109,8 @@ export class InvoicePaymentComponent implements OnInit, OnDestroy {
                     }
                 },
                 error => {
-                    this.message = "";
+                    this.disablePay = false;
+                    this.message = null;
                     console.log("pgerr===", error);
                     this.alertService.error(error);
                     this.callbackService.paymentNav(false);
