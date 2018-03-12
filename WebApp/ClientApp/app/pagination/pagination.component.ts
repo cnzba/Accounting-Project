@@ -36,9 +36,9 @@ export class PaginationComponent implements OnInit, OnChanges {
             .filter(page => this.isValidPageNumber(page, this.totalPages))
             .toArray();
     }
-   isValidPageNumber(page: number, totalPages: number): boolean {
-        return page > 0 && page <= totalPages;
-   }
+  isValidPageNumber(page: number, totalPages: number): boolean {
+       return page > 0 && page <= totalPages;
+  }
     selectPage(page: number, event) {
         event.preventDefault();
         if (this.isValidPageNumber(page, this.totalPages)) {
