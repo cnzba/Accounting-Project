@@ -37,10 +37,9 @@ namespace WebApp.Controllers
 
             if (LoginOk)
             {
-                var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, loginModel.Username)
-            };
+                var claims = new List<Claim> {
+                    new Claim(ClaimTypes.Name, loginModel.Username)
+                };
 
                 var userIdentity = new ClaimsIdentity(claims, "login");
 
@@ -49,7 +48,7 @@ namespace WebApp.Controllers
 
                 return Ok(value: userName);
             }
-            return View();
+            else return BadRequest();
         }
 
 
@@ -66,7 +65,7 @@ namespace WebApp.Controllers
 
             var User = DbUser.FindUser(username);
 
-            if(User == null)
+            if (User == null)
             {
                 return (false, string.Empty);
             }
