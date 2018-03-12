@@ -19,22 +19,16 @@ import { ActivatedRoute } from '@angular/router';
 
 })
 export class InvoicelistComponent implements OnInit{
-    offset: any;
-   
-    
+    // offset is the index of an invoice we want to view and is used to compute the page to show; offset = 3 for example means display the page containing the 4th invoice in the list
 
-    InvoiceService: any;
+    // offset needs to be initialized
+    offset: number = 0;
 
     title: string = 'CBA Invoicing';
     invo: IInvoice[];
 
-
     errorMessage: string;
-
-
-    
-    
-   
+  
     // inject InvoiceService
     constructor(private route: ActivatedRoute, private invoiceService: InvoiceService, private alertService: AlertService, private http: Http) {
         this.invo = this.route.snapshot.data['invoices'];

@@ -10,10 +10,7 @@
 
 
     <div class="row">
-
-
-
-        <app-pagination [offset]="offset" [limit]="limit" [size]="count" (pageChange)="onPageChange($event)"></app-pagination>
+        <app-pagination [offset]="offset" [limit]="1" [size]="invo.length" (pageChange)="onPageChange($event)"></app-pagination>
     </div>
 
 
