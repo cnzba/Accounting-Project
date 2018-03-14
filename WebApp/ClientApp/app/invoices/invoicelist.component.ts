@@ -1,4 +1,5 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { InvoiceService } from "./invoice.service";
 import { IInvoice, IInvoiceLine } from "./invoice";
@@ -8,7 +9,7 @@ import { PaginationComponent } from '../pagination/pagination.component';
 
 
 
-import { ActivatedRoute } from '@angular/router';
+
 
 
 
@@ -19,13 +20,14 @@ import { ActivatedRoute } from '@angular/router';
 
 })
 export class InvoicelistComponent implements OnInit{
+    
     // offset is the index of an invoice we want to view and is used to compute the page to show; offset = 3 for example means display the page containing the 4th invoice in the list
 
     // offset needs to be initialized
     offset: number = 0;
-
+   // page: number = 1;
     title: string = 'CBA Invoicing';
-    invo: IInvoice[];
+    invo: IInvoice;
 
     errorMessage: string;
   
@@ -39,30 +41,14 @@ export class InvoicelistComponent implements OnInit{
 
     
    
-    ngOnInit() {
-       // this.setPage = 1;
+    ngOnInit(): void {
+       
     }
 
    
-
-    
-    // deleteFieldValue(index) {
-    //  this.invo.splice(index, 1);
-    //  }
-
-    // getInvoices(): void {
-    //  this.invoiceService.getInvoices().subscribe(invoices => {
-    //  this.invo = invoices;
-    //  this.alertService.success("");
-    //  }, error => this.alertService.error(error));
-    //  }
-
     
 
-
-    // onSelect(inv: IInvoice): void {
-    // this.selectedinvoi = inv;
-    // }
+               
    
     
     }
