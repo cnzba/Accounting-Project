@@ -12,6 +12,8 @@ export interface IInvoice {
     gstRate?: number;
     subTotal?: number;
     grandTotal?: number;
+    email: string;
+    paymentId: string;
     
     invoiceLine: IInvoiceLine[];
 }
@@ -30,6 +32,8 @@ export class Invoice implements IInvoice {
     gstRate?: number;
     subTotal?: number;
     grandTotal?: number;
+    email: string;
+    paymentId: string;
     
     invoiceLine: IInvoiceLine[];
 

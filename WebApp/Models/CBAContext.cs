@@ -13,6 +13,7 @@ namespace WebApp.Models
         public virtual DbSet<Invoice> Invoice { get; set; }
         public virtual DbSet<InvoiceLine> InvoiceLine { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<PaymentModel> Payment { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -48,6 +49,16 @@ namespace WebApp.Models
                 entity.Property(e => e.Email).IsRequired();
                 entity.Property(e => e.Name).IsRequired();
                 entity.Property(e => e.Password).IsRequired();
+            });
+
+            modelBuilder.Entity<PaymentModel>(entity =>
+            {
+                entity.Property(e => e.Type).IsRequired();
+                entity.Property(e => e.InvoiceNo).IsRequired();
+                entity.Property(e => e.Status).IsRequired();
+                entity.Property(e => e.Amount).IsRequired();
+                entity.Property(e => e.PaymentId).IsRequired();
+                entity.Property(e => e.paymentDate).IsRequired();
             });
         }
     }

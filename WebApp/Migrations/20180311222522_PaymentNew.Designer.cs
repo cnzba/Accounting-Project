@@ -11,9 +11,10 @@ using WebApp.Models;
 namespace WebApp.Migrations
 {
     [DbContext(typeof(CBAContext))]
-    partial class CBAContextModelSnapshot : ModelSnapshot
+    [Migration("20180311222522_PaymentNew")]
+    partial class PaymentNew
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

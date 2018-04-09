@@ -60,7 +60,7 @@ namespace WebApp.Controllers
 
             await _context.SaveChangesAsync();
 
-            var pathToFile = _env.WebRootPath
+            var pathToFile = _env.ContentRootPath
                             + Path.DirectorySeparatorChar.ToString()
                             + "EmailTemplates"
                             + Path.DirectorySeparatorChar.ToString()

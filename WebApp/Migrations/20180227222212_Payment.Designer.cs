@@ -11,9 +11,10 @@ using WebApp.Models;
 namespace WebApp.Migrations
 {
     [DbContext(typeof(CBAContext))]
-    partial class CBAContextModelSnapshot : ModelSnapshot
+    [Migration("20180227222212_Payment")]
+    partial class Payment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,9 +42,6 @@ namespace WebApp.Migrations
                     b.Property<DateTime>("DateDue")
                         .HasColumnType("date");
 
-                    b.Property<string>("Email")
-                        .IsRequired();
-
                     b.Property<string>("GstNumber")
                         .IsRequired();
 
@@ -51,8 +49,6 @@ namespace WebApp.Migrations
 
                     b.Property<string>("InvoiceNumber")
                         .IsRequired();
-
-                    b.Property<string>("PaymentId");
 
                     b.Property<int>("Status");
 
@@ -100,7 +96,7 @@ namespace WebApp.Migrations
                     b.Property<string>("InvoiceNo")
                         .IsRequired();
 
-                    b.Property<string>("PaymentId")
+                    b.Property<string>("RefId")
                         .IsRequired();
 
                     b.Property<string>("Status")
@@ -112,8 +108,6 @@ namespace WebApp.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired();
-
-                    b.Property<DateTime>("paymentDate");
 
                     b.HasKey("Id");
 
