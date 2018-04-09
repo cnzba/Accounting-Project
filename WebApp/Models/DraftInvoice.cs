@@ -26,6 +26,10 @@ namespace WebApp.Models
         public string ClientContactPerson { get; set; }
         public string ClientContact { get; set; }
 
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
         public DateTime DateDue { get; set; }
         #endregion
 
