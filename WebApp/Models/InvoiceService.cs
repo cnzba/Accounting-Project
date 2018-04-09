@@ -86,14 +86,14 @@ namespace WebApp
         {
             var invoiceToUpdate = GetInvoice(invoice.InvoiceNumber);
 
-            if(invoiceToUpdate.Status != InvoiceStatus.Draft) throw new ArgumentException($"Invoice {invoice.InvoiceNumber} is not a draft and may not be modified");
+            if (invoiceToUpdate.Status != InvoiceStatus.Draft) throw new ArgumentException($"Invoice {invoice.InvoiceNumber} is not a draft and may not be modified");
 
             invoiceToUpdate.ClientContactPerson = invoice.ClientContactPerson;
             invoiceToUpdate.ClientName = invoice.ClientName;
             invoiceToUpdate.ClientContact = invoice.ClientContact;
             invoiceToUpdate.DateDue = invoice.DateDue;
 
-            // every time an invoice is modified, it's item lines are completely rewritten
+            // every time an invoice is modified, its item lines are completely rewritten
             invoiceToUpdate.InvoiceLine.Clear();
             invoiceToUpdate.InvoiceLine = invoice.InvoiceLine;
 
@@ -106,6 +106,21 @@ namespace WebApp
         public bool InvoiceExists(string invoiceNumber)
         {
             return context.Invoice.Any(e => e.InvoiceNumber == invoiceNumber);
+        }
+
+        public bool DeleteInvoice(int id)
+        {
+            var invoice = context.Invoice.SingleOrDefault(n => n.Id == id);
+            if (invoice.Status == InvoiceStatus.Draft)
+            {
+                context.Remove<Invoice>(invoice);
+                context.SaveChanges();
+                return true;
+            }
+            else
+                return false;
+
+                
         }
     }
 }

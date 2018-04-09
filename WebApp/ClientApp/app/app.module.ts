@@ -25,7 +25,7 @@ import { ForgotPasswordService } from './login/forgot-password.service';
 import { ChangePasswordService } from './login/change-password.service';
 import { InvoicePaymentComponent } from './payment/invoice-payment.component';
 import { InvoicePaymentService } from './payment/invoice-payment.service';
-
+import { PaginationComponent } from "./pagination/pagination.component";
 
 @NgModule({
     declarations: [
@@ -37,7 +37,8 @@ import { InvoicePaymentService } from './payment/invoice-payment.service';
         InvoiceEditComponent,
         ForgotPasswordComponent,
         ChangePasswordComponent,
-        InvoicePaymentComponent
+        InvoicePaymentComponent,
+        PaginationComponent
     ],
     imports: [
         BrowserModule,

@@ -43,7 +43,6 @@ namespace WebApp
             // Cookie Authentication 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
-                options.LoginPath = "/Account/Login/";
                 options.Cookie.Name = "InvoiceCbaNZ";
                 // Controls how much time the authentication ticket stored in the cookie will remain valid from the point it is created.
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(240);
@@ -97,6 +96,16 @@ namespace WebApp
                     template: "{controller}/{action}/{id?}");
             });
 
+            // here you can see we make sure it doesn't start with /api, if it does, it'll 404 within .NET if it can't be found
+            app.MapWhen(x => !x.Request.Path.Value.StartsWith("/api"), builder =>
+            {
+                builder.UseMvc(routes =>
+                {
+                    routes.MapSpaFallbackRoute(
+                        name: "spa-fallback",
+                        defaults: new { controller = "Client", action = "Index" });
+                });
+            });
 
 
         }

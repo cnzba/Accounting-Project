@@ -13,5 +13,6 @@ namespace WebApp
         Invoice GetInvoiceByPaymentId(string paymentId);
         bool InvoiceExists(string invoiceNumber);
         bool ModifyInvoice(DraftInvoice invoice);
+        bool DeleteInvoice(int Id);
     }
 }
