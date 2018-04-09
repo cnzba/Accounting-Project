@@ -8,7 +8,7 @@
 
             </a>
         </li>
-        <li class="page-item active" (click)="cancelEvent($event)" *ngIf="(currentPage - range) > 1">
+        <li class="page-item" (click)="cancelEvent($event)" *ngIf="(currentPage - range) > 1">
             <a class="page-link" href="#">...</a>
 
         </li>
@@ -17,7 +17,7 @@
                 {{page}}
             </a>
         </li>
-        <li class="page-item active" (click)="cancelEvent($event)" *ngIf="(currentPage + range) < totalPages">
+        <li class="page-item" (click)="cancelEvent($event)" *ngIf="(currentPage + range) < totalPages">
             <a class="page-link" href="#">...</a>
         </li>
         <li class="page-item " (click)="selectPage(currentPage + 1, $event)" [class.disabled]="currentPage == totalPages">
