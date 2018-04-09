@@ -45,6 +45,7 @@ namespace UnitTestProject
                 ClientName = "Electrocal Commission",
                 ClientContactPerson = "Glen Clarke",
                 ClientContact = "530/546A Memorial Ave\\r\\nChristchurch Airport\\r\\nChristchurch 8053",
+                Email = "ec@example.com",
                 InvoiceLine = new List<InvoiceLine>()
                     {
                         new InvoiceLine()

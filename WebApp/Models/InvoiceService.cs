@@ -59,6 +59,7 @@ namespace WebApp
             invoice.ClientName = draftInvoice.ClientName;
             invoice.ClientContactPerson = draftInvoice.ClientContactPerson;
             invoice.ClientContact = draftInvoice.ClientContact;
+            invoice.Email = draftInvoice.Email;
             invoice.DateDue = draftInvoice.DateDue;
             invoice.InvoiceLine = draftInvoice.InvoiceLine;
 
