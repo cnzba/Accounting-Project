@@ -23,7 +23,7 @@ import { ForgotPasswordComponent } from './login/forgot-password.component';
 import { ChangePasswordComponent } from './login/change-password.component';
 import { ForgotPasswordService } from './login/forgot-password.service';
 import { ChangePasswordService } from './login/change-password.service';
-
+import { PaginationComponent } from "./pagination/pagination.component";
 
 @NgModule({
     declarations: [
@@ -34,7 +34,8 @@ import { ChangePasswordService } from './login/change-password.service';
         InvoicedetailComponent,
         InvoiceEditComponent,
         ForgotPasswordComponent,
-        ChangePasswordComponent
+        ChangePasswordComponent,
+        PaginationComponent
     ],
     imports: [
         BrowserModule,
