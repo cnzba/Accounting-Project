@@ -6,7 +6,14 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import { InvoiceService } from "./invoice.service";
 import { Invoice, IInvoice, IInvoiceLine, InvoiceLine } from "./invoice";
-import { AlertService } from "../alert/alert.service";
+import { AlertService } from "../common/alert/alert.service";
+import { apiError } from "../common/error.service";
+
+// TODO
+// client-side validation for due date
+// remove a success alert message when the form is touched or dirtied
+// check invoice (as opposed to DraftInvoice) validation and use attributes where possible
+// validate line items (description not empty; amounts default to 0)
 
 @Component({
     selector: 'app-invoice-edit',
@@ -25,6 +32,9 @@ export class InvoiceEditComponent implements OnInit {
 
     // the model backing the form
     private modifyInvoice: IInvoice = new Invoice();
+
+    // model for any errors on the form
+    private formErrors: apiError = new apiError();
 
     private userAskedForAddress = false;
     private userAskedForContact = false;
@@ -91,6 +101,8 @@ export class InvoiceEditComponent implements OnInit {
     }
 
     onSubmit() {
+        this.formErrors = new apiError();
+
         this.invoiceService.saveDraftInvoice(this.modifyInvoice)
             .subscribe(invoice => {
                 this.resetInvoice = this.deepCopyInvoice(invoice);
@@ -98,7 +110,10 @@ export class InvoiceEditComponent implements OnInit {
                 this.alertService.success("Invoice saved");
                 console.log(invoice);
             },
-            ((err: string) => this.alertService.error(err)));
+            ((err: apiError) => {
+                this.formErrors = err;
+                if (err.globalError) this.alertService.error(err.globalError);
+            }));
     }
 
     onReset() {

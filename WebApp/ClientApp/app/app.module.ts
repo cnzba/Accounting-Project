@@ -7,8 +7,8 @@ import 'rxjs/add/operator/map';
 
 import { AppComponent } from './app.component';
 import { HttpClientModule } from "@angular/common/http";
-import { AlertComponent } from './alert/alert.component';
-import { AlertService } from "./alert/alert.service";
+import { AlertComponent } from './common/alert/alert.component';
+import { AlertService } from "./common/alert/alert.service";
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from "./login/auth.guard";
 import { AuthenticationService } from "./login/authentication.service";
@@ -26,6 +26,7 @@ import { ChangePasswordService } from './login/change-password.service';
 import { InvoicePaymentComponent } from './payment/invoice-payment.component';
 import { InvoicePaymentService } from './payment/invoice-payment.service';
 import { PaginationComponent } from "./pagination/pagination.component";
+import { ErrorService } from "./common/error.service";
 
 @NgModule({
     declarations: [
@@ -70,7 +71,8 @@ import { PaginationComponent } from "./pagination/pagination.component";
         UserService,
         ForgotPasswordService,
         ChangePasswordService,
-        InvoicePaymentService
+        InvoicePaymentService,
+        ErrorService
     ],
     bootstrap: [AppComponent]
 })

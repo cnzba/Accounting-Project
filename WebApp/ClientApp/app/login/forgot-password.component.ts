@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { ForgotPasswordService } from './forgot-password.service';
-import { AlertService } from '../alert/alert.service';
+import { AlertService } from '../common/alert/alert.service';
 
 @Component({
   selector: 'app-forgot-password',

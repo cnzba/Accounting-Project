@@ -26,14 +26,15 @@ namespace WebApp.Models
         public string InvoiceNumber { get; set; } // the alternate key is used instead
 
         // read/write for the client
-        [MinLength(1, ErrorMessage = "ClientName cannot be empty")]
+        [Required(ErrorMessage = "The client's name is required.")]
         public string ClientName { get; set; }
         public string ClientContactPerson { get; set; }
         public string ClientContact { get; set; }
         [Required]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "The client's email address is required.")]
         public string Email { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime DateDue { get; set; }
 
         public string PaymentId { get; set; }
@@ -82,7 +83,7 @@ namespace WebApp.Models
         }
         #endregion
 
-        #region Validation
+        #region Custom Validation
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (!DateDue.Equals(DateTime.MinValue) && DateDue<=DateCreated)

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { AuthenticationService } from "./authentication.service";
-import { AlertService } from "../alert/alert.service";
+import { AlertService } from "../common/alert/alert.service";
 import { CallbackService } from '../common/callback.service';
 import { Subscription } from 'rxjs';
 

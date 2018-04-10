@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { InvoiceService } from "./invoices/invoice.service";
 import { IUser } from "./users/user";
 import { AuthenticationService } from "./login/authentication.service";
-import { AlertService } from "./alert/alert.service";
+import { AlertService } from "./common/alert/alert.service";
 
 import { Router, Event, NavigationStart, NavigationEnd, NavigationError, NavigationCancel } from '@angular/router';
 import { CallbackService } from './common/callback.service';

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { IInvoice } from '../invoices/invoice';
 import { InvoiceService } from '../invoices/invoice.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { AlertService } from '../alert/alert.service';
+import { AlertService } from '../common/alert/alert.service';
 import { Subscription } from 'rxjs';
 import { CallbackService } from '../common/callback.service';
 import { environment } from '../../environments/environment';

@@ -20,6 +20,7 @@
                     </div>
                     <div class="col-7">
                         <input type="date" [ngModel]="modifyInvoice.dateDue | date:'yyyy-MM-dd'" (ngModelChange)="modifyInvoice.dateDue = $event" name="duedate" />
+                        <label class="alert alert-danger field-error" *ngIf="formErrors.hasFieldError('DateDue')">{{formErrors.fieldError("DateDue")}}</label>
                     </div>
                 </div>
 
@@ -29,6 +30,7 @@
                     </div>
                     <div class="col-7">
                         <input type="text" [(ngModel)]="modifyInvoice.clientName" name="clientname" required />
+                        <label class="alert alert-danger field-error" *ngIf="formErrors.hasFieldError('ClientName')">{{formErrors.fieldError("ClientName")}}</label>
                     </div>
                 </div>
 
@@ -37,7 +39,8 @@
                         <b>Client Email</b>
                     </div>
                     <div class="col-7">
-                        <input type="email" name="email">
+                        <input type="email" [(ngModel)]="modifyInvoice.email" name="email" required>
+                        <label class="alert alert-danger field-error" *ngIf="formErrors.hasFieldError('Email')">{{formErrors.fieldError("Email")}}</label>
                     </div>
                 </div>
 
@@ -165,13 +168,13 @@
                     <button *ngIf="!isFirst" (click)="moveItemUp(i)" type="button" class="btn btn-outline-secondary btn-sm" aria-label="Left Align">
                         <span class="oi oi-arrow-circle-top" aria-hidden="true"></span>
                     </button>
-                    <button *ngIf="isFirst" style="visibility:hidden" type="button" class="btn btn-outline-secondary btn-sm" aria-label="Left Align">
+                    <button *ngIf="isFirst" style="display:none" type="button" class="btn btn-outline-secondary btn-sm" aria-label="Left Align">
                         <span class="oi oi-arrow-circle-top" aria-hidden="true"></span>
                     </button>
                     <button *ngIf="!isLast" (click)="moveItemDown(i)" type="button" class="btn btn-outline-secondary btn-sm">
                         <span class="oi oi-arrow-circle-bottom" aria-hidden="true"></span>
                     </button>
-                    <button *ngIf="isLast" style="visibility:hidden" type="button" class="btn btn-outline-secondary btn-sm">
+                    <button *ngIf="isLast" style="display:none" type="button" class="btn btn-outline-secondary btn-sm">
                         <span class="oi oi-arrow-circle-bottom" aria-hidden="true"></span>
                     </button>
                 </div>

@@ -24,7 +24,7 @@ export class AuthenticationService {
 
         if (login) this.http.get<IUser>(this.getUserUrl + login)
             .catch((err: HttpErrorResponse, caught: Observable<IUser>) => {
-                if (err.status == 404) {
+                if (err.status == 401) {
                     localStorage.removeItem('LoginId');
                     return Observable.of(null);
                 }

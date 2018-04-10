@@ -3,7 +3,7 @@ import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { InvoiceService } from "./invoice.service";
 import { IInvoice, IInvoiceLine } from "./invoice";
-import { AlertService } from "../alert/alert.service";
+import { AlertService } from "../common/alert/alert.service";
 
 import { PaginationComponent } from '../pagination/pagination.component';
 
