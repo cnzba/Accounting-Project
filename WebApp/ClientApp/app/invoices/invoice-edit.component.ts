@@ -122,19 +122,12 @@ export class InvoiceEditComponent implements OnInit {
     }
 
     ngOnInit() {
-        // select between creating a new invoice or modifying existing invoice depending on the url (route)
-        this.route.paramMap.switchMap((params: ParamMap) => {
-            let id = params.get('id');
-            let data: Observable<IInvoice>;
-
-            if (id == null) data = this.invoiceService.createNewInvoice();
-            else data = this.invoiceService.getInvoice(id);
-
-            return data;
-        }).subscribe((invoice: IInvoice) => {
-            this.modifyInvoice = invoice;
+        this.route.data.subscribe((data: { invoice: IInvoice }) => {
+            this.modifyInvoice = data.invoice;
             this.resetInvoice = this.deepCopyInvoice(this.modifyInvoice);
         });
     }
+     
+    
 }
 

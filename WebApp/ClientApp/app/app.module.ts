@@ -27,6 +27,8 @@ import { InvoicePaymentComponent } from './payment/invoice-payment.component';
 import { InvoicePaymentService } from './payment/invoice-payment.service';
 import { PaginationComponent } from "./pagination/pagination.component";
 import { ErrorService } from "./common/error.service";
+import { ErrorpageComponent } from './errorpage/errorpage.component';
+import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
 
 @NgModule({
     declarations: [
@@ -39,7 +41,8 @@ import { ErrorService } from "./common/error.service";
         ForgotPasswordComponent,
         ChangePasswordComponent,
         InvoicePaymentComponent,
-        PaginationComponent
+        PaginationComponent,
+        ErrorpageComponent
     ],
     imports: [
         BrowserModule,
@@ -53,11 +56,15 @@ import { ErrorService } from "./common/error.service";
                 resolve: { invoices: InvoiceListResolver }
             },
             { path: "invoices/:id", component: InvoicedetailComponent, canActivate: [AuthGuard] },
-            { path: "invoices/edit/:id", component: InvoiceEditComponent },
+            {
+                path: "invoices/edit/:id", component: InvoiceEditComponent,
+                resolve: { invoice: InvoiceResolverService }
+            },
             { path: "invoice/new", component: InvoiceEditComponent },
             { path: "forgot-password", component: ForgotPasswordComponent },
             { path: "change-password", component: ChangePasswordComponent, canActivate: [AuthGuard] },
             { path: "pay/:id", component: InvoicePaymentComponent },
+            { path: "error", component: ErrorpageComponent },
             // otherwise redirect to the invoice list
             { path: '**', redirectTo: 'invoices' }
         ], { enableTracing: false })
@@ -65,6 +72,7 @@ import { ErrorService } from "./common/error.service";
     providers: [
         InvoiceService,
         InvoiceListResolver,
+        InvoiceResolverService,
         AuthGuard,
         AlertService,
         AuthenticationService,

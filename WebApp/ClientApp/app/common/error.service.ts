@@ -41,19 +41,22 @@ export class ErrorService {
     handleError(err: HttpErrorResponse) {
         let resultError = new apiError();
 
-        if (err.error instanceof Error) {
-            // A client-side or network error occurred. Handle it accordingly.
+        if (err.error instanceof Error) { // a network or programming error
             resultError.globalError = `An error occurred: ${err.error.message}`;
-        } else {
-            // The backend returned an unsuccessful response code.
-            if (err.status == 401) {
-                this.router.navigate(['/login'])
+            this.router.navigate(['/error', { msg: resultError.globalError }]);
+        } else { // the HTTP request was made but we got something other than 200 OK
+            if (err.status == 404 || err.status == 504) {
+                resultError.globalError = `The requested resource was not found. The server could be down.`;
+            }
+            else if (err.status == 401) { // request not authorized
+                this.router.navigate(['/login', { returnUrl: this.router.url }]);
                 this.alertService.error("You session has expired. Please re-login.");
             }
-            else if (err.status >= 500 && err.status < 600) {
+            else if (err.status >= 500 && err.status < 600) { // server errors
                 resultError.globalError = "A server error has occurred.";
             }
-            else if (err.status == 400) {
+            else if (err.status == 400) { // bad request
+                // The web api received the request but the request wasn't correctly made.
                 // the error will either be one of:
                 // a string
                 // a list of key/value pairs where the values are strings

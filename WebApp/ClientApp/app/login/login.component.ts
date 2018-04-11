@@ -30,7 +30,9 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.authenticationService.logout().subscribe();
 
         // get return url from route parameters or default to '/'
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        if (this.route.snapshot.paramMap.has('returnUrl'))
+            this.returnUrl = this.route.snapshot.paramMap.get('returnUrl');
+        else this.returnUrl = '/';
     }
 
     login() {
