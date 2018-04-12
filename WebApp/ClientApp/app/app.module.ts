@@ -27,7 +27,7 @@ import { InvoicePaymentComponent } from './payment/invoice-payment.component';
 import { InvoicePaymentService } from './payment/invoice-payment.service';
 import { PaginationComponent } from "./pagination/pagination.component";
 import { ErrorService } from "./common/error.service";
-import { PageNotFoundComponent } from './errorpage/pagenotfound.component';
+import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
 
 @NgModule({
