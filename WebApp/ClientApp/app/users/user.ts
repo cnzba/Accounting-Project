@@ -1,5 +1,5 @@
 export interface IUser {
-    login: string;
+    email: string;
     name: string;
     active: boolean;
     forcePasswordChange: boolean;

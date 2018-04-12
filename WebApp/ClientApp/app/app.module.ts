@@ -6,7 +6,7 @@ import { NgForm } from '@angular/forms';
 import 'rxjs/add/operator/map';
 
 import { AppComponent } from './app.component';
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AlertComponent } from './common/alert/alert.component';
 import { AlertService } from "./common/alert/alert.service";
 import { LoginComponent } from './login/login.component';
@@ -26,9 +26,10 @@ import { ChangePasswordService } from './login/change-password.service';
 import { InvoicePaymentComponent } from './payment/invoice-payment.component';
 import { InvoicePaymentService } from './payment/invoice-payment.service';
 import { PaginationComponent } from "./pagination/pagination.component";
-import { ErrorService } from "./common/error.service";
+import { HttpErrorInterceptor } from "./common/error.service";
 import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
+import { SpinnerService } from "./common/spinner.service";
 
 @NgModule({
     declarations: [
@@ -57,7 +58,7 @@ import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
             },
             { path: "invoices/:id", component: InvoicedetailComponent, canActivate: [AuthGuard] },
             {
-                path: "invoices/edit/:id", component: InvoiceEditComponent,
+                path: "invoices/edit/:id", component: InvoiceEditComponent, canActivate: [AuthGuard],
                 resolve: { invoice: InvoiceResolverService }
             },
             {
@@ -83,7 +84,8 @@ import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
         ForgotPasswordService,
         ChangePasswordService,
         InvoicePaymentService,
-        ErrorService
+        SpinnerService,
+        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
     ],
     bootstrap: [AppComponent]
 })

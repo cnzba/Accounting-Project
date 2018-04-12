@@ -7,7 +7,6 @@ import { HttpRequest } from "@angular/common/http";
 import { HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/observable/of';
-import { ErrorService } from "../common/error.service";
 
 describe('Invoice service', () => {
     var service: InvoiceService;
@@ -25,8 +24,7 @@ describe('Invoice service', () => {
             'post': res
         });
 
-        var error = new ErrorService();
-        service = new InvoiceService(http, error);
+        service = new InvoiceService(http);
     });
 
     it("getInvoice should provide the invoice number to HttpClient.get", async(() => {

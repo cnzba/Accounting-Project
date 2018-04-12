@@ -9,7 +9,6 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 
 import { IInvoice, IInvoiceLine } from './invoice';
-import { ErrorService } from "../common/error.service";
 
 @Injectable()
 export class InvoiceService {
@@ -17,20 +16,18 @@ export class InvoiceService {
     // private _invoiceUrl = 'assets/mockapi/invoices/invoices.json';
     private invoiceUrl = 'api/invoice';
 
-    constructor(private http: HttpClient, private errorService: ErrorService) { }
+    constructor(private http: HttpClient) { }
 
     getInvoices(): Observable<IInvoice[]> {
-        return this.http.get<IInvoice[]>(this.invoiceUrl).catch((err: HttpErrorResponse)=>this.errorService.handleError(err));
+        return this.http.get<IInvoice[]>(this.invoiceUrl);
     }
 
     getInvoice(invoiceNumber: string): Observable<IInvoice> {
-        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber)
-              .catch((err: HttpErrorResponse)=>this.errorService.handleError(err));
+        return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber);
     }
 
     getInvoiceByPaymentId(paymentId: string): Observable<IInvoice> {
-        return this.http.get<IInvoice>(this.invoiceUrl + '/p/' + paymentId)
-            .catch((err: HttpErrorResponse)=>this.errorService.handleError(err));
+        return this.http.get<IInvoice>(this.invoiceUrl + '/p/' + paymentId);
     }
 
     createNewInvoice(): Observable<IInvoice> {
@@ -75,15 +72,13 @@ export class InvoiceService {
     private createInvoice(invoice: IInvoice): Observable<IInvoice> {
         console.log('Post (send): ' + JSON.stringify(invoice));
         return this.http.post<IInvoice>(this.invoiceUrl, invoice)
-            .do(data => console.log('Post (receive): ' + JSON.stringify(data)))
-            .catch((err: HttpErrorResponse)=>this.errorService.handleError(err));
+            .do(data => console.log('Post (receive): ' + JSON.stringify(data)));
     }
 
     private updateInvoice(invoice: IInvoice): Observable<IInvoice> {
         console.log('Put (send): ' + JSON.stringify(invoice));
         return this.http.put<IInvoice>(this.invoiceUrl + '/' + invoice.invoiceNumber, invoice)
-            .do(data => console.log('Put (receive): ' + JSON.stringify(data)))
-            .catch((err: HttpErrorResponse)=>this.errorService.handleError(err));
+            .do(data => console.log('Put (receive): ' + JSON.stringify(data)));
     }
 
     private isSaved(invoice: IInvoice) {
