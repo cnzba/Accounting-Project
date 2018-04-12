@@ -26,7 +26,7 @@ export class ApiError {
         return this.formErrors.get(field);
     }
 
-    private formErrors: Map<string, string>;
+    formErrors: Map<string, string>;
 
     constructor() {
         this.formErrors = new Map<string, string>();
