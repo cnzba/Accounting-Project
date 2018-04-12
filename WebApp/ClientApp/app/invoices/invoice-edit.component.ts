@@ -8,6 +8,7 @@ import { InvoiceService } from "./invoice.service";
 import { Invoice, IInvoice, IInvoiceLine, InvoiceLine } from "./invoice";
 import { AlertService } from "../common/alert/alert.service";
 import { ApiError } from "../common/error.service";
+import { SpinnerService } from "../common/spinner.service";
 
 // TODO
 // client-side validation for due date
@@ -25,7 +26,8 @@ export class InvoiceEditComponent implements OnInit {
         private invoiceService: InvoiceService,
         private route: ActivatedRoute,
         private location: Location,
-        private alertService: AlertService) { }
+        private alertService: AlertService,
+        private spinnerService: SpinnerService) { }
 
     // the copy of the invoice to reset to when the reset button is pushed
     private resetInvoice: IInvoice;
@@ -39,8 +41,8 @@ export class InvoiceEditComponent implements OnInit {
     private userAskedForAddress = false;
     private userAskedForContact = false;
 
-    get requireAddress() : boolean {
-       return this.modifyInvoice.grandTotal >= 1000;
+    get requireAddress(): boolean {
+        return this.modifyInvoice.grandTotal >= 1000;
     }
 
     get showAddress(): boolean {
@@ -101,17 +103,20 @@ export class InvoiceEditComponent implements OnInit {
     }
 
     onSubmit() {
+        this.spinnerService.showSpinner();
         this.formErrors = new ApiError();
 
         this.invoiceService.saveDraftInvoice(this.modifyInvoice)
-            .subscribe(invoice => {
+            .subscribe(invoice => { 
                 this.resetInvoice = this.deepCopyInvoice(invoice);
                 this.modifyInvoice = invoice;
+                this.spinnerService.hideSpinner()
                 this.alertService.success("Invoice saved");
                 console.log(invoice);
             },
             ((err: ApiError) => {
                 this.formErrors = err;
+                this.spinnerService.hideSpinner()
                 if (err.globalError) this.alertService.error(err.globalError);
             }));
     }
@@ -127,7 +132,7 @@ export class InvoiceEditComponent implements OnInit {
             this.resetInvoice = this.deepCopyInvoice(this.modifyInvoice);
         });
     }
-     
-    
+
+
 }
 

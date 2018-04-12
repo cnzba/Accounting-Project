@@ -14,7 +14,7 @@ describe('Authentication service', () => {
     let service: AuthenticationService;
     let http;
     let user: IUser = {
-        "login": "guest",
+        "email": "guest",
         "name": "guest",
         "active": true,
         "forcePasswordChange": false
