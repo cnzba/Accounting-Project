@@ -26,7 +26,7 @@ export class ApiError {
         return this.formErrors.get(field);
     }
 
-    formErrors: Map<string, string>;
+    private formErrors: Map<string, string>;
 
     constructor() {
         this.formErrors = new Map<string, string>();
@@ -43,7 +43,6 @@ export class ErrorService {
 
         if (err.error instanceof Error) { // a network or programming error
             resultError.globalError = `An error occurred: ${err.error.message}`;
-            this.router.navigate(['/error', { msg: resultError.globalError }]);
         } else { // the HTTP request was made but we got something other than 200 OK
             if (err.status == 404 || err.status == 504) {
                 resultError.globalError = `The requested resource was not found. The server could be down.`;
