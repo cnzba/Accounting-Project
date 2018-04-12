@@ -7,7 +7,7 @@ import 'rxjs/add/operator/catch';
 import { InvoiceService } from "./invoice.service";
 import { Invoice, IInvoice, IInvoiceLine, InvoiceLine } from "./invoice";
 import { AlertService } from "../common/alert/alert.service";
-import { apiError } from "../common/error.service";
+import { ApiError } from "../common/error.service";
 
 // TODO
 // client-side validation for due date
@@ -34,7 +34,7 @@ export class InvoiceEditComponent implements OnInit {
     private modifyInvoice: IInvoice = new Invoice();
 
     // model for any errors on the form
-    private formErrors: apiError = new apiError();
+    private formErrors: ApiError = new ApiError();
 
     private userAskedForAddress = false;
     private userAskedForContact = false;
@@ -101,7 +101,7 @@ export class InvoiceEditComponent implements OnInit {
     }
 
     onSubmit() {
-        this.formErrors = new apiError();
+        this.formErrors = new ApiError();
 
         this.invoiceService.saveDraftInvoice(this.modifyInvoice)
             .subscribe(invoice => {
@@ -110,7 +110,7 @@ export class InvoiceEditComponent implements OnInit {
                 this.alertService.success("Invoice saved");
                 console.log(invoice);
             },
-            ((err: apiError) => {
+            ((err: ApiError) => {
                 this.formErrors = err;
                 if (err.globalError) this.alertService.error(err.globalError);
             }));

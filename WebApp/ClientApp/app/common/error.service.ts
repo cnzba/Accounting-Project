@@ -4,7 +4,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { AlertService } from "./alert/alert.service";
 
-export class apiError {
+export class ApiError {
     get hasGlobalError(): boolean {
         if (this.globalError == null) return false;
         else return true;
@@ -39,7 +39,7 @@ export class ErrorService {
     constructor(private router: Router, private alertService: AlertService) { }
 
     handleError(err: HttpErrorResponse) {
-        let resultError = new apiError();
+        let resultError = new ApiError();
 
         if (err.error instanceof Error) { // a network or programming error
             resultError.globalError = `An error occurred: ${err.error.message}`;

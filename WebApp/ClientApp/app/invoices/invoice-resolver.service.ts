@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import { IInvoice } from "./invoice";
 import { AlertService } from "../common/alert/alert.service";
-import { apiError } from "../common/error.service";
+import { ApiError } from "../common/error.service";
 
 @Injectable()
 export class InvoiceResolverService {
@@ -21,8 +21,7 @@ export class InvoiceResolverService {
         if (id == null) data = this.invoiceService.createNewInvoice();
         else data = this.invoiceService.getInvoice(id);
 
-        return data.take(1).catch((err: apiError) => {
-            err.globalError = "Invoice " + id + " could not be retrieved.";
+        return data.take(1).catch((err: ApiError) => {
             this.router.navigate(['/invoices']);
             this.alertService.error(err.globalError, true);
             return Observable.of(null);

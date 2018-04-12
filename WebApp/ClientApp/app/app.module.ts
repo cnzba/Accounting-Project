@@ -27,7 +27,7 @@ import { InvoicePaymentComponent } from './payment/invoice-payment.component';
 import { InvoicePaymentService } from './payment/invoice-payment.service';
 import { PaginationComponent } from "./pagination/pagination.component";
 import { ErrorService } from "./common/error.service";
-import { ErrorpageComponent } from './errorpage/errorpage.component';
+import { PageNotFoundComponent } from './errorpage/pagenotfound.component';
 import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
 
 @NgModule({
@@ -42,7 +42,7 @@ import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
         ChangePasswordComponent,
         InvoicePaymentComponent,
         PaginationComponent,
-        ErrorpageComponent
+        PageNotFoundComponent
     ],
     imports: [
         BrowserModule,
@@ -60,13 +60,16 @@ import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
                 path: "invoices/edit/:id", component: InvoiceEditComponent,
                 resolve: { invoice: InvoiceResolverService }
             },
-            { path: "invoice/new", component: InvoiceEditComponent },
+            {
+                path: "invoice/new", component: InvoiceEditComponent,
+                resolve: { invoice: InvoiceResolverService }
+            },
             { path: "forgot-password", component: ForgotPasswordComponent },
             { path: "change-password", component: ChangePasswordComponent, canActivate: [AuthGuard] },
             { path: "pay/:id", component: InvoicePaymentComponent },
-            { path: "error", component: ErrorpageComponent },
             // otherwise redirect to the invoice list
-            { path: '**', redirectTo: 'invoices' }
+            { path: "", redirectTo: '/invoices', pathMatch: 'full' },
+            { path: '**', component: PageNotFoundComponent }
         ], { enableTracing: false })
     ],
     providers: [
