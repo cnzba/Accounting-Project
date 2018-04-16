@@ -7,7 +7,9 @@
     <a class="btn btn-lg btn-success" [routerLink]="['/invoice/new']">
         Create New Invoice
     </a>
-
+    <nav class="navbar">
+        <input class="form-control" type="search" placeholder="Enter search item" name="search" [(ngModel)]="filter">
+    </nav>
 
     <div class="row">
         <app-pagination [offset]="offset" [limit]="1" [size]="invo.length" (pageChange)="onPageChange($event)"></app-pagination>
@@ -31,14 +33,14 @@
         </thead>
 
         <tbody>
-            <tr *ngFor="let inv of invo; index as i ">
-                <ng-container  *ngIf="i>=offset && i< offset +limit">
-                    <td *ngIf="inv.status==='Sent'||inv.status==='Paid'" >
+            <tr *ngFor="let inv of invo| filter:filter; index as i ">
+                <ng-container *ngIf="i>=offset && i< offset +limit">
+                    <td *ngIf="inv.status==='Sent'||inv.status==='Paid'">
                         <a [routerLink]="['/invoices', inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
                     </td>
 
 
-                    <td *ngIf="inv.status==='New'||inv.status==='Draft'" >
+                    <td *ngIf="inv.status==='New'||inv.status==='Draft'">
                         <a [routerLink]="['/invoices/edit/',inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
                     </td>
 
@@ -49,7 +51,7 @@
                     <td style="width: 10%">{{inv.dateDue | date: 'dd/MM/yyyy'}}</td>
                     <td style="width: 10%">{{inv.status}}</td>
 
-                    <td *ngIf="inv.status==='Draft'" style="width:10%" >
+                    <td *ngIf="inv.status==='Draft'" style="width:10%">
                         <button class="btn btn-default" type="button" (click)="deleteFieldValue(i)">Delete</button>
                     </td>
                 </ng-container>

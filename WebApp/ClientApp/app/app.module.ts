@@ -14,6 +14,7 @@ import { AuthGuard } from "./login/auth.guard";
 import { AuthenticationService } from "./login/authentication.service";
 import { UserService } from "./users/user.service";
 import { HttpModule } from "@angular/http";
+
 import { InvoicelistComponent } from "./invoices/invoicelist.component";
 import { InvoicedetailComponent } from "./invoices/invoicedetail.component";
 import { InvoiceEditComponent } from "./invoices/invoice-edit.component";
@@ -42,6 +43,7 @@ import { PaginationComponent } from "./pagination/pagination.component";
         HttpClientModule,
         FormsModule,
         HttpModule,
+        Ng2SearchPipeModule,
         RouterModule.forRoot([
             { path: 'login', component: LoginComponent },
             {

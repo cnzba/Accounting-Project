@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform, Injectable  } from '@angular/core';
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { InvoiceService } from "./invoice.service";
@@ -19,6 +19,11 @@ import { PaginationComponent } from '../pagination/pagination.component';
     styleUrls: ['./invoicelist.component.css'],
 
 })
+@Pipe({
+    name: 'filter'
+})
+
+@Injectable()
 export class InvoicelistComponent implements OnInit{
     
     // offset is the index of an invoice we want to view and is used to compute the page to show; offset = 3 for example means display the page containing the 4th invoice in the list
@@ -41,7 +46,8 @@ export class InvoicelistComponent implements OnInit{
     }
 
     
-   
+    public searchString: string;
+
     ngOnInit(): void {
        
     }
