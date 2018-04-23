@@ -6,9 +6,9 @@ import { NgForm } from '@angular/forms';
 import 'rxjs/add/operator/map';
 
 import { AppComponent } from './app.component';
-import { HttpClientModule } from "@angular/common/http";
-import { AlertComponent } from './alert/alert.component';
-import { AlertService } from "./alert/alert.service";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { AlertComponent } from './common/alert/alert.component';
+import { AlertService } from "./common/alert/alert.service";
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from "./login/auth.guard";
 import { AuthenticationService } from "./login/authentication.service";
@@ -26,6 +26,10 @@ import { ChangePasswordService } from './login/change-password.service';
 import { InvoicePaymentComponent } from './payment/invoice-payment.component';
 import { InvoicePaymentService } from './payment/invoice-payment.service';
 import { PaginationComponent } from "./pagination/pagination.component";
+import { HttpErrorInterceptor } from "./common/error.service";
+import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
+import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
+import { SpinnerService } from "./common/spinner.service";
 
 @NgModule({
     declarations: [
@@ -38,7 +42,8 @@ import { PaginationComponent } from "./pagination/pagination.component";
         ForgotPasswordComponent,
         ChangePasswordComponent,
         InvoicePaymentComponent,
-        PaginationComponent
+        PaginationComponent,
+        PageNotFoundComponent
     ],
     imports: [
         BrowserModule,
@@ -52,25 +57,35 @@ import { PaginationComponent } from "./pagination/pagination.component";
                 resolve: { invoices: InvoiceListResolver }
             },
             { path: "invoices/:id", component: InvoicedetailComponent, canActivate: [AuthGuard] },
-            { path: "invoices/edit/:id", component: InvoiceEditComponent },
-            { path: "invoice/new", component: InvoiceEditComponent },
+            {
+                path: "invoices/edit/:id", component: InvoiceEditComponent, canActivate: [AuthGuard],
+                resolve: { invoice: InvoiceResolverService }
+            },
+            {
+                path: "invoice/new", component: InvoiceEditComponent,
+                resolve: { invoice: InvoiceResolverService }
+            },
             { path: "forgot-password", component: ForgotPasswordComponent },
             { path: "change-password", component: ChangePasswordComponent, canActivate: [AuthGuard] },
             { path: "pay/:id", component: InvoicePaymentComponent },
             // otherwise redirect to the invoice list
-            { path: '**', redirectTo: 'invoices' }
+            { path: "", redirectTo: '/invoices', pathMatch: 'full' },
+            { path: '**', component: PageNotFoundComponent }
         ], { enableTracing: false })
     ],
     providers: [
         InvoiceService,
         InvoiceListResolver,
+        InvoiceResolverService,
         AuthGuard,
         AlertService,
         AuthenticationService,
         UserService,
         ForgotPasswordService,
         ChangePasswordService,
-        InvoicePaymentService
+        InvoicePaymentService,
+        SpinnerService,
+        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
     ],
     bootstrap: [AppComponent]
 })

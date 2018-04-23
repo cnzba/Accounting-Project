@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { InvoiceService } from "./invoices/invoice.service";
 import { IUser } from "./users/user";
 import { AuthenticationService } from "./login/authentication.service";
-import { AlertService } from "./alert/alert.service";
+import { AlertService } from "./common/alert/alert.service";
 
 import { Router, Event, NavigationStart, NavigationEnd, NavigationError, NavigationCancel } from '@angular/router';
 import { CallbackService } from './common/callback.service';
+import { SpinnerService } from "./common/spinner.service";
 
 @Component({
     selector: 'app-root',
@@ -23,8 +24,17 @@ export class AppComponent {
     showUser: boolean;
 
     constructor(private authenticationService: AuthenticationService,
-        private alertService: AlertService, private router: Router, private callbackService: CallbackService) {
+        private alertService: AlertService,
+        private router: Router,
+        private callbackService: CallbackService,
+        private spinnerService: SpinnerService) {
+
+        spinnerService.getSpinner().subscribe(show => {
+            this.loading = show;
+        });
+
         router.events.subscribe((routerEvent: Event) => this.checkRouterEvent(routerEvent));
+
         callbackService.updateNavObs$.subscribe(fpc => {
             this.forcePasswordChange = fpc;
         });
@@ -45,18 +55,18 @@ export class AppComponent {
                 this.showUser = true;
             });
         this.forcePasswordChange = localStorage.getItem("forcePasswordChange") === "true";
-        
+
     }
 
     checkRouterEvent(routerEvent: Event): void {
         if (routerEvent instanceof NavigationStart) {
-            this.loading = true;
+            this.spinnerService.showSpinner();
         }
 
         if (routerEvent instanceof NavigationEnd ||
             routerEvent instanceof NavigationCancel ||
             routerEvent instanceof NavigationError) {
-            this.loading = false;
+            this.spinnerService.hideSpinner();
         }
     }
 }

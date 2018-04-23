@@ -103,7 +103,7 @@ namespace WebApp.Controllers
 
             if (invoiceNumber != invoice.InvoiceNumber)
             {
-                return BadRequest();
+                return BadRequest("Unexpected invoice number");
             }
 
             try
