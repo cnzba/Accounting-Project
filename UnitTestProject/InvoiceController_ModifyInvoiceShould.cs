@@ -77,7 +77,7 @@ namespace UnitTestProject
             var result = controller.ModifyInvoice("", new DraftInvoice() { InvoiceNumber = "x" });
 
             //assert
-            Assert.IsTrue(result is BadRequestResult);
+            Assert.IsTrue(result is BadRequestObjectResult);
         }
     }
 }

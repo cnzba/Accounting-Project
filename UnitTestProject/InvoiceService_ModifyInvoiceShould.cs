@@ -48,6 +48,7 @@ namespace UnitTestProject
             var modifiedInvoice = new DraftInvoice()
             {
                 InvoiceNumber = "20171005-001",
+                ClientName = "Electrocal Commission",
                 InvoiceLine = new List<InvoiceLine>()
                     {
                         new InvoiceLine()
