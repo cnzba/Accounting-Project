@@ -132,20 +132,19 @@ namespace WebApp.Controllers
         }
 
         // DELETE api/invoice/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpDelete("{InvoiceNumber}")]
+        public IActionResult DeleteInvoice([FromRoute] string invoiceNumber)
         {
+            if (!service.InvoiceExists(invoiceNumber)) return NotFound();
+
             try
             {
-                if (!service.DeleteInvoice(id))
-                {
-                    return BadRequest("Invoice had status other than draft.");
-                }
-                else return Ok("Deletion of draft invoice successful.");
+                if (service.DeleteInvoice(invoiceNumber)) return Ok("Deletion of draft invoice successful.");
+                else return BadRequest("Unable to delete invoice.");
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Invoice had status other than draft.");
             }
             catch (Exception ex)
             {
