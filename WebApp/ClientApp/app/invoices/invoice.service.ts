@@ -86,4 +86,10 @@ export class InvoiceService {
         else return false;
     }
 
+    deleteInvoice(invoiceNumber: string): Observable<string> {
+        console.log('Delete (send): ' + invoiceNumber);
+        return this.http.delete<string>(this.invoiceUrl + '/' + invoiceNumber)
+            .do(data => console.log('Delete (receive): ' + JSON.stringify(data)));
+    }
+
 }

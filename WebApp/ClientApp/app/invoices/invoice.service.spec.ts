@@ -21,7 +21,8 @@ describe('Invoice service', () => {
         http = jasmine.createSpyObj('http', {
             'get': res,
             'put': res,
-            'post': res
+            'post': res,
+            'delete': res
         });
 
         service = new InvoiceService(http);
@@ -31,6 +32,12 @@ describe('Invoice service', () => {
         service.getInvoice(invoice.invoiceNumber).subscribe();
         expect(http.get.calls.count()).toEqual(1);
         expect(http.get.calls.argsFor(0).toString().search(invoice.invoiceNumber) != -1).toEqual(true);
+    }));
+
+    it("deleteInvoice should provide the invoice number to HttpClient.delete", async(() => {
+        service.deleteInvoice(invoice.invoiceNumber).subscribe();
+        expect(http.delete.calls.count()).toEqual(1);
+        expect(http.delete.calls.argsFor(0).toString().search(invoice.invoiceNumber) != -1).toEqual(true);
     }));
 
     it("createNewInvoice should provide fake invoice number ending in -xxx", async(() => {

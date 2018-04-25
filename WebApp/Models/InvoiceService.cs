@@ -20,7 +20,7 @@ namespace WebApp
             options = optionsAccessor.Value;
         }
 
-        private void validate(Invoice invoice)
+        private void Validate(Invoice invoice)
         {
             Validator.ValidateObject(invoice, new ValidationContext(invoice), true);
         }
@@ -53,25 +53,27 @@ namespace WebApp
 
         public bool CreateInvoice(DraftInvoice draftInvoice)
         {
-            Invoice invoice = new Invoice();
+            Invoice invoice = new Invoice
+            {
 
-            // copy the information supplied by the client
-            invoice.ClientName = draftInvoice.ClientName;
-            invoice.ClientContactPerson = draftInvoice.ClientContactPerson;
-            invoice.ClientContact = draftInvoice.ClientContact;
-            invoice.Email = draftInvoice.Email;
-            invoice.DateDue = draftInvoice.DateDue;
-            invoice.InvoiceLine = draftInvoice.InvoiceLine;
+                // copy the information supplied by the client
+                ClientName = draftInvoice.ClientName,
+                ClientContactPerson = draftInvoice.ClientContactPerson,
+                ClientContact = draftInvoice.ClientContact,
+                Email = draftInvoice.Email,
+                DateDue = draftInvoice.DateDue,
+                InvoiceLine = draftInvoice.InvoiceLine,
 
-            // add the server generated information
-            invoice.InvoiceNumber = GenerateInvoiceNumber();
-            invoice.CharitiesNumber = options.CharitiesNumber;
-            invoice.GstNumber = options.GSTNumber;
-            invoice.GstRate = options.GSTRate;
-            invoice.DateCreated = DateTime.Now;
-            invoice.Status = InvoiceStatus.Draft;
+                // add the server generated information
+                InvoiceNumber = GenerateInvoiceNumber(),
+                CharitiesNumber = options.CharitiesNumber,
+                GstNumber = options.GSTNumber,
+                GstRate = options.GSTRate,
+                DateCreated = DateTime.Now,
+                Status = InvoiceStatus.Draft
+            };
 
-            validate(invoice);
+            Validate(invoice);
 
             context.Add<Invoice>(invoice);
             int count = context.SaveChanges();
@@ -98,7 +100,7 @@ namespace WebApp
             invoiceToUpdate.InvoiceLine.Clear();
             invoiceToUpdate.InvoiceLine = invoice.InvoiceLine;
 
-            validate(invoiceToUpdate);
+            Validate(invoiceToUpdate);
 
             if (!context.ChangeTracker.HasChanges()) return true;
             else return context.SaveChanges() > 0;
@@ -109,19 +111,15 @@ namespace WebApp
             return context.Invoice.Any(e => e.InvoiceNumber == invoiceNumber);
         }
 
-        public bool DeleteInvoice(int id)
+        public bool DeleteInvoice(string invoiceNumber)
         {
-            var invoice = context.Invoice.SingleOrDefault(n => n.Id == id);
-            if (invoice.Status == InvoiceStatus.Draft)
-            {
-                context.Remove<Invoice>(invoice);
-                context.SaveChanges();
-                return true;
-            }
-            else
-                return false;
+            var invoice = context.Invoice.SingleOrDefault(n => n.InvoiceNumber == invoiceNumber);
 
-                
+            if (invoice == null) throw new ArgumentOutOfRangeException();
+            if(invoice.Status != InvoiceStatus.Draft) throw new ArgumentException();
+
+            context.Remove<Invoice>(invoice);
+            return context.SaveChanges() > 0;
         }
     }
 }
