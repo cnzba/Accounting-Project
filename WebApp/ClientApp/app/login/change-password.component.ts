@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChangePasswordService } from './change-password.service';
-import { AlertService } from '../alert/alert.service';
+import { AlertService } from '../common/alert/alert.service';
 import { Subscription } from 'rxjs';
 import { CallbackService } from '../common/callback.service';
 

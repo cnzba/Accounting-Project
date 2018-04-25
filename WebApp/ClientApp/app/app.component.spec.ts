@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { AlertComponent } from './alert/alert.component';
-import { AlertService } from './alert/alert.service';
+import { AlertComponent } from './common/alert/alert.component';
+import { AlertService } from './common/alert/alert.service';
 import { RouterTestingModule } from '@angular/router/testing';
 
 xdescribe('AppComponent', () => {

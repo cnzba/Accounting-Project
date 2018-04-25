@@ -6,7 +6,15 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import { InvoiceService } from "./invoice.service";
 import { Invoice, IInvoice, IInvoiceLine, InvoiceLine } from "./invoice";
-import { AlertService } from "../alert/alert.service";
+import { AlertService } from "../common/alert/alert.service";
+import { ApiError } from "../common/error.service";
+import { SpinnerService } from "../common/spinner.service";
+
+// TODO
+// client-side validation for due date
+// remove a success alert message when the form is touched or dirtied
+// check invoice (as opposed to DraftInvoice) validation and use attributes where possible
+// validate line items (description not empty; amounts default to 0)
 
 @Component({
     selector: 'app-invoice-edit',
@@ -18,7 +26,8 @@ export class InvoiceEditComponent implements OnInit {
         private invoiceService: InvoiceService,
         private route: ActivatedRoute,
         private location: Location,
-        private alertService: AlertService) { }
+        private alertService: AlertService,
+        private spinnerService: SpinnerService) { }
 
     // the copy of the invoice to reset to when the reset button is pushed
     private resetInvoice: IInvoice;
@@ -26,11 +35,14 @@ export class InvoiceEditComponent implements OnInit {
     // the model backing the form
     private modifyInvoice: IInvoice = new Invoice();
 
+    // model for any errors on the form
+    private formErrors: ApiError = new ApiError();
+
     private userAskedForAddress = false;
     private userAskedForContact = false;
 
-    get requireAddress() : boolean {
-       return this.modifyInvoice.grandTotal >= 1000;
+    get requireAddress(): boolean {
+        return this.modifyInvoice.grandTotal >= 1000;
     }
 
     get showAddress(): boolean {
@@ -91,14 +103,22 @@ export class InvoiceEditComponent implements OnInit {
     }
 
     onSubmit() {
+        this.spinnerService.showSpinner();
+        this.formErrors = new ApiError();
+
         this.invoiceService.saveDraftInvoice(this.modifyInvoice)
-            .subscribe(invoice => {
+            .subscribe(invoice => { 
                 this.resetInvoice = this.deepCopyInvoice(invoice);
                 this.modifyInvoice = invoice;
+                this.spinnerService.hideSpinner()
                 this.alertService.success("Invoice saved");
                 console.log(invoice);
             },
-            ((err: string) => this.alertService.error(err)));
+            ((err: ApiError) => {
+                this.formErrors = err;
+                this.spinnerService.hideSpinner()
+                if (err.globalError) this.alertService.error(err.globalError);
+            }));
     }
 
     onReset() {
@@ -107,19 +127,12 @@ export class InvoiceEditComponent implements OnInit {
     }
 
     ngOnInit() {
-        // select between creating a new invoice or modifying existing invoice depending on the url (route)
-        this.route.paramMap.switchMap((params: ParamMap) => {
-            let id = params.get('id');
-            let data: Observable<IInvoice>;
-
-            if (id == null) data = this.invoiceService.createNewInvoice();
-            else data = this.invoiceService.getInvoice(id);
-
-            return data;
-        }).subscribe((invoice: IInvoice) => {
-            this.modifyInvoice = invoice;
+        this.route.data.subscribe((data: { invoice: IInvoice }) => {
+            this.modifyInvoice = data.invoice;
             this.resetInvoice = this.deepCopyInvoice(this.modifyInvoice);
         });
     }
+
+
 }
 

@@ -1,18 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { AuthenticationService } from "./authentication.service";
-import { AlertService } from "../alert/alert.service";
+import { AlertService } from "../common/alert/alert.service";
 import { CallbackService } from '../common/callback.service';
 import { Subscription } from 'rxjs';
+import { SpinnerService } from "../common/spinner.service";
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit, OnDestroy {
     model: any = {};
-    loading = false;
     returnUrl: string;
     subscription: Subscription;
 
@@ -21,7 +21,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         private router: Router,
         private authenticationService: AuthenticationService,
         private alertService: AlertService,
-        private callbackService: CallbackService) {
+        private callbackService: CallbackService,
+        private spinnerService: SpinnerService) {
         this.subscription = callbackService.updateNavObs$.subscribe();
     }
 
@@ -30,11 +31,15 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.authenticationService.logout().subscribe();
 
         // get return url from route parameters or default to '/'
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        if (this.route.snapshot.paramMap.has('returnUrl'))
+            this.returnUrl = this.route.snapshot.paramMap.get('returnUrl');
+        else this.returnUrl = '/';
+
+        console.log(`LOGIN: After login will direct to ${this.returnUrl}`);
     }
 
     login() {
-        this.loading = true;
+        this.spinnerService.showSpinner();
         this.authenticationService.login(this.model.username, this.model.password)
             .subscribe(
             data => {
@@ -48,7 +53,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             },
             error => {
                 this.alertService.error("Login failed.");
-                this.loading = false;
+                this.spinnerService.hideSpinner();
             });
     }
 

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using ServiceUtil.Email;
+using System.Threading.Tasks;
 
 namespace WebApp
 {
@@ -46,6 +47,15 @@ namespace WebApp
                 options.Cookie.Name = "InvoiceCbaNZ";
                 // Controls how much time the authentication ticket stored in the cookie will remain valid from the point it is created.
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(240);
+
+                // ensures a 401 instead of 404 response if authorization fails
+                // (404 comes because default is to redirect to asp.net core login page, which doesn't exist
+                // as we are just a web api)
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                };
             });
 
             services.AddSwaggerGen(c =>

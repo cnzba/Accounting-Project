@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './login.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthenticationService } from "./authentication.service";
-import { AlertService } from "../alert/alert.service";
+import { AlertService } from "../common/alert/alert.service";
 
 xdescribe('LoginComponent', () => {
     let component: LoginComponent;
