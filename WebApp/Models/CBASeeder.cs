@@ -104,7 +104,7 @@ namespace WebApp.Models
                 //Grand Total = 29.60
                 var invoice4 = new Invoice()
                 {
-                    InvoiceNumber = "20180416-001",
+                    InvoiceNumber = "DRAFT0000001",
                     DateCreated = new DateTime(2018, 4, 16),
                     DateDue = new DateTime(2018, 5, 16),
                     ClientName = "ANZ",
@@ -113,8 +113,8 @@ namespace WebApp.Models
 
                     Status = InvoiceStatus.Draft,
                     GstRate = .15m,
-                    GstNumber = "96-712-561",
-                    CharitiesNumber = "CC20097",
+                    GstNumber = "96-712-571",
+                    CharitiesNumber = "CC20090",
                     InvoiceLine = new List<InvoiceLine>()
                     {
                         new InvoiceLine()
@@ -131,7 +131,7 @@ namespace WebApp.Models
                 //Grand Total = 23.86M
                 var invoice5 = new Invoice()
                 {
-                    InvoiceNumber = "20180301-001",
+                    InvoiceNumber = "CBANZ00001/18",
                     DateCreated = new DateTime(2018, 3, 1),
                     DateDue = new DateTime(2018, 4, 15),
                     ClientName = "Supercare",
@@ -159,17 +159,17 @@ namespace WebApp.Models
             
                 var invoice6 = new Invoice()
                 {
-                    InvoiceNumber = "20180101-001",
-                    DateCreated = new DateTime(2018, 1, 1),
-                    DateDue = new DateTime(2018, 3, 1),
+                    InvoiceNumber = "CBANZ00002/18",
+                    DateCreated = new DateTime(2018, 3, 10),
+                    DateDue = new DateTime(2018, 4, 1),
                     ClientName = "AT&T",
                     ClientContact = "52 St Lukes Road\\r\\nAuckland 1030",
                     Email = "at&t@example.com",
                     PaymentId = _cryptography.GenerateTempPassword(12),
                     Status = InvoiceStatus.Paid,
                     GstRate = .15m,
-                    GstNumber = "96-712-561",
-                    CharitiesNumber = "CC20097",
+                    GstNumber = "96-712-563",
+                    CharitiesNumber = "CC20099",
                     InvoiceLine = new List<InvoiceLine>()
                     {
                         new InvoiceLine()
@@ -191,7 +191,7 @@ namespace WebApp.Models
                 //Grand Total = 24.60M
                 var invoice7 = new Invoice()
                 {
-                    InvoiceNumber = "20180425-001",
+                    InvoiceNumber = "DRAFT0000002",
                     DateCreated = new DateTime(2018, 4, 25),
                     DateDue = new DateTime(2018, 6, 1),
                     ClientName = "IBM",
@@ -200,8 +200,8 @@ namespace WebApp.Models
 
                     Status = InvoiceStatus.Draft,
                     GstRate = .15m,
-                    GstNumber = "96-712-561",
-                    CharitiesNumber = "CC20097",
+                    GstNumber = "96-712-564",
+                    CharitiesNumber = "CC20080",
                     InvoiceLine = new List<InvoiceLine>()
                     {
                         new InvoiceLine()
@@ -218,7 +218,7 @@ namespace WebApp.Models
                 //Grand total:23M
                 var invoice8 = new Invoice()
                 {
-                    InvoiceNumber = "20180325-010",
+                    InvoiceNumber = "DRAFT0000003",
                     DateCreated = new DateTime(2018, 3, 25),
                     DateDue = new DateTime(2018, 7, 10),
                     ClientName = "Concentrix",
@@ -226,8 +226,8 @@ namespace WebApp.Models
                     Email = "concentrix@example.com",
                     Status = InvoiceStatus.Draft,
                     GstRate = .15m,
-                    GstNumber = "96-712-562",
-                    CharitiesNumber = "CC20098",
+                    GstNumber = "96-712-572",
+                    CharitiesNumber = "CC20093",
                     InvoiceLine = new List<InvoiceLine>()
                     {
                         new InvoiceLine()
@@ -244,7 +244,7 @@ namespace WebApp.Models
                 //Grand total:11.5M
                 var invoice9 = new Invoice()
                 {
-                    InvoiceNumber = "20180429-001",
+                    InvoiceNumber = "CBANZ00003/18",
                     DateCreated = new DateTime(2018, 4, 29),
                     DateDue = new DateTime(2018, 6, 10),
                     ClientName = "Auckland Council",
@@ -252,8 +252,8 @@ namespace WebApp.Models
                     Email = "auckcouncil@example.com",
                     Status = InvoiceStatus.Sent,
                     GstRate = .15m,
-                    GstNumber = "96-712-563",
-                    CharitiesNumber = "CC20099",
+                    GstNumber = "96-712-567",
+                    CharitiesNumber = "CC20110",
                     InvoiceLine = new List<InvoiceLine>()
                     {
                         new InvoiceLine()
@@ -270,7 +270,7 @@ namespace WebApp.Models
                 //Grand total: 6.61M
                 var invoice10 = new Invoice()
                 {
-                    InvoiceNumber = "20180220-002",
+                    InvoiceNumber = "CBANZ00004/18",
                     DateCreated = new DateTime(2018, 2, 20),
                     DateDue = new DateTime(2018, 4, 10),
                     ClientName = "Mike Wazowski",
@@ -278,7 +278,7 @@ namespace WebApp.Models
                     Email = "wazmike@example.com",
                     Status = InvoiceStatus.Paid,
                     GstRate = .15m,
-                    GstNumber = "96-712-564",
+                    GstNumber = "96-712-569",
                     CharitiesNumber = "CC20100",
                     InvoiceLine = new List<InvoiceLine>()
                     {
@@ -296,7 +296,7 @@ namespace WebApp.Models
                 //Grand total: 33.06M 
                 var invoice11 = new Invoice()
                 {
-                    InvoiceNumber = "20180424-020",
+                    InvoiceNumber = "DRAFT0000004",
                     DateCreated = new DateTime(2018, 4, 24),
                     DateDue = new DateTime(2018, 10, 05),
                     ClientName = "Mo Salah",
@@ -304,7 +304,7 @@ namespace WebApp.Models
                     Email = "m.salah@example.com",
                     Status = InvoiceStatus.Draft,
                     GstRate = .15m,
-                    GstNumber = "96-712-565",
+                    GstNumber = "96-712-566",
                     CharitiesNumber = "CC20101",
                     InvoiceLine = new List<InvoiceLine>()
                     {
