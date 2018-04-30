@@ -98,10 +98,235 @@ namespace WebApp.Models
                     }
                 };
 
+                //Invoice Type is Draft
+                //GST Type Exclusive 
+                //GST Amount = 3.86M
+                //Grand Total = 29.60
+                var invoice4 = new Invoice()
+                {
+                    InvoiceNumber = "20180416-001",
+                    DateCreated = new DateTime(2018, 4, 16),
+                    DateDue = new DateTime(2018, 5, 16),
+                    ClientName = "ANZ",
+                    ClientContact = "52 Solmine Ave\\r\\nRiccarton\\r\\nChristchurch 8025",
+                    Email = "anz@example.com",
+
+                    Status = InvoiceStatus.Draft,
+                    GstRate = .15m,
+                    GstNumber = "96-712-561",
+                    CharitiesNumber = "CC20097",
+                    InvoiceLine = new List<InvoiceLine>()
+                    {
+                        new InvoiceLine()
+                        {
+                            Description = "Donation",
+                            Amount = 25.74M
+                        }
+                    }
+                };
+
+                //Invoice Type is Sent
+                //GST Type Exclusive
+                //GST Amount = 3.11M
+                //Grand Total = 23.86M
+                var invoice5 = new Invoice()
+                {
+                    InvoiceNumber = "20180301-001",
+                    DateCreated = new DateTime(2018, 3, 1),
+                    DateDue = new DateTime(2018, 4, 15),
+                    ClientName = "Supercare",
+                    ClientContact = "5/92 Owairaka Avenue\\r\\nMt Albert\\r\\nAuckland 1025",
+                    Email = "supercare@example.com",
+                    PaymentId = _cryptography.GenerateTempPassword(12),
+                    Status = InvoiceStatus.Sent,
+                    GstRate = .15m,
+                    GstNumber = "96-712-562",
+                    CharitiesNumber = "CC20098",
+                    InvoiceLine = new List<InvoiceLine>()
+                    {
+                        new InvoiceLine()
+                        {
+                            Description = "Expenditure",
+                            Amount = 20.75M
+                        }
+                    }
+                };
+
+                //Invoice Type is Paid
+                //GST Type Inclusive
+                //GST Amount = 6.52M
+                //Grand Total = 50.00M
+            
+                var invoice6 = new Invoice()
+                {
+                    InvoiceNumber = "20180101-001",
+                    DateCreated = new DateTime(2018, 1, 1),
+                    DateDue = new DateTime(2018, 3, 1),
+                    ClientName = "AT&T",
+                    ClientContact = "52 St Lukes Road\\r\\nAuckland 1030",
+                    Email = "at&t@example.com",
+                    PaymentId = _cryptography.GenerateTempPassword(12),
+                    Status = InvoiceStatus.Paid,
+                    GstRate = .15m,
+                    GstNumber = "96-712-561",
+                    CharitiesNumber = "CC20097",
+                    InvoiceLine = new List<InvoiceLine>()
+                    {
+                        new InvoiceLine()
+                        {
+                            Description = "Fundraising Dinner",
+                            Amount = 25.00M
+                        },
+                        new InvoiceLine()
+                        {
+                            Description = "Bookkeeping 2 hours @21.74 per hour",
+                            Amount = 50.00M
+                        }
+                    }
+                };
+
+                //Invoice Type is Draft
+                //GST Type Inclusive 
+                //GST Amount = 3.21M
+                //Grand Total = 24.60M
+                var invoice7 = new Invoice()
+                {
+                    InvoiceNumber = "20180425-001",
+                    DateCreated = new DateTime(2018, 4, 25),
+                    DateDue = new DateTime(2018, 6, 1),
+                    ClientName = "IBM",
+                    ClientContact = "5 Gaunt Street\\r\\nAuckland 1070",
+                    Email = "ibm@example.com",
+
+                    Status = InvoiceStatus.Draft,
+                    GstRate = .15m,
+                    GstNumber = "96-712-561",
+                    CharitiesNumber = "CC20097",
+                    InvoiceLine = new List<InvoiceLine>()
+                    {
+                        new InvoiceLine()
+                        {
+                            Description = "Donation",
+                            Amount = 24.60M
+                        }
+                    }
+                };
+
+                //Invoice type is Draft
+                //GST type is inclusive
+                //GST amount: 3M
+                //Grand total:23M
+                var invoice8 = new Invoice()
+                {
+                    InvoiceNumber = "20180325-010",
+                    DateCreated = new DateTime(2018, 3, 25),
+                    DateDue = new DateTime(2018, 7, 10),
+                    ClientName = "Concentrix",
+                    ClientContact = "83 Carrington Rd, Mt Albert, Auckland 1025",
+                    Email = "concentrix@example.com",
+                    Status = InvoiceStatus.Draft,
+                    GstRate = .15m,
+                    GstNumber = "96-712-562",
+                    CharitiesNumber = "CC20098",
+                    InvoiceLine = new List<InvoiceLine>()
+                    {
+                        new InvoiceLine()
+                        {
+                            Description = "Charity Dinner",
+                            Amount = 23M
+                        }
+                    }
+                };
+
+                //Invoice type is sent
+                //GST is inclusive
+                //GST amount: 1.5M
+                //Grand total:11.5M
+                var invoice9 = new Invoice()
+                {
+                    InvoiceNumber = "20180429-001",
+                    DateCreated = new DateTime(2018, 4, 29),
+                    DateDue = new DateTime(2018, 6, 10),
+                    ClientName = "Auckland Council",
+                    ClientContact = "23 Quay St, Auckland 1050",
+                    Email = "auckcouncil@example.com",
+                    Status = InvoiceStatus.Sent,
+                    GstRate = .15m,
+                    GstNumber = "96-712-563",
+                    CharitiesNumber = "CC20099",
+                    InvoiceLine = new List<InvoiceLine>()
+                    {
+                        new InvoiceLine()
+                        {
+                            Description = "Donation",
+                            Amount = 11.5M
+                        }
+                    }
+                };
+
+                //Invoice type is Paid
+                //GST is exclusive
+                //GST amount: 0.86M
+                //Grand total: 6.61M
+                var invoice10 = new Invoice()
+                {
+                    InvoiceNumber = "20180220-002",
+                    DateCreated = new DateTime(2018, 2, 20),
+                    DateDue = new DateTime(2018, 4, 10),
+                    ClientName = "Mike Wazowski",
+                    ClientContact = "225, Great North Rd, Auckland 1024",
+                    Email = "wazmike@example.com",
+                    Status = InvoiceStatus.Paid,
+                    GstRate = .15m,
+                    GstNumber = "96-712-564",
+                    CharitiesNumber = "CC20100",
+                    InvoiceLine = new List<InvoiceLine>()
+                    {
+                        new InvoiceLine()
+                        {
+                            Description = "Donation",
+                            Amount =5.75M
+                        }
+                    }
+                };
+
+                //Invoice type is Draft
+                //GST is exclusive
+                //GST Amount: 4.31M
+                //Grand total: 33.06M 
+                var invoice11 = new Invoice()
+                {
+                    InvoiceNumber = "20180424-020",
+                    DateCreated = new DateTime(2018, 4, 24),
+                    DateDue = new DateTime(2018, 10, 05),
+                    ClientName = "Mo Salah",
+                    ClientContact = "2a, Kingsway Ave, Auckland 1025",
+                    Email = "m.salah@example.com",
+                    Status = InvoiceStatus.Draft,
+                    GstRate = .15m,
+                    GstNumber = "96-712-565",
+                    CharitiesNumber = "CC20101",
+                    InvoiceLine = new List<InvoiceLine>()
+                    {
+                        new InvoiceLine()
+                        {
+                            Description = "Donation",
+                            Amount = 28.75M
+                        }
+                    }
+                };
+
                 _context.Add(invoice1);
                 _context.Add(invoice2);
                 _context.Add(invoice3);
-
+                _context.Add(invoice4);
+                _context.Add(invoice5);
+                _context.Add(invoice6);
+                _context.Add(invoice7);
+                _context.Add(invoice8);
+                _context.Add(invoice9);
+                _context.Add(invoice10);
+                _context.Add(invoice11);
                 _context.SaveChanges();
             }
 
