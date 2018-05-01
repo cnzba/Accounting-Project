@@ -19,9 +19,7 @@ import { PaginationComponent } from '../pagination/pagination.component';
     styleUrls: ['./invoicelist.component.css'],
 
 })
-@Pipe({
-    name: 'filter'
-})
+
 
 @Injectable()
 export class InvoicelistComponent implements OnInit{
@@ -33,22 +31,46 @@ export class InvoicelistComponent implements OnInit{
    // page: number = 1;
     limit: number = 1;
     title: string = 'CBA Invoicing';
-    invo: IInvoice;
-
+   // invo: IInvoice;
+   
     errorMessage: string;
+
+    _listFilter: string;
+    get listFilter(): string {
+        return this._listFilter;
+    }
+    set listFilter(value: string) {
+        this._listFilter = value;
+        this.filteredInvoice = this.listFilter ? this.performFilter(this.listFilter) : this.invo;
+    }
+    filteredInvoice: IInvoice[];
+    invo: IInvoice[] = [];
+   
   
     // inject InvoiceService
-    constructor(private route: ActivatedRoute, private invoiceService: InvoiceService, private alertService: AlertService, private http: Http) {
+    constructor(private route: ActivatedRoute, private _invoiceService: InvoiceService, private alertService: AlertService, private http: Http) {
         this.invo = this.route.snapshot.data['invoices'];
     }
-    onPageChange(offset) {
+   onPageChange(offset) {
         this.offset = offset;
-    }
-
+   }
     
-    public searchString: string;
+    performFilter(filterBy: string): IInvoice[] {
+        filterBy = filterBy.toLocaleLowerCase();
+        return this.invo.filter((inv: IInvoice) =>
+            inv.clientName.toLocaleLowerCase().indexOf(filterBy) !== -1);
+    }
+ 
+   
 
     ngOnInit(): void {
+        this._invoiceService.getInvoices()
+            .subscribe(invo => {
+                this.invo = invo;
+                this.filteredInvoice = this.invo;
+            },
+            error => this.errorMessage = <any>error);
+    }
        
     }
 
@@ -58,7 +80,8 @@ export class InvoicelistComponent implements OnInit{
                
    
     
-    }
+    
+
 
 
 
