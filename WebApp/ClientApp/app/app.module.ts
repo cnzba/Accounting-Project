@@ -26,6 +26,7 @@ import { ForgotPasswordService } from './login/forgot-password.service';
 import { ChangePasswordService } from './login/change-password.service';
 import { PaginationComponent } from "./pagination/pagination.component";
 
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -43,7 +44,7 @@ import { PaginationComponent } from "./pagination/pagination.component";
         HttpClientModule,
         FormsModule,
         HttpModule,
-        Ng2SearchPipeModule,
+        
         RouterModule.forRoot([
             { path: 'login', component: LoginComponent },
             {

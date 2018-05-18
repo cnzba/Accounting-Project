@@ -11,12 +11,20 @@
     <div class="row">
         <div class="col-md-2">Filter by:</div>
 
-        <input type="text" [(ngModel)]="listfilter" name="clientName" />
+        <input type="text" [(ngModel)]="listFilter" name="clientName" />
+        </div>
+    <div class="col-md-2">
+
+<select [(ngModel)]="selected" placeholder="select" (ngModelChange)="onSelect($event)">
+    <option *ngFor="let sta of status" [value]="st">{{sta}}</option>
+</select>
+
 
     </div>
+    
     <div class='row'>
         <div class='col-md-6'>
-            <h3>Filtered by: {{listfilter}} </h3>
+            <h3>Filtered by: {{listFilter}} </h3>
         </div>
     </div>
     <!--<div class="row">
