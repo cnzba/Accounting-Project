@@ -24,6 +24,8 @@ import { ForgotPasswordComponent } from './login/forgot-password.component';
 import { ChangePasswordComponent } from './login/change-password.component';
 import { ForgotPasswordService } from './login/forgot-password.service';
 import { ChangePasswordService } from './login/change-password.service';
+import { InvoicePaymentComponent } from './payment/invoice-payment.component';
+import { InvoicePaymentService } from './payment/invoice-payment.service';
 import { PaginationComponent } from "./pagination/pagination.component";
 
 
@@ -37,6 +39,7 @@ import { PaginationComponent } from "./pagination/pagination.component";
         InvoiceEditComponent,
         ForgotPasswordComponent,
         ChangePasswordComponent,
+        InvoicePaymentComponent,
         PaginationComponent
     ],
     imports: [
@@ -56,6 +59,7 @@ import { PaginationComponent } from "./pagination/pagination.component";
             { path: "invoice/new", component: InvoiceEditComponent },
             { path: "forgot-password", component: ForgotPasswordComponent },
             { path: "change-password", component: ChangePasswordComponent, canActivate: [AuthGuard] },
+            { path: "pay/:id", component: InvoicePaymentComponent },
             // otherwise redirect to the invoice list
             { path: '**', redirectTo: 'invoices' }
         ], { enableTracing: false })
@@ -68,7 +72,8 @@ import { PaginationComponent } from "./pagination/pagination.component";
         AuthenticationService,
         UserService,
         ForgotPasswordService,
-        ChangePasswordService
+        ChangePasswordService,
+        InvoicePaymentService
     ],
     bootstrap: [AppComponent]
 })

@@ -27,6 +27,11 @@ export class InvoiceService {
               .catch(this.handleError);
     }
 
+    getInvoiceByPaymentId(paymentId: string): Observable<IInvoice> {
+        return this.http.get<IInvoice>(this.invoiceUrl + '/p/' + paymentId)
+            .catch(this.handleError);
+    }
+
     createNewInvoice(): Observable<IInvoice> {
         var today = new Date();
         var dueDate = new Date();
@@ -37,7 +42,7 @@ export class InvoiceService {
             + ("0" + today.getDate()).slice(-2)
             + "-xxx";
 
-        return Observable.of({ invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, "invoiceLine": [], subTotal: 0, grandTotal: 0 });
+        return Observable.of({ invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0 });
     }
 
     saveDraftInvoice(invoice: IInvoice): Observable<IInvoice> {

@@ -43,6 +43,14 @@ namespace WebApp
             return invoice;
         }
 
+        public Invoice GetInvoiceByPaymentId(string paymentId)
+        {
+            var invoice = context.Invoice.Include("InvoiceLine")
+                .SingleOrDefault(t => t.PaymentId == paymentId);
+
+            return invoice;
+        }
+
         public bool CreateInvoice(DraftInvoice draftInvoice)
         {
             Invoice invoice = new Invoice();
@@ -51,6 +59,7 @@ namespace WebApp
             invoice.ClientName = draftInvoice.ClientName;
             invoice.ClientContactPerson = draftInvoice.ClientContactPerson;
             invoice.ClientContact = draftInvoice.ClientContact;
+            invoice.Email = draftInvoice.Email;
             invoice.DateDue = draftInvoice.DateDue;
             invoice.InvoiceLine = draftInvoice.InvoiceLine;
 

@@ -35,6 +35,7 @@ namespace WebApp
             //services.AddSingleton<IEmailConfig, EmailConfig>();
             services.AddTransient<CBASeeder>();
             services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IStripePaymentService, StripePaymentService>();
 
             services.AddMvc()
                 .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
