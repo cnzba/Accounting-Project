@@ -4,7 +4,7 @@
 
 
 
-    <a class="btn btn-lg btn-success" [routerLink]="['/invoice/new']">
+    <a id="createNew" class="btn btn-lg btn-success" [routerLink]="['/invoice/new']">
         Create New Invoice
     </a>
 
@@ -35,11 +35,12 @@
                 <ng-container  *ngIf="i>=offset && i< offset +limit">
                     <td *ngIf="inv.status==='Sent'||inv.status==='Paid'" >
                         <a [routerLink]="['/invoices', inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
+
                     </td>
 
-
                     <td *ngIf="inv.status==='New'||inv.status==='Draft'" >
-                        <a [routerLink]="['/invoices/edit/',inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
+                        <a [routerLink]="['/invoices/edit/',inv.invoiceNumber]">{{inv.invoiceNumber}} </a>
+                        <button class="btn btn-sm" id="delete_key" data-toggle="modal" data-target="#deleteModal" (click)="setinvoiceNum(inv.invoiceNumber)"> <span class="oi oi-trash"></span></button>
                     </td>
 
 
@@ -49,9 +50,9 @@
                     <td style="width: 10%">{{inv.dateDue | date: 'dd/MM/yyyy'}}</td>
                     <td style="width: 10%">{{inv.status}}</td>
 
-                    <td *ngIf="inv.status==='Draft'" style="width:10%" >
-                        <button class="btn btn-default" type="button" (click)="deleteFieldValue(i)">Delete</button>
-                    </td>
+                    <!--<td *ngIf="inv.status==='Draft'" style="width:0.1%" >
+                        <button class="btn btn-sm" id="delete_key" data-toggle="modal" data-target="#deleteModal"><span class="oi oi-trash"></span></button>
+                    </td>-->
                 </ng-container>
 
             </tr>
@@ -61,9 +62,27 @@
         </tbody>
     </table>
 
+    <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
 
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="deleteModalLabel">Are you sure?</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>When you delete a draft invoice it cannot be undone!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="deleteFieldValue()">Yes, Confirm!</button>
+                </div>
+            </div>
 
-    <a class="btn btn-lg btn-success" [routerLink]="['/invoice/new']">
+        </div>
+    </div>
+    <a id="createNew" class="btn btn-lg btn-success" [routerLink]="['/invoice/new']">
         Create New Invoice
     </a>
 

@@ -14,6 +14,7 @@ import { PaginationComponent } from '../pagination/pagination.component';
 
 })
 export class InvoicelistComponent implements OnInit {
+    
 
     // offset is the index of an invoice we want to view and is used to compute the page to show; offset = 3 for example means display the page containing the 4th invoice in the list
 
@@ -22,7 +23,7 @@ export class InvoicelistComponent implements OnInit {
     // page: number = 1;
     limit: number = 1;
     title: string = 'CBA Invoicing';
-    invo: IInvoice;
+    invo: IInvoice[];
 
     errorMessage: string;
 
@@ -32,11 +33,36 @@ export class InvoicelistComponent implements OnInit {
     }
     onPageChange(offset) {
         this.offset = offset;
+       
     }
+    
+    private _invoiceNumber: string;
+    getinvoiceNum():string{
+       return this._invoiceNumber;
+           } 
+    setinvoiceNum(currentInvoiceNum:string){
+         this._invoiceNumber = currentInvoiceNum;
+       }
+    
+    deleteFieldValue(invoiceNumber: string){
+            var delete_value = this.getinvoiceNum();
+            invoiceNumber = delete_value;
+            this.invoiceService.deleteInvoice(invoiceNumber).subscribe(
+               data => {
+               //window.location.reload();
+               this.invo = this.invo.filter(inv=> inv.invoiceNumber !== invoiceNumber);
+               this.offset=0;
+               this.alertService.success(invoiceNumber +" has successfully been deleted!");
+            },
+              err=> {
+                this.alertService.error("Error: the delete has failed")
+            });
 
+    }
+        
+    
     ngOnInit(): void {
+       
     }
+
 }
-
-
-

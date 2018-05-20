@@ -1,6 +1,40 @@
-.btn {
+#createNew {
     margin: 20px;
 }
-.invoices{
-    //margin-top:20px;
+.row{
+    margin-left:0px;
+}
+#delete_key {
+    float: right;
+    margin: -3px 0px 0px 0px;
+    border: 1px solid #ddd;
+    background-color: #eaeaeb
+
+}
+#delete_key:hover {
+    background-color: #939398;
+}
+
+.modal {
+    text-align: center;
+    padding: 0 !important;
+}
+.modal-header {
+    background-color: #222529;
+    color: white
+
+}
+.modal:before {
+    content:"";
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -4px;
+}
+.modal-dialog {
+    display: inline-block;
+    width:500px;
+    text-align: left;
+    vertical-align: middle;
+
 }
