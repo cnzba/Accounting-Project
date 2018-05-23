@@ -28,16 +28,7 @@ export class InvoicelistComponent implements OnInit {
     selected:any;
     //selectedData:any;
     filtered: any;
-    stat = [
-        { value: "All", id: "123" },
-        { value: "Unpaid and sent", id:"12" },
-
-        { value: "Unpaid and sent",id:"23" },
-        { value: "Unpaid and not sent" ,id:"45"},
-        { value: "Unpaid with due date",id:"56" },
-        { value: "Paid",id:"57" },
-        { value: "Open",id:"78" },
-        { value: "Overdue" ,id:"45"}];
+   
     status = ['Select Status', 'All', 'Unpaid and sent', 'Unpaid with due date', 'Paid', 'Open', 'Overdue'];
    
     // offset is the index of an invoice we want to view and is used to compute the page to show; offset = 3 for example means display the page containing the 4th invoice in the list
