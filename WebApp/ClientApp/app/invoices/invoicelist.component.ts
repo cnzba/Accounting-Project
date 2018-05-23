@@ -24,17 +24,22 @@ import { DecimalPipe } from '@angular/common/src/pipes/number_pipe';
 
 
 export class InvoicelistComponent implements OnInit {
-    selected:number;
-    selectedData:any;
-    stat = [{ value: "Select Status" },
-        { value: "All" },
-        { value: "Unpaid and sent" },
-        { value: "Unpaid and not sent" },
-        { value: "Unpaid with due date" },
-        { value: "Paid" },
-        { value: "Open" },
-        { value: "Overdue" }];
-    status = ['Select Status', 'All', 'Unpaid and sent', 'Unpaid with due date', 'Paid', 'Open','Overdue'];
+    invoiceNumber: string;
+    selected:any;
+    //selectedData:any;
+    filtered: any;
+    stat = [
+        { value: "All", id: "123" },
+        { value: "Unpaid and sent", id:"12" },
+
+        { value: "Unpaid and sent",id:"23" },
+        { value: "Unpaid and not sent" ,id:"45"},
+        { value: "Unpaid with due date",id:"56" },
+        { value: "Paid",id:"57" },
+        { value: "Open",id:"78" },
+        { value: "Overdue" ,id:"45"}];
+    status = ['Select Status', 'All', 'Unpaid and sent', 'Unpaid with due date', 'Paid', 'Open', 'Overdue'];
+   
     // offset is the index of an invoice we want to view and is used to compute the page to show; offset = 3 for example means display the page containing the 4th invoice in the list
 
     // offset needs to be initialized
@@ -60,28 +65,29 @@ export class InvoicelistComponent implements OnInit {
 
     // inject InvoiceService
     constructor(private route: ActivatedRoute, private _invoiceService: InvoiceService, private alertService: AlertService, private http: Http) {
-        this.selectedData = this.status;
+       // this.selected = this.stat;
         this.invo = this.route.snapshot.data['invoices'];
        
     }
     onPageChange(offset) {
         this.offset = offset;
     }
-   onSelect(sta:any) {
-        console.log(sta);
-     
-       this.selectedData = this.stat.filter(inv => inv.value == sta)
-       this.performFilter(sta);
+    onOptionsSelected() {
+       // let value = event.target.value;
+      //  this.selected = value;
+        console.log(this.selected);
+        this.filtered = this.filteredInvoice.filter(t => t.status == this.selected);
+        
     }
 
-
+    
     
 
     performFilter(filterBy: any): IInvoice[] {
        filterBy = filterBy.toLocaleLowerCase();
         return this.invo.filter((inv: IInvoice) =>
-             (inv.clientName.toLocaleLowerCase().indexOf(filterBy) !== -1) || (inv.invoiceNumber.toLocaleLowerCase().indexOf(filterBy) !== -1) ||
-             (inv.amount>=0));
+            (inv.clientName.toLocaleLowerCase().indexOf(filterBy) !== -1) || (inv.invoiceNumber.toLocaleLowerCase().indexOf(filterBy) !== -1)
+            || (inv.status.toLocaleLowerCase().indexOf(filterBy) !== -1));
            
 
     
