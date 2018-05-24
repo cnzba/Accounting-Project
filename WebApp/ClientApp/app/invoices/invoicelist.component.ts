@@ -88,7 +88,8 @@ export class InvoicelistComponent implements OnInit {
                 this.filteredInvoice = this.invo.filter(invoice => invoice.status == "Sent" && today > invoice.dateDue);
                 break;
 
-        } 
+        }
+      //  this.performFilter(filterBy:any);
     }
    
 
@@ -99,7 +100,7 @@ export class InvoicelistComponent implements OnInit {
        filterBy = filterBy.toLocaleLowerCase();
         return this.invo.filter((inv: IInvoice) =>
            (inv.clientName.toLocaleLowerCase().indexOf(filterBy) !== -1) || (inv.invoiceNumber.toLocaleLowerCase().indexOf(filterBy) !== -1)
-            || (inv.status.toLocaleLowerCase().indexOf(filterBy) !== -1) || (inv.dateCreated.toString().toLocaleLowerCase().indexOf(filterBy) !== -1)
+            ||  (inv.dateCreated.toString().toLocaleLowerCase().indexOf(filterBy) !== -1)
             || (inv.dateDue.toString().toLocaleLowerCase().indexOf(filterBy) !== -1) || (inv.grandTotal.toString().toLocaleLowerCase().indexOf(filterBy) !== -1));
            
 
