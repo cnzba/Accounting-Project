@@ -29,7 +29,7 @@ export class InvoicelistComponent implements OnInit {
     //selectedData:any;
     filtered: any;
    
-    status = ['Select Status', 'All', 'Unpaid and sent', 'Unpaid with due date', 'Paid', 'Open', 'Overdue'];
+    status = ['All', 'Unpaid and sent', 'Unpaid with due date', 'Paid', 'Open', 'Overdue'];
    
     // offset is the index of an invoice we want to view and is used to compute the page to show; offset = 3 for example means display the page containing the 4th invoice in the list
 
@@ -64,12 +64,33 @@ export class InvoicelistComponent implements OnInit {
         this.offset = offset;
     }
     onOptionsSelected() {
-       // let value = event.target.value;
-      //  this.selected = value;
+        // let value = event.target.value;
+        // this.selected = value;
         console.log(this.selected);
-        this.filtered = this.filteredInvoice.filter(t => t.status == this.selected);
-        
+        //  this.filtered = this.invo.filter(t => t.status == this.selected);
+        let today: Date = new Date();
+        switch (this.selected) {
+            case "All":
+                this.invo = this.route.snapshot.data['invoices'];
+                break;
+
+       case "Paid":
+                this.filteredInvoice = this.invo.filter(invoice => invoice.status == "Paid" );
+                break;
+            case "Unpaid and sent":
+                this.filteredInvoice = this.invo.filter(invoice => invoice.status == "Sent");
+                break;
+                
+            case "Unpaid within due date":
+                this.filteredInvoice = this.invo.filter(invoice => invoice.status == "Sent" && today <= invoice.dateDue);
+                break;
+            case "Overdue":
+                this.filteredInvoice = this.invo.filter(invoice => invoice.status == "Sent" && today > invoice.dateDue);
+                break;
+
+        } 
     }
+   
 
     
     
@@ -77,8 +98,9 @@ export class InvoicelistComponent implements OnInit {
     performFilter(filterBy: any): IInvoice[] {
        filterBy = filterBy.toLocaleLowerCase();
         return this.invo.filter((inv: IInvoice) =>
-            (inv.clientName.toLocaleLowerCase().indexOf(filterBy) !== -1) || (inv.invoiceNumber.toLocaleLowerCase().indexOf(filterBy) !== -1)
-            || (inv.status.toLocaleLowerCase().indexOf(filterBy) !== -1));
+           (inv.clientName.toLocaleLowerCase().indexOf(filterBy) !== -1) || (inv.invoiceNumber.toLocaleLowerCase().indexOf(filterBy) !== -1)
+            || (inv.status.toLocaleLowerCase().indexOf(filterBy) !== -1) || (inv.dateCreated.toString().toLocaleLowerCase().indexOf(filterBy) !== -1)
+            || (inv.dateDue.toString().toLocaleLowerCase().indexOf(filterBy) !== -1) || (inv.grandTotal.toString().toLocaleLowerCase().indexOf(filterBy) !== -1));
            
 
     
