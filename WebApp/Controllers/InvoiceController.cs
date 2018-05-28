@@ -76,8 +76,9 @@ namespace WebApp.Controllers
 
             try
             {
-                if (service.CreateInvoice(invoice))
-                    return CreatedAtAction("GetInvoice", new { InvoiceNumber = invoice.InvoiceNumber }, invoice);
+                Invoice created = service.CreateInvoice(invoice);
+                if (created!=null)
+                    return CreatedAtAction("GetInvoice", new { InvoiceNumber = created.InvoiceNumber }, created);
             }
             catch(ValidationException ex)
             {

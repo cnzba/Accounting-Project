@@ -25,7 +25,7 @@ namespace UnitTestProject
             var controller = new InvoiceController(service.Object, logger);
 
             controller.ModelState.AddModelError("fake", "required");
-            service.Setup(s => s.CreateInvoice(It.IsAny<DraftInvoice>())).Returns(true);
+            service.Setup(s => s.CreateInvoice(It.IsAny<DraftInvoice>())).Returns(new Invoice());
 
             //act
             var result = controller.CreateInvoice(new DraftInvoice());
@@ -41,7 +41,7 @@ namespace UnitTestProject
             var service = new Mock<IInvoiceService>();
             var controller = new InvoiceController(service.Object, logger);
 
-            service.Setup(s => s.CreateInvoice(It.IsAny<DraftInvoice>())).Returns(true);
+            service.Setup(s => s.CreateInvoice(It.IsAny<DraftInvoice>())).Returns(new Invoice());
 
             //act
             var result = controller.CreateInvoice(new DraftInvoice());
@@ -62,7 +62,7 @@ namespace UnitTestProject
             var service = new Mock<IInvoiceService>();
             var controller = new InvoiceController(service.Object, logger);
 
-            service.Setup(s => s.CreateInvoice(It.IsAny<DraftInvoice>())).Returns(false);
+            service.Setup(s => s.CreateInvoice(It.IsAny<DraftInvoice>())).Returns((Invoice)null);
 
             //act
             var result = controller.CreateInvoice(new DraftInvoice());

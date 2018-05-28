@@ -5,7 +5,7 @@ namespace WebApp
 {
     public interface IInvoiceService
     {
-        bool CreateInvoice(DraftInvoice invoice);
+        Invoice CreateInvoice(DraftInvoice invoice);
         string GenerateInvoiceNumber();
         IEnumerable<Invoice> GetAllInvoices();
         IEnumerable<IInvoiceHeader> GetInvoiceHeaders();

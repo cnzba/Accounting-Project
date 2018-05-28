@@ -27,7 +27,7 @@ namespace WebApp.Models
             {
                 entity.HasAlternateKey(e => e.InvoiceNumber);
 
-                entity.Property(e => e.DateCreated).HasColumnType("date").IsRequired();
+                entity.Property(e => e.DateCreated).IsRequired();
                 entity.Property(e => e.DateDue).HasColumnType("date");
 
                 entity.Property(e => e.InvoiceNumber).IsRequired();

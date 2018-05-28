@@ -51,8 +51,12 @@ namespace WebApp
             return invoice;
         }
 
-        public bool CreateInvoice(DraftInvoice draftInvoice)
+        public Invoice CreateInvoice(DraftInvoice draftInvoice)
         {
+            // determine current New Zealand time
+            TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("New Zealand Standard Time");
+            DateTime localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
+
             Invoice invoice = new Invoice
             {
 
@@ -69,7 +73,7 @@ namespace WebApp
                 CharitiesNumber = options.CharitiesNumber,
                 GstNumber = options.GSTNumber,
                 GstRate = options.GSTRate,
-                DateCreated = DateTime.Now,
+                DateCreated = localNow,
                 Status = InvoiceStatus.Draft
             };
 
@@ -77,7 +81,8 @@ namespace WebApp
 
             context.Add<Invoice>(invoice);
             int count = context.SaveChanges();
-            return count > 0;
+
+            if (count > 0) return invoice; else return null;
         }
 
         public string GenerateInvoiceNumber()

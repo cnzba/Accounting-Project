@@ -65,7 +65,7 @@ namespace UnitTestProject
             var result = service.CreateInvoice(invoice);
 
             // assert
-            Assert.IsTrue(result);
+            Assert.IsTrue(result!=null);
             var cleancontext = new CBAContext(dboptions);
             Assert.IsTrue(context.Invoice.Any());
             Assert.IsTrue(context.Invoice.FirstOrDefault().InvoiceLine.Count() == 2);

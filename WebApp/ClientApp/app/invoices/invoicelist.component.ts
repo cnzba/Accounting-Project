@@ -21,7 +21,7 @@ export class InvoicelistComponent implements OnInit {
     // offset needs to be initialized
     offset: number = 0;
     // page: number = 1;
-    limit: number = 1;
+    limit: number = 20;
     title: string = 'CBA Invoicing';
     invo: IInvoice[];
 
