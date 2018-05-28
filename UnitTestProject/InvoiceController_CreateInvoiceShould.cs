@@ -51,7 +51,7 @@ namespace UnitTestProject
             Assert.IsTrue(createdAtAction);
 
             var created = result as CreatedAtActionResult;
-            Assert.IsTrue(created.Value is DraftInvoice);
+            Assert.IsTrue(created.Value is Invoice);
             Assert.IsTrue(created.StatusCode == 201);
         }
 
