@@ -1,4 +1,4 @@
-# CBA Accounting Project
+# CNZBA Accounting Project
 
 Please see the 
 [project wiki](https://cbanewzealand.visualstudio.com/Accounting%20Software/_wiki/wikis/Accounting-Software.wiki?wikiVersion=GBwikiMaster&pagePath=%2FIntroduction) 
