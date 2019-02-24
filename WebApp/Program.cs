@@ -12,12 +12,12 @@ namespace WebApp
     {
         public static void Main(string[] args)
         {
-            var host = BuildWebHost(args);
+            var host = CreateWebHostBuilder(args).Build();
             MigrateAndSeedCBADatabase(host);
             host.Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((builderContext, config) =>
                     {
@@ -29,8 +29,7 @@ namespace WebApp
                         // added a 2nd time to ensure environment variables can override settings in the CBA database
                         config.AddEnvironmentVariables();
                     })
-                .UseStartup<Startup>()
-                .Build();
+                .UseStartup<Startup>();
 
         private static void MigrateAndSeedCBADatabase(IWebHost host)
         {

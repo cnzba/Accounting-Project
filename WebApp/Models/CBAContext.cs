@@ -35,13 +35,14 @@ namespace WebApp.Models
 
                 entity.Property(e => e.GstNumber).IsRequired();
                 entity.Property(e => e.CharitiesNumber).IsRequired();
+                entity.Property(e => e.GstRate).HasColumnType("decimal(18,2)");
             });
             
             modelBuilder.Entity<InvoiceLine>(entity =>
             {
-                entity.Property(e => e.Amount).IsRequired();
+                entity.Property(e => e.Amount).IsRequired().HasColumnType("decimal(18,2)");
                 // an invoice line cannot exist without an invoice: IsRequired gives cascade delete behaviour
-                entity.Property("InvoiceId").IsRequired(); 
+                entity.Property("InvoiceId").IsRequired();
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -56,7 +57,7 @@ namespace WebApp.Models
                 entity.Property(e => e.Type).IsRequired();
                 entity.Property(e => e.InvoiceNo).IsRequired();
                 entity.Property(e => e.Status).IsRequired();
-                entity.Property(e => e.Amount).IsRequired();
+                entity.Property(e => e.Amount).IsRequired().HasColumnType("decimal(18,2)");
                 entity.Property(e => e.PaymentId).IsRequired();
                 entity.Property(e => e.paymentDate).IsRequired();
             });

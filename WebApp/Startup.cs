@@ -12,6 +12,10 @@ using System;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using ServiceUtil.Email;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
+
 
 namespace WebApp
 {
@@ -28,7 +32,13 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CBAContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CBA_Database")));
-           
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
 
             services.AddScoped<ICryptography, Cryptography>();
             services.AddScoped<IEmailService, EmailService>();
@@ -39,7 +49,14 @@ namespace WebApp
             services.AddScoped<IStripePaymentService, StripePaymentService>();
 
             services.AddMvc()
-                .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+                .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
 
             // Cookie Authentication 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
@@ -67,31 +84,33 @@ namespace WebApp
             services.AddOptions();
             services.Configure<CBAOptions>(Configuration);
             services.Configure<EmailConfig>(Configuration.GetSection("EmailConfig"));
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseAuthentication();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+                // app.UseBrowserLink();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
             }
 
             // allow angular to pick up from index.html
-            app.UseDefaultFiles();
+            // app.UseDefaultFiles();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+            app.UseCookiePolicy();
 
             app.UseSwagger();
-
-            // Enable Authentication
-            app.UseAuthentication();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
@@ -103,21 +122,21 @@ namespace WebApp
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller}/{action}/{id?}");
+                    template: "{controller}/{action=Index}/{id?}");
             });
 
-            // here you can see we make sure it doesn't start with /api, if it does, it'll 404 within .NET if it can't be found
-            app.MapWhen(x => !x.Request.Path.Value.StartsWith("/api"), builder =>
+            app.UseSpa(spa =>
             {
-                builder.UseMvc(routes =>
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
                 {
-                    routes.MapSpaFallbackRoute(
-                        name: "spa-fallback",
-                        defaults: new { controller = "Client", action = "Index" });
-                });
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
             });
-
-
         }
     }
 }
