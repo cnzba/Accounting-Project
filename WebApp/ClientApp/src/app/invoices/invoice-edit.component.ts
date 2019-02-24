@@ -23,20 +23,21 @@ import { SpinnerService } from "../common/spinner.service";
 })
 export class InvoiceEditComponent implements OnInit {
     constructor(
-        private invoiceService: InvoiceService,
+        private invoiceServiceP: InvoiceService,
         private route: ActivatedRoute,
         private location: Location,
         private alertService: AlertService,
         private spinnerService: SpinnerService) { }
 
+    invoiceService: InvoiceService = this.invoiceServiceP;
     // the copy of the invoice to reset to when the reset button is pushed
     private resetInvoice: IInvoice;
 
     // the model backing the form
-    private modifyInvoice: IInvoice = new Invoice();
+    modifyInvoice: IInvoice = new Invoice();
 
     // model for any errors on the form
-    private formErrors: ApiError = new ApiError();
+    formErrors: ApiError = new ApiError();
 
     private userAskedForAddress = false;
     private userAskedForContact = false;
@@ -76,7 +77,7 @@ export class InvoiceEditComponent implements OnInit {
     }
 
     // code for line items
-    private addLineItem() {
+    addLineItem() {
         this.modifyInvoice.invoiceLine.push(new InvoiceLine());
     }
 
