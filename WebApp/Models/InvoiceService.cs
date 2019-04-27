@@ -126,5 +126,70 @@ namespace WebApp
             context.Remove<Invoice>(invoice);
             return context.SaveChanges() > 0;
         }
+
+        public IEnumerable<Invoice> GetAllInvoicesBy(string keyword, string sort)
+        {
+
+            IEnumerable<Invoice> result;
+
+            if (string.IsNullOrEmpty(sort))
+            {
+                sort = "created_asc";
+            }
+
+            if (sort.Equals("created_desc"))
+            {
+                result = context.Invoice.Include("InvoiceLine").OrderByDescending(i => i.DateCreated).ToList();
+            }
+            else if (sort.Equals("due_asc"))
+            {
+                result = context.Invoice.Include("InvoiceLine").OrderBy(i => i.DateDue).ToList();
+            }
+            else if (sort.Equals("due_desc"))
+            {
+                result = context.Invoice.Include("InvoiceLine").OrderByDescending(i => i.DateDue).ToList();
+            }
+            else if (sort.Equals("name_asc"))
+            {
+                result = context.Invoice.Include("InvoiceLine").OrderBy(i => i.ClientName).ToList();
+            }
+            else if (sort.Equals("name_desc"))
+            {
+                result = context.Invoice.Include("InvoiceLine").OrderByDescending(i => i.ClientName).ToList();
+            }
+            else if (sort.Equals("amount_asc"))
+            {
+                result = context.Invoice.Include("InvoiceLine").ToList();
+                result = result.OrderBy(i => i.GrandTotal);
+            }
+            else if (sort.Equals("amount_desc"))
+            {
+                result = context.Invoice.Include("InvoiceLine").ToList();
+                result = result.OrderByDescending(i => i.GrandTotal);                
+            }
+            else if (sort.Equals("status_asc"))
+            {
+                result = context.Invoice.Include("InvoiceLine").OrderBy(i => i.Status).ToList();
+            }
+            else if (sort.Equals("status_desc"))
+            {
+                result = context.Invoice.Include("InvoiceLine").OrderByDescending(i => i.Status).ToList();
+            }
+            else // sort=created_asc
+            {
+                result = context.Invoice.Include("InvoiceLine").OrderBy(i => i.DateCreated).ToList();
+            }
+
+            if(!string.IsNullOrEmpty(keyword))
+            {
+                result = result.Where(r => r.ClientName.Contains(keyword, StringComparison.CurrentCultureIgnoreCase)
+                                        || r.DateCreated.ToString("dd'/'MM'/'yyyy").Contains(keyword)
+                                        || r.DateDue.ToString("dd'/'MM'/'yyyy").Contains(keyword)
+                                        || r.GrandTotal.ToString().Equals(keyword)
+                                        || r.Status.ToString().Contains(keyword, StringComparison.CurrentCultureIgnoreCase)
+                                        || r.InvoiceNumber.Contains(keyword, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            }                
+            return result;
+        }
     }
 }
