@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApp.Models;
 
 namespace WebApp.Migrations
 {
     [DbContext(typeof(CBAContext))]
-    partial class CBAContextModelSnapshot : ModelSnapshot
+    [Migration("20190426050842_DepartmentCreate")]
+    partial class DepartmentCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,13 +97,9 @@ namespace WebApp.Migrations
 
                     b.Property<int>("ItemOrder");
 
-                    b.Property<int?>("ProductsProductId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("InvoiceId");
-
-                    b.HasIndex("ProductsProductId");
 
                     b.ToTable("InvoiceLine");
                 });
@@ -144,32 +142,6 @@ namespace WebApp.Migrations
                     b.ToTable("Payment");
                 });
 
-            modelBuilder.Entity("WebApp.Models.Products", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ProductDescription")
-                        .IsRequired();
-
-                    b.Property<string>("ProductName")
-                        .IsRequired();
-
-                    b.Property<decimal>("ProductPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("TaxId");
-
-                    b.HasKey("ProductId");
-
-                    b.HasIndex("TaxId");
-
-                    b.ToTable("Products");
-                });
-
-          
-
             modelBuilder.Entity("WebApp.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -199,18 +171,6 @@ namespace WebApp.Migrations
                     b.HasOne("WebApp.Models.Invoice", "Invoice")
                         .WithMany("InvoiceLine")
                         .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("WebApp.Models.Products")
-                        .WithMany("InvoiceLine")
-                        .HasForeignKey("ProductsProductId");
-                });
-
-            modelBuilder.Entity("WebApp.Models.Products", b =>
-                {
-                    b.HasOne("WebApp.Models.TaxInfo", "TaxInfo")
-                        .WithMany("Products")
-                        .HasForeignKey("TaxId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

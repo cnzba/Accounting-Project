@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApp.Models;
 
 namespace WebApp.Migrations
 {
     [DbContext(typeof(CBAContext))]
-    partial class CBAContextModelSnapshot : ModelSnapshot
+    [Migration("20190430063638_ProductsCreate")]
+    partial class ProductsCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,7 +170,22 @@ namespace WebApp.Migrations
                     b.ToTable("Products");
                 });
 
-          
+            modelBuilder.Entity("WebApp.Models.TaxInfo", b =>
+                {
+                    b.Property<int>("TaxId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("TaxName")
+                        .IsRequired();
+
+                    b.Property<string>("TaxValue")
+                        .IsRequired();
+
+                    b.HasKey("TaxId");
+
+                    b.ToTable("TaxInfo");
+                });
 
             modelBuilder.Entity("WebApp.Models.User", b =>
                 {

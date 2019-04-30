@@ -14,6 +14,9 @@ namespace WebApp.Models
         public virtual DbSet<InvoiceLine> InvoiceLine { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<PaymentModel> Payment { get; set; }
+        public virtual DbSet<Department> Department { get; set; }
+        public virtual DbSet<TaxInfo> TaxInfo { get; set; }
+        public virtual DbSet<Products> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -61,6 +64,31 @@ namespace WebApp.Models
                 entity.Property(e => e.PaymentId).IsRequired();
                 entity.Property(e => e.paymentDate).IsRequired();
             });
+
+            modelBuilder.Entity<Department>(entity =>
+            {
+                entity.Property(e => e.DepartmentId).IsRequired();
+                entity.Property(e => e.DepartmentAddress).IsRequired();
+                entity.Property(e => e.Deleted).IsRequired();
+            });
+
+            
+            modelBuilder.Entity<TaxInfo>(entity =>
+            {
+                entity.Property(e => e.TaxId).IsRequired();
+                entity.Property(e => e.TaxName).IsRequired();
+                entity.Property(e => e.TaxValue).IsRequired();
+            });
+
+            modelBuilder.Entity<Products>(entity =>
+            {
+                    entity.Property(e => e.ProductId).IsRequired();
+                    entity.Property(e => e.ProductName).IsRequired();
+                    entity.Property(e => e.ProductDescription).IsRequired();
+                    entity.Property(e => e.ProductPrice).HasColumnType("decimal(18,2)");
+                    entity.Property(e => e.TaxId).IsRequired();
+            });
+           
         }
     }
 }
