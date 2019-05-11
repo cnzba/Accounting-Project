@@ -11,7 +11,7 @@ namespace WebApp.Models
         public int Id { get; set; } // the PK is not needed by the client
         public int ItemOrder { get; set; }
         public string Description { get; set; }
-        public decimal Amount { get; set; }
+        public decimal Amount { get; set; } // amount of invoice line item
 
         // Foreign Key(s) (commented because EF Core will add them to the model automatically
         // as shadow properties)
