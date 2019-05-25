@@ -29,6 +29,12 @@ import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
 import { SpinnerService } from "./common/spinner.service";
 import { environment } from '../environments/environment';
 
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSortModule } from '@angular/material/sort';
+
+import { InvoiceFilterPipe } from './pipes/invoice-filter.pipe';
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -41,13 +47,18 @@ import { environment } from '../environments/environment';
         ChangePasswordComponent,
         InvoicePaymentComponent,
         PaginationComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        InvoiceFilterPipe
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+        BrowserAnimationsModule,
+        MatSortModule,
+        AngularFontAwesomeModule,
         HttpClientModule,
         FormsModule,
         HttpModule,
+        
         RouterModule.forRoot([
             { path: 'login', component: LoginComponent },
             {
@@ -88,3 +99,4 @@ import { environment } from '../environments/environment';
     bootstrap: [AppComponent]
 })
 export class AppModule { }
+export class PizzaPartyAppModule { }

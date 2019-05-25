@@ -7,10 +7,15 @@ import { AlertService } from "../common/alert/alert.service";
 
 import { PaginationComponent } from '../pagination/pagination.component';
 
+import { Sort } from '@angular/material';
+import { InvoiceFilterPipe } from '../pipes/invoice-filter.pipe';
+
+
 @Component({
-    selector: 'app-invoicelist',
+    selector: 'app-invoicelist',    
     templateUrl: './invoicelist.component.html',
     styleUrls: ['./invoicelist.component.css'],
+    
 
 })
 export class InvoicelistComponent implements OnInit {
@@ -24,12 +29,16 @@ export class InvoicelistComponent implements OnInit {
     limit: number = 20;
     title: string = 'CBA Invoicing';
     invo: IInvoice[];
+    sortedData: IInvoice[];
 
     errorMessage: string;
+
+    public searchString: string;
 
     // inject InvoiceService
     constructor(private route: ActivatedRoute, private invoiceService: InvoiceService, private alertService: AlertService, private http: Http) {
         this.invo = this.route.snapshot.data['invoices'];
+        this.sortedData = this.invo.slice();
     }
     onPageChange(offset) {
         this.offset = offset;
@@ -59,10 +68,34 @@ export class InvoicelistComponent implements OnInit {
             });
 
     }
-        
-    
+       
+
+    sortData(sort: Sort) {
+        const data = this.invo.slice();
+        if (!sort.active || sort.direction === '') {
+            this.sortedData = data;
+            return;
+        }
+
+        this.sortedData = data.sort((a, b) => {
+            const isAsc = sort.direction === 'asc';
+            switch (sort.active) {
+                case 'invoiceNumber': return compare(a.invoiceNumber, b.invoiceNumber, isAsc);
+                case 'clientName': return compare(a.clientName.toLowerCase(), b.clientName.toLowerCase(), isAsc);
+                case 'grandTotal': return compare(a.grandTotal, b.grandTotal, isAsc);
+                case 'status': return compare(a.status, b.status, isAsc);
+                case 'dateCreated': return compare(a.dateCreated, b.dateCreated, isAsc);
+                case 'dateDue': return compare(a.dateDue, b.dateDue, isAsc);
+                default: return 0;
+            }
+        });
+    }
+   
     ngOnInit(): void {
        
     }
+}
 
+function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
