@@ -62,7 +62,7 @@
                     </div>
                     <div class="col-1">
                         <button type="button" [class.hidden]="!contactHover"
-                                (click)="removeContact()" 
+                                (click)="removeContact()"
                                 class="btn btn-outline-danger btn-sm">
                             <span class="oi oi-x"></span>
                         </button>
@@ -139,11 +139,7 @@
         </div>
 
         <div class="row">
-            <div class="col-6">
-                <b>Description</b>
-            </div>
-            <div class="col-2">
-                <b>Amount</b>
+            <div class="col-10">
                 <div class="float-right">
                     <button type="button" class="btn btn-link btn-sm" (click)="addLineItem()">
                         Add Item
@@ -152,15 +148,49 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-6">
+                <b>Description</b>
+            </div>
+
+            <div class="col-1">
+                <b>Quantity</b>
+            </div>
+
+            <div class="col-1">
+                <b>Unit Price</b>
+            </div>
+
+            <div class="col-1">
+                <b>Amount</b>
+                <!--<div class="float-right">
+                    <button type="button" class="btn btn-link btn-sm" (click)="addLineItem()">
+                        Add Item
+                    </button>
+                </div>-->
+            </div>
+        </div>
+
         <div class="row" *ngFor='let il of modifyInvoice.invoiceLine; index as i; first as isFirst; last as isLast' (mouseenter)="itemHover = i" (mouseleave)="itemHover = -1">
             <div class="col-6">
                 <input [(ngModel)]="il.description" class="form-control" type="text" name="description{{i}}" />
             </div>
+
+            <div class="col-1">
+                <input [ngModel]="il.quantity" (ngModelChange)="updateInvoiceLineAmountByQuantity($event,i)"
+                       class="form-control" type="number" name="quantity{{i}}" />
+            </div>
+
+            <div class="col-1">
+                <input [ngModel]="il.unitPrice" (ngModelChange)="updateInvoiceLineAmountByUnitPrice($event,i)"
+                       class="form-control" type="text" name="unitPrice{{i}}" appTwoDigitDecimaNumber/>
+            </div>
+
             <div class="col-2">
-                <input [ngModel]="il.amount" (ngModelChange)="il.amount=$event"
+                <input [ngModel]="il.amount" disabled (ngModelChange)="il.amount=$event"
                        class="form-control" type="text" name="amount{{i}}" />
             </div>
-            <div class="col-4">
+            <div class="col-2">
                 <div [class.hidden]="i!=itemHover">
                     <button (click)="deleteLineItem(i)" type="button" class="btn btn-outline-danger btn-sm">
                         <span class="oi oi-x"></span>
@@ -181,7 +211,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-8">
+            <div class="col-10">
                 <div class="float-right">
                     <button type="button" class="btn btn-link btn-sm" (click)="addLineItem()">
                         Add Item

@@ -48,17 +48,23 @@ export interface IInvoiceLine {
     itemOrder: number;
     description: string;
     amount: number;
+    quantity: number;
+    unitPrice: number;
 }
 
 export class InvoiceLine implements IInvoiceLine {
     itemOrder: number;
     description: string;
     amount: number;
+    quantity: number;
+    unitPrice: number;
 
     constructor() {
         this.description = "";
         this.amount = 0;
         this.itemOrder = 0;
+        this.quantity = 0;
+        this.unitPrice = 0;
     }
 }
 

@@ -29,6 +29,9 @@ import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
 import { SpinnerService } from "./common/spinner.service";
 import { environment } from '../environments/environment';
 
+import { TwoDigitDecimaNumberDirective } from './invoices/two-digit-decima-number.directive';
+
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -41,7 +44,8 @@ import { environment } from '../environments/environment';
         ChangePasswordComponent,
         InvoicePaymentComponent,
         PaginationComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        TwoDigitDecimaNumberDirective 
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

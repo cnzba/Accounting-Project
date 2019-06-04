@@ -85,6 +85,16 @@ export class InvoiceEditComponent implements OnInit {
         this.modifyInvoice.invoiceLine.splice(i, 1);
     }
 
+    private updateInvoiceLineAmountByUnitPrice(unitPrice: number, i: number) {
+        this.modifyInvoice.invoiceLine[i].unitPrice = unitPrice;
+        this.modifyInvoice.invoiceLine[i].amount = parseFloat((this.modifyInvoice.invoiceLine[i].quantity * unitPrice).toFixed(2));
+    }
+
+    private updateInvoiceLineAmountByQuantity(quantity: number, i: number) {
+        this.modifyInvoice.invoiceLine[i].quantity = quantity;
+        this.modifyInvoice.invoiceLine[i].amount = parseFloat((this.modifyInvoice.invoiceLine[i].unitPrice * quantity).toFixed(2));
+    }
+
     private moveItemUp(i: number) {
         if (i <= 0) return;
         let il = this.modifyInvoice.invoiceLine;
