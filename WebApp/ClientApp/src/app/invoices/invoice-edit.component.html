@@ -178,7 +178,7 @@
 
             <div class="col-1">
                 <input [ngModel]="il.quantity" (ngModelChange)="updateInvoiceLineAmountByQuantity($event,i)"
-                       class="form-control" type="number" name="quantity{{i}}" />
+                       class="form-control" type="number" min="0" name="quantity{{i}}" appPositiveInteger/>
             </div>
 
             <div class="col-1">

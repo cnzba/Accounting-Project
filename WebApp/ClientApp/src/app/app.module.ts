@@ -30,6 +30,7 @@ import { SpinnerService } from "./common/spinner.service";
 import { environment } from '../environments/environment';
 
 import { TwoDigitDecimaNumberDirective } from './invoices/two-digit-decima-number.directive';
+import { InputIntegerOnlyDirective } from './invoices/input-integer-only.directive';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { TwoDigitDecimaNumberDirective } from './invoices/two-digit-decima-numbe
         InvoicePaymentComponent,
         PaginationComponent,
         PageNotFoundComponent,
-        TwoDigitDecimaNumberDirective 
+        TwoDigitDecimaNumberDirective,
+        InputIntegerOnlyDirective
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
