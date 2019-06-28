@@ -183,11 +183,12 @@
 
             <div class="col-1">
                 <input [ngModel]="il.unitPrice" (ngModelChange)="updateInvoiceLineAmountByUnitPrice($event,i)"
+                       (blur)="setValueToTwoDecimal(il.unitPrice,i)"
                        class="form-control" type="text" name="unitPrice{{i}}" appTwoDigitDecimaNumber/>
             </div>
 
             <div class="col-2">
-                <input [ngModel]="il.amount" disabled (ngModelChange)="il.amount=$event"
+                <input [ngModel]="il.amount| number:'1.2-2'" disabled (ngModelChange)="il.amount=$event"
                        class="form-control" type="text" name="amount{{i}}" />
             </div>
             <div class="col-2">

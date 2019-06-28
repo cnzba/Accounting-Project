@@ -8,7 +8,7 @@ export class InputIntegerOnlyDirective {
     private regex: RegExp = new RegExp(/^\d*[1-9]\d*$/g);
     // Allow key codes for special events. Reflect :
     // Backspace, tab, end, home
-    private specialKeys: Array<string> = ['Backspace', 'Tab', 'End', 'Home', '-'];
+    private specialKeys: Array<string> = ['Backspace', 'Tab', 'End', 'Home'];
 
     constructor(private el: ElementRef) {
     }

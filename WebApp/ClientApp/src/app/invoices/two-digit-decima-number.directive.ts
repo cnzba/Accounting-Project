@@ -5,10 +5,10 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 })
 export class TwoDigitDecimaNumberDirective {
     // Allow decimal numbers and positive values
-    private regex: RegExp = new RegExp(/^\d+\.?\d{0,2}$/g);
+    private regex: RegExp = new RegExp(/^\d+\.?\d{0,4}$/g);
     // Allow key codes for special events. Reflect :
     // Backspace, tab, end, home
-    private specialKeys: Array<string> = ['Backspace', 'Tab', 'End', 'Home', '-'];
+    private specialKeys: Array<string> = ['Backspace', 'Tab', 'End', 'Home'];
 
     constructor(private el: ElementRef) {
     }
