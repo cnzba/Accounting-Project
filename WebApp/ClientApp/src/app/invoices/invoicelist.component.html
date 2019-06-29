@@ -8,37 +8,46 @@
         Create New Invoice
     </a>
 
-
+    
     <div class="row">
-        <app-pagination [offset]="offset" [limit]="limit" [size]="invo.length" (pageChange)="onPageChange($event)"></app-pagination>
+        <div class="col-md-6">
+            <input type="text"
+                   class="form-control"
+                   name="searchString"
+                   placeholder="Search..."
+                   [(ngModel)]="searchString" />
+        </div>
+        <div class="col-md-6">
+            <app-pagination class="pull-right" [offset]="offset" [limit]="limit" [size]="invo.length" (pageChange)="onPageChange($event)"></app-pagination>
+        </div>
     </div>
 
 
-    <table class="table table-bordered table-striped table-hover table-light">
+    <table class="table table-bordered table-striped table-hover table-light"
+           matSort (matSortChange)="sortData($event)">
         <thead class="thead-dark">
             <tr>
-                <th style="width:10%">Invoice Number</th>
+                <th mat-sort-header="invoiceNumber" style="width:10%">Invoice Number</th>
 
-                <th style="width: 10%">Date Created</th>
-                <th style="width: 10%">Client Name</th>
-                <th style="width: 10%">Amount</th>
-                <th style="width: 10%">Due Date</th>
-                <th style="width: 10%">Status</th>
-
+                <th mat-sort-header="dateCreated" style="width: 10%">Date Created</th>
+                <th mat-sort-header="clientName" style="width: 10%">Client Name</th>
+                <th mat-sort-header="grandTotal" style="width: 10%">Amount</th>
+                <th mat-sort-header="dateDue" style="width: 10%">Due Date</th>
+                <th mat-sort-header="status" style="width: 10%">Status</th>
 
             </tr>
 
         </thead>
 
         <tbody>
-            <tr *ngFor="let inv of invo; index as i ">
-                <ng-container  *ngIf="i>=offset && i< offset +limit">
-                    <td *ngIf="inv.status==='Sent'||inv.status==='Paid'" >
+            <tr *ngFor="let inv of sortedData | invoiceFilter : searchString; index as i ">
+                <ng-container *ngIf="i>=offset && i< offset +limit">
+                    <td *ngIf="inv.status==='Sent'||inv.status==='Paid'">
                         <a [routerLink]="['/invoices', inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
 
                     </td>
 
-                    <td *ngIf="inv.status==='New'||inv.status==='Draft'" >
+                    <td *ngIf="inv.status==='New'||inv.status==='Draft'">
                         <a [routerLink]="['/invoices/edit/',inv.invoiceNumber]">{{inv.invoiceNumber}} </a>
                         <button class="btn btn-sm" id="delete_key" data-toggle="modal" data-target="#deleteModal" (click)="setinvoiceNum(inv.invoiceNumber)"> <span class="oi oi-trash"></span></button>
                     </td>
@@ -60,7 +69,9 @@
     </table>
 
     <div class="row">
-        <app-pagination [offset]="offset" [limit]="limit" [size]="invo.length" (pageChange)="onPageChange($event)"></app-pagination>
+        <div class="col-md-12">
+            <app-pagination class="pull-right" [offset]="offset" [limit]="limit" [size]="invo.length" (pageChange)="onPageChange($event)"></app-pagination>
+        </div>        
     </div>
 
     <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">

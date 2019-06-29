@@ -153,5 +153,19 @@ namespace WebApp.Controllers
                 return BadRequest("Unable to delete invoice.");
             }
         }
+
+        [Route("s")]
+        [HttpGet]
+        public IActionResult SearchByKeywordAndSort([FromQuery] string keyword, [FromQuery] string sort)
+        {
+            var invoices = service.GetAllInvoicesBy(keyword, sort);
+
+            if (invoices == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(invoices);
+        }
     }
 }
