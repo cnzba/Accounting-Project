@@ -79,11 +79,12 @@ export class InvoicelistComponent implements OnInit {
 
         this.sortedData = data.sort((a, b) => {
             const isAsc = sort.direction === 'asc';
+            const isDesc = sort.direction === 'desc';
             switch (sort.active) {
                 case 'invoiceNumber': return compare(a.invoiceNumber, b.invoiceNumber, isAsc);
-                case 'clientName': return compare(a.clientName.toLowerCase(), b.clientName.toLowerCase(), isAsc);
+                case 'clientName': return compare(a.clientName.toLowerCase(), b.clientName.toLowerCase(), isDesc);
                 case 'grandTotal': return compare(a.grandTotal, b.grandTotal, isAsc);
-                case 'status': return compare(a.status, b.status, isAsc);
+                case 'status': return compare(a.status, b.status, isDesc);
                 case 'dateCreated': return compare(a.dateCreated, b.dateCreated, isAsc);
                 case 'dateDue': return compare(a.dateDue, b.dateDue, isAsc);
                 default: return 0;
