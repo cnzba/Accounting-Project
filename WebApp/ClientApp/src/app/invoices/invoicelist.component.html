@@ -24,7 +24,7 @@
 
 
     <table class="table table-bordered table-striped table-hover table-light"
-           matSort (matSortChange)="sortData($event)">
+           matSort (matSortChange)="sortData($event)" matSortActive="dateCreated" matSortDirection="desc" matSortDisableClear>
         <thead class="thead-dark">
             <tr>
                 <th mat-sort-header="invoiceNumber" style="width:10%">Invoice Number</th>

@@ -32,7 +32,7 @@ namespace WebApp
 
         public IEnumerable<IInvoiceHeader> GetInvoiceHeaders()
         {
-            return context.Invoice.Include("InvoiceLine").OrderBy(i => i.DateCreated).ToList();
+            return context.Invoice.Include("InvoiceLine").OrderByDescending(i => i.DateCreated).ToList();
         }
 
         public Invoice GetInvoice(string invoiceNumber)
