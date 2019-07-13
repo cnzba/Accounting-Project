@@ -54,7 +54,8 @@ export class InvoiceService {
     computeGST(invoice: IInvoice): number
     {
         let total: number = this.computeTotal(invoice);
-        return total - total / (1 + invoice.gstRate);
+        //return total - total / (1 + invoice.gstRate);
+        return total * invoice.gstRate;
     }
 
     computeTotal(invoice: IInvoice) : number
