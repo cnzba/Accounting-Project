@@ -29,6 +29,12 @@ import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
 import { SpinnerService } from "./common/spinner.service";
 import { environment } from '../environments/environment';
 
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSortModule } from '@angular/material/sort';
+
+import { InvoiceFilterPipe } from './pipes/invoice-filter.pipe';
+
 import { TwoDigitDecimaNumberDirective } from './invoices/two-digit-decima-number.directive';
 import { InputIntegerOnlyDirective } from './invoices/input-integer-only.directive';
 
@@ -46,11 +52,15 @@ import { InputIntegerOnlyDirective } from './invoices/input-integer-only.directi
         InvoicePaymentComponent,
         PaginationComponent,
         PageNotFoundComponent,
+        InvoiceFilterPipe,
         TwoDigitDecimaNumberDirective,
         InputIntegerOnlyDirective
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+        BrowserAnimationsModule,
+        MatSortModule,
+        AngularFontAwesomeModule,
         HttpClientModule,
         FormsModule,
         HttpModule,
