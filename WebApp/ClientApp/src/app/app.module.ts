@@ -35,6 +35,10 @@ import { MatSortModule } from '@angular/material/sort';
 
 import { InvoiceFilterPipe } from './pipes/invoice-filter.pipe';
 
+import { TwoDigitDecimaNumberDirective } from './invoices/two-digit-decima-number.directive';
+import { InputIntegerOnlyDirective } from './invoices/input-integer-only.directive';
+
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -48,7 +52,10 @@ import { InvoiceFilterPipe } from './pipes/invoice-filter.pipe';
         InvoicePaymentComponent,
         PaginationComponent,
         PageNotFoundComponent,
-        InvoiceFilterPipe
+        InvoiceFilterPipe,
+        
+        TwoDigitDecimaNumberDirective,
+        InputIntegerOnlyDirective
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
