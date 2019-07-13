@@ -14,5 +14,7 @@ namespace WebApp
         bool InvoiceExists(string invoiceNumber);
         bool ModifyInvoice(DraftInvoice invoice);
         bool DeleteInvoice(string invoiceNumber);
+
+        IEnumerable<Invoice> GetAllInvoicesBy(string keyword, string sort);
     }
 }
