@@ -42,6 +42,8 @@ namespace WebApp.Models
                         new InvoiceLine()
                         {
                             Description = "Fundraising Dinner",
+                            Quantity = 1,
+                            UnitPrice = 25,
                             Amount = 25
                         }
                     }
@@ -65,7 +67,9 @@ namespace WebApp.Models
                         new InvoiceLine()
                         {
                             Description = "Fundraising Dinner",
-                            Amount = 25
+                            Quantity = 2,
+                            UnitPrice = 25,
+                            Amount = 50
                         }
                     }
                 };
@@ -88,11 +92,15 @@ namespace WebApp.Models
                         new InvoiceLine()
                         {
                             Description = "Fundraising Dinner",
+                            Quantity = 1,
+                            UnitPrice = 21.74M,
                             Amount = 21.74M
                         },
                         new InvoiceLine()
                         {
                             Description = "Bookkeeping 2 hours @21.74 per hour",
+                            Quantity = 2,
+                            UnitPrice = 21.74M,
                             Amount = 43.48M
                         }
                     }
