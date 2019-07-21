@@ -161,7 +161,7 @@
                 <b>Unit Price</b>
             </div>
 
-            <div class="col-1">
+            <div class="col-2 text-right">
                 <b>Amount</b>
                 <!--<div class="float-right">
                     <button type="button" class="btn btn-link btn-sm" (click)="addLineItem()">
@@ -178,18 +178,18 @@
 
             <div class="col-1">
                 <input [ngModel]="il.quantity" (ngModelChange)="updateInvoiceLineAmountByQuantity($event,i)"
-                       class="form-control" type="number" min="0" name="quantity{{i}}" appPositiveInteger/>
+                       class="form-control text-right" type="number" min="0" name="quantity{{i}}" appPositiveInteger/>
             </div>
 
             <div class="col-1">
                 <input [ngModel]="il.unitPrice" (ngModelChange)="updateInvoiceLineAmountByUnitPrice($event,i)"
                        (blur)="setValueToTwoDecimal(il.unitPrice,i)"
-                       class="form-control" type="text" name="unitPrice{{i}}" appTwoDigitDecimaNumber/>
+                       class="form-control text-right" type="text" name="unitPrice{{i}}" appTwoDigitDecimaNumber/>
             </div>
 
             <div class="col-2">
                 <input [ngModel]="il.amount| number:'1.2-2'" disabled (ngModelChange)="il.amount=$event"
-                       class="form-control" type="text" name="amount{{i}}" />
+                       class="form-control text-right" type="text" name="amount{{i}}" />
             </div>
             <div class="col-2">
                 <div [class.hidden]="i!=itemHover">
@@ -224,7 +224,7 @@
             <div class="col-6">
                 <b>Total</b>
             </div>
-            <div class="col-2">
+            <div class="col-2 text-right">
                 {{invoiceService.computeTotal(modifyInvoice) |number:'.2-2'}}
             </div>
         </div>
@@ -232,7 +232,7 @@
             <div class="col-6">
                 <b>Includes GST of</b>
             </div>
-            <div class="col-2">
+            <div class="col-2 text-right">
                 {{invoiceService.computeGST(modifyInvoice) |number:'.2-2'}}
             </div>
         </div>
