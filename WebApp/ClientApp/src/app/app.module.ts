@@ -37,6 +37,7 @@ import { InvoiceFilterPipe } from './pipes/invoice-filter.pipe';
 
 import { TwoDigitDecimaNumberDirective } from './invoices/two-digit-decima-number.directive';
 import { InputIntegerOnlyDirective } from './invoices/input-integer-only.directive';
+import { CreateOrganisationComponent } from './createOrganisation/create-organisation.component';
 
 
 @NgModule({
@@ -81,6 +82,7 @@ import { InputIntegerOnlyDirective } from './invoices/input-integer-only.directi
                 resolve: { invoice: InvoiceResolverService }
             },
             { path: "forgot-password", component: ForgotPasswordComponent },
+            { path: "create-organisation", component: CreateOrganisationComponent },
             { path: "change-password", component: ChangePasswordComponent, canActivate: [AuthGuard] },
             { path: "pay/:id", component: InvoicePaymentComponent },
             // otherwise redirect to the invoice list

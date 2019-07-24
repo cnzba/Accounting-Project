@@ -1,0 +1,28 @@
+.lead{
+    float: right;
+    padding-bottom: 5%;
+}
+
+.jumbotron{
+    background-color:rgb(213, 237, 250);
+}
+
+#button2{
+    margin: 20px; 
+}
+footer{
+    padding-top: 70px;
+}
+
+.form-row{
+    float: left;
+    width: 20%;
+    padding: 5px;
+    margin-top:10px;
+    
+
+}
+
+#PhoneNumber2{
+    margin-left:20px; 
+}
