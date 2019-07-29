@@ -38,6 +38,7 @@ import { InvoiceFilterPipe } from './pipes/invoice-filter.pipe';
 import { TwoDigitDecimaNumberDirective } from './invoices/two-digit-decima-number.directive';
 import { InputIntegerOnlyDirective } from './invoices/input-integer-only.directive';
 
+import { DatePipe } from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -89,6 +90,7 @@ import { InputIntegerOnlyDirective } from './invoices/input-integer-only.directi
         ], { enableTracing: false })
     ],
     providers: [
+        DatePipe,
         InvoiceService,
         InvoiceListResolver,
         InvoiceResolverService,
