@@ -34,6 +34,8 @@ namespace WebApp.Models
         [DataType(DataType.Date)]
         [NotPast(ErrorMessage = "The due date cannot be in the past.")]
         public DateTime DateDue { get; set; }
+
+        public string LoginId { get; set; }
         #endregion
 
         #region Navigation properties and foreign keys

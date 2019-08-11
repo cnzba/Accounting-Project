@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApp.Models;
 
 namespace WebApp.Migrations
 {
     [DbContext(typeof(CBAContext))]
-    partial class CBAContextModelSnapshot : ModelSnapshot
+    [Migration("20190805074426_AddOrganisationToUser")]
+    partial class AddOrganisationToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,8 +36,6 @@ namespace WebApp.Migrations
 
                     b.Property<string>("ClientName")
                         .IsRequired();
-
-                    b.Property<int?>("CreatorId");
 
                     b.Property<DateTime>("DateCreated");
 
@@ -61,8 +61,6 @@ namespace WebApp.Migrations
                     b.HasKey("Id");
 
                     b.HasAlternateKey("InvoiceNumber");
-
-                    b.HasIndex("CreatorId");
 
                     b.ToTable("Invoice");
                 });
@@ -198,13 +196,6 @@ namespace WebApp.Migrations
                     b.HasIndex("OrganisationId");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("WebApp.Models.Invoice", b =>
-                {
-                    b.HasOne("WebApp.Models.User", "Creator")
-                        .WithMany("Invoices")
-                        .HasForeignKey("CreatorId");
                 });
 
             modelBuilder.Entity("WebApp.Models.InvoiceLine", b =>

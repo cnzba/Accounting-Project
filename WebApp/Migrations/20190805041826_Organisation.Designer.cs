@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApp.Models;
 
 namespace WebApp.Migrations
 {
     [DbContext(typeof(CBAContext))]
-    partial class CBAContextModelSnapshot : ModelSnapshot
+    [Migration("20190805041826_Organisation")]
+    partial class Organisation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,8 +36,6 @@ namespace WebApp.Migrations
 
                     b.Property<string>("ClientName")
                         .IsRequired();
-
-                    b.Property<int?>("CreatorId");
 
                     b.Property<DateTime>("DateCreated");
 
@@ -61,8 +61,6 @@ namespace WebApp.Migrations
                     b.HasKey("Id");
 
                     b.HasAlternateKey("InvoiceNumber");
-
-                    b.HasIndex("CreatorId");
 
                     b.ToTable("Invoice");
                 });
@@ -131,7 +129,7 @@ namespace WebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organisation");
+                    b.ToTable("Organisations");
                 });
 
             modelBuilder.Entity("WebApp.Models.PaymentModel", b =>
@@ -188,23 +186,12 @@ namespace WebApp.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<int?>("OrganisationId");
-
                     b.Property<string>("Password")
                         .IsRequired();
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrganisationId");
-
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("WebApp.Models.Invoice", b =>
-                {
-                    b.HasOne("WebApp.Models.User", "Creator")
-                        .WithMany("Invoices")
-                        .HasForeignKey("CreatorId");
                 });
 
             modelBuilder.Entity("WebApp.Models.InvoiceLine", b =>
@@ -213,13 +200,6 @@ namespace WebApp.Migrations
                         .WithMany("InvoiceLine")
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("WebApp.Models.User", b =>
-                {
-                    b.HasOne("WebApp.Models.Organisation", "Organisation")
-                        .WithMany("Users")
-                        .HasForeignKey("OrganisationId");
                 });
 #pragma warning restore 612, 618
         }

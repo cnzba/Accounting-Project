@@ -140,6 +140,10 @@ export class AuthenticationService {
             }));
     }
 
+    getLoginId(): string {
+        return this.helper.getStoredUser();
+    }
+
 }
 
 

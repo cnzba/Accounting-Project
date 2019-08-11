@@ -74,7 +74,8 @@ namespace WebApp
                 GstNumber = options.GSTNumber,
                 GstRate = options.GSTRate,
                 DateCreated = localNow,
-                Status = InvoiceStatus.Draft
+                Status = InvoiceStatus.Draft,
+                Creator = context.User.FirstOrDefault(u => u.Email == draftInvoice.LoginId)
             };
 
             Validate(invoice);
