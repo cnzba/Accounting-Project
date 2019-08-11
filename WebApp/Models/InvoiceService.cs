@@ -69,7 +69,8 @@ namespace WebApp
                 InvoiceLine = draftInvoice.InvoiceLine,
 
                 // add the server generated information
-                InvoiceNumber = GenerateInvoiceNumber(),
+                //InvoiceNumber = GenerateInvoiceNumber(),
+                InvoiceNumber = GenerateOrganisationInvoiceNumber(draftInvoice.LoginId),
                 CharitiesNumber = options.CharitiesNumber,
                 GstNumber = options.GSTNumber,
                 GstRate = options.GSTRate,
@@ -89,6 +90,35 @@ namespace WebApp
         public string GenerateInvoiceNumber()
         {
             return string.Format("CBA{0:N}", Guid.NewGuid());
+        }
+
+        public string GenerateOrganisationInvoiceNumber(string loginId)
+        {
+            
+            var user = context.User.Include(u => u.Organisation).FirstOrDefault(u => u.Email == loginId);
+            if (user == null && user.Organisation == null)
+                return null;
+
+            //var org = context.Organisation.Find(user.Organisation.Id);
+
+            var lastInvoice = context.Invoice.Where(i => i.Creator.Organisation.Id == user.Organisation.Id)
+                .OrderByDescending(i=>i.InvoiceNumber).First();
+            if(lastInvoice == null)
+            {
+                return user.Organisation.Code + "000001";
+            }
+
+            string invoiceSequentialNumber = lastInvoice.InvoiceNumber.Substring(3);
+            try
+            {
+                int sn = int.Parse(invoiceSequentialNumber);
+                return user.Organisation.Code + (sn + 1).ToString("D6");
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.ToString());
+            }
+            return user.Organisation.Code + "000000";
         }
 
         public bool ModifyInvoice(DraftInvoice invoice)
