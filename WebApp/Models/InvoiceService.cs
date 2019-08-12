@@ -108,7 +108,7 @@ namespace WebApp
                 return user.Organisation.Code + "000001";
             }
 
-            string invoiceSequentialNumber = lastInvoice.InvoiceNumber.Substring(3);
+            string invoiceSequentialNumber = lastInvoice.InvoiceNumber.Substring(user.Organisation.Code.Length);    //org code is 4 characters
             try
             {
                 int sn = int.Parse(invoiceSequentialNumber);
