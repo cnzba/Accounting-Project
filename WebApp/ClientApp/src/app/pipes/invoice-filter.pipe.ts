@@ -20,7 +20,7 @@ export class InvoiceFilterPipe implements PipeTransform {
             const clientName = it.clientName.toLocaleLowerCase().includes(searchString.toLocaleLowerCase())
             const status = it.status.toLowerCase().includes(searchString.toLowerCase())
             const invoiceNumber = it.invoiceNumber.toLowerCase().includes(searchString.toLowerCase())
-            const grandTotal = ("$"+it.grandTotal.toString()).toLowerCase().includes(searchString.toLowerCase())
+            const grandTotal = ("$" + it.grandTotal.toFixed(2)).toLowerCase().includes(searchString.toLowerCase())
 
             let format_dateCreated = this.datepipe.transform(it.dateCreated, 'dd/MM/yyyy');
             const dateCreated = format_dateCreated.toString().toLowerCase().includes(searchString.toLowerCase())
