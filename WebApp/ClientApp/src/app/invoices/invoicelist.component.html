@@ -18,7 +18,7 @@
                    [(ngModel)]="searchString" />
         </div>
         <div class="col-md-6">
-            <app-pagination class="pull-right" [offset]="offset" [limit]="limit" [size]="invo.length" (pageChange)="onPageChange($event)"></app-pagination>
+            <app-pagination class="pull-right" [offset]="offset" [limit]="limit" [size]="(sortedData | invoiceFilter : searchString).length" (pageChange)="onPageChange($event)"></app-pagination>
         </div>
     </div>
 
@@ -70,7 +70,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <app-pagination class="pull-right" [offset]="offset" [limit]="limit" [size]="sortedData.length" (pageChange)="onPageChange($event)"></app-pagination>
+            <app-pagination class="pull-right" [offset]="offset" [limit]="limit" [size]="(sortedData | invoiceFilter : searchString).length" (pageChange)="onPageChange($event)"></app-pagination>
         </div>        
     </div>
 
