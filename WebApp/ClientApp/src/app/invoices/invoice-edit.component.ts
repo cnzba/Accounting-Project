@@ -10,6 +10,8 @@ import { AlertService } from "../common/alert/alert.service";
 import { ApiError } from "../common/error.service";
 import { SpinnerService } from "../common/spinner.service";
 
+//import { AuthenticationService } from "../login/authentication.service";
+
 // TODO
 // client-side validation for due date
 // remove a success alert message when the form is touched or dirtied
@@ -122,6 +124,8 @@ export class InvoiceEditComponent implements OnInit {
     onSubmit() {
         this.spinnerService.showSpinner();
         this.formErrors = new ApiError();
+
+        this.modifyInvoice.loginId = localStorage.getItem('LoginId');
 
         this.invoiceService.saveDraftInvoice(this.modifyInvoice)
             .subscribe(invoice => { 

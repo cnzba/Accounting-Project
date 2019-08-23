@@ -21,8 +21,63 @@ namespace WebApp.Models
         }
         public void Seed()
         {
+            if (!_context.Organisation.Any())
+            {
+                var org = new Organisation()
+                {
+                    Name = "Canterbury & New Zealand Business Association",
+                    Code = "ABNZ",
+                    StreetAddressOne = "301 Tuam Street",
+                    City = "Christchurch",
+                    Country = "New Zealand",
+                    CreatedAt = DateTime.Now
+                };
+                _context.Organisation.Add(org);
+                _context.SaveChanges();
+            }
+
+            if (!_context.User.Any())
+            {
+                var org = _context.Organisation.First();
+
+                var user1 = new User()
+                {
+                    Email = "guest@guest.com",
+                    Name = "guest",
+                    Password = _cryptography.HashMD5("guest"),
+                    Active = true,
+                    Organisation = org
+                };
+
+                var user2 = new User()
+                {
+                    Email = "helersonlage@gmail.com",
+                    Name = "Helerson Lage",
+                    Password = "68eacb97d86f0c4621fa2b0e17cabd8c",
+                    Active = true,
+                    Organisation = org
+                };
+
+                var user3 = new User()
+                {
+                    Email = "j.george@cbanewzealand.org.nz",
+                    Name = "John George",
+                    Password = _cryptography.HashMD5("john"),
+                    Active = true,
+                    Organisation = org
+                };
+
+                _context.User.Add(user1);
+                _context.User.Add(user2);
+                _context.User.Add(user3);
+
+                _context.SaveChanges();
+            }
+
             if (!_context.Invoice.Any())
             {
+                var user = _context.User.FirstOrDefault(u => u.Email == "guest@guest.com");
+
                 var invoice1 = new Invoice()
                 {
                     InvoiceNumber = "20171005-001",
@@ -37,6 +92,7 @@ namespace WebApp.Models
                     GstRate = .15m,
                     GstNumber = "96-712-561",
                     CharitiesNumber = "CC20097",
+                    Creator = user,
                     InvoiceLine = new List<InvoiceLine>()
                     {
                         new InvoiceLine()
@@ -62,6 +118,7 @@ namespace WebApp.Models
                     GstRate = .15m,
                     GstNumber = "96-712-561",
                     CharitiesNumber = "CC20097",
+                    Creator = user,
                     InvoiceLine = new List<InvoiceLine>()
                     {
                         new InvoiceLine()
@@ -87,6 +144,7 @@ namespace WebApp.Models
                     GstRate = .15m,
                     GstNumber = "96-712-561",
                     CharitiesNumber = "CC20097",
+                    Creator = user,
                     InvoiceLine = new List<InvoiceLine>()
                     {
                         new InvoiceLine()
@@ -111,40 +169,7 @@ namespace WebApp.Models
                 _context.Add(invoice3);
 
                 _context.SaveChanges();
-            }
-
-            if (!_context.User.Any())
-            {
-                var user1 = new User()
-                {
-                    Email = "guest@guest.com",
-                    Name = "guest",
-                    Password = _cryptography.HashMD5("guest"),
-                    Active = true
-                };
-
-                var user2 = new User()
-                {
-                    Email = "helersonlage@gmail.com",
-                    Name = "Helerson Lage",
-                    Password = "68eacb97d86f0c4621fa2b0e17cabd8c",
-                    Active = true
-                };
-
-                var user3 = new User()
-                {
-                    Email = "j.george@cbanewzealand.org.nz",
-                    Name = "John George",
-                    Password = _cryptography.HashMD5("john"),
-                    Active = true
-                };
-
-                _context.User.Add(user1);
-                _context.User.Add(user2);
-                _context.User.Add(user3);
-
-                _context.SaveChanges();
-            }
+            }        
         }
     }
 }

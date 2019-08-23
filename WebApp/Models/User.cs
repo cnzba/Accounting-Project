@@ -23,5 +23,9 @@ namespace WebApp.Models
         {
             throw new NotImplementedException();
         }
+
+        public Organisation Organisation { get; set; }
+
+        public ICollection<Invoice> Invoices { get; set; }
     }
 }

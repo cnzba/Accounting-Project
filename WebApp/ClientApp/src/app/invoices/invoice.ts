@@ -14,7 +14,8 @@ export interface IInvoice {
     grandTotal?: number;
     email: string;
     paymentId: string;
-    
+    loginId: string;
+
     invoiceLine: IInvoiceLine[];
 }
 
@@ -34,11 +35,13 @@ export class Invoice implements IInvoice {
     grandTotal?: number;
     email: string;
     paymentId: string;
-    
+    loginId: string;
+
     invoiceLine: IInvoiceLine[];
 
     constructor(){
         this.clientName = this.clientContactPerson = this.clientContact = this.status = this.gstNumber = this.charitiesNumber = "";
+        this.loginId = "";
         this.gstRate = this.subTotal = this.grandTotal =0;
         this.invoiceLine = [];
     }

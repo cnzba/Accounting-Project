@@ -14,6 +14,7 @@ namespace WebApp.Models
         public virtual DbSet<InvoiceLine> InvoiceLine { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<PaymentModel> Payment { get; set; }
+        public virtual DbSet<Organisation> Organisation { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -60,6 +61,15 @@ namespace WebApp.Models
                 entity.Property(e => e.Amount).IsRequired().HasColumnType("decimal(18,2)");
                 entity.Property(e => e.PaymentId).IsRequired();
                 entity.Property(e => e.paymentDate).IsRequired();
+            });
+
+            modelBuilder.Entity<Organisation>(entity =>
+            {
+                entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.Code).IsRequired();
+                entity.Property(e => e.StreetAddressOne).IsRequired();
+                entity.Property(e => e.City).IsRequired();
+                entity.Property(e => e.Country).IsRequired();
             });
         }
     }

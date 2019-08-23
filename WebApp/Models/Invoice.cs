@@ -54,7 +54,10 @@ namespace WebApp.Models
         public string CharitiesNumber { get; set; }
 
         public decimal GstRate { get; set; }
+
+        public User Creator { get; set; }
         #endregion
+
 
         #region Navigation properties and foreign keys
         // Foreign Key commented as EF Core will auto add it to model as shadow property
@@ -63,6 +66,7 @@ namespace WebApp.Models
         // navigation property
         public ICollection<InvoiceLine> InvoiceLine { get; set; }
         #endregion
+               
 
         #region Computed fields. Assumes line item amounts GST inclusive.
         public decimal SubTotal
