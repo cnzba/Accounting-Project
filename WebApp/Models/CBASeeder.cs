@@ -36,98 +36,6 @@ namespace WebApp.Models
                 _context.SaveChanges();
             }
 
-            if (!_context.Invoice.Any())
-            {
-                var invoice1 = new Invoice()
-                {
-                    InvoiceNumber = "20171005-001",
-                    DateCreated = new DateTime(2017, 10, 5),
-                    DateDue = new DateTime(2017, 10, 17),
-                    ClientName = "Electrocal Commission",
-                    ClientContactPerson = "Glen Clarke",
-                    ClientContact = "530/546A Memorial Ave\\r\\nChristchurch Airport\\r\\nChristchurch 8053",
-                    Email = "ec@example.com",
-                    PaymentId = _cryptography.GenerateTempPassword(12),
-                    Status = InvoiceStatus.Draft,
-                    GstRate = .15m,
-                    GstNumber = "96-712-561",
-                    CharitiesNumber = "CC20097",
-                    InvoiceLine = new List<InvoiceLine>()
-                    {
-                        new InvoiceLine()
-                        {
-                            Description = "Fundraising Dinner",
-                            Quantity = 1,
-                            UnitPrice = 25,
-                            Amount = 25
-                        }
-                    }
-                };
-
-                var invoice2 = new Invoice()
-                {
-                    InvoiceNumber = "20171113-001",
-                    DateCreated = new DateTime(2017, 11, 13),
-                    DateDue = new DateTime(2017, 11, 27),
-                    ClientName = "Jason Carpets",
-                    ClientContact = "297 Moorhouse Ave\\r\\nSydenham\\r\\nChristchurch 8011",
-                    Email = "jc@example.com",
-                    PaymentId = _cryptography.GenerateTempPassword(12),
-                    Status = InvoiceStatus.Sent,
-                    GstRate = .15m,
-                    GstNumber = "96-712-561",
-                    CharitiesNumber = "CC20097",
-                    InvoiceLine = new List<InvoiceLine>()
-                    {
-                        new InvoiceLine()
-                        {
-                            Description = "Fundraising Dinner",
-                            Quantity = 2,
-                            UnitPrice = 25,
-                            Amount = 50
-                        }
-                    }
-                };
-
-                var invoice3 = new Invoice()
-                {
-                    InvoiceNumber = "20170909-001",
-                    DateCreated = new DateTime(2017, 9, 9),
-                    DateDue = new DateTime(2017, 9, 30),
-                    ClientName = "Transtellar",
-                    ClientContact = "52 Solmine Ave\\r\\nRiccarton\\r\\nChristchurch 8025",
-                    Email = "t@example.com",
-                    PaymentId = _cryptography.GenerateTempPassword(12),
-                    Status = InvoiceStatus.Paid,
-                    GstRate = .15m,
-                    GstNumber = "96-712-561",
-                    CharitiesNumber = "CC20097",
-                    InvoiceLine = new List<InvoiceLine>()
-                    {
-                        new InvoiceLine()
-                        {
-                            Description = "Fundraising Dinner",
-                            Quantity = 1,
-                            UnitPrice = 21.74M,
-                            Amount = 21.74M
-                        },
-                        new InvoiceLine()
-                        {
-                            Description = "Bookkeeping 2 hours @21.74 per hour",
-                            Quantity = 2,
-                            UnitPrice = 21.74M,
-                            Amount = 43.48M
-                        }
-                    }
-                };
-
-                _context.Add(invoice1);
-                _context.Add(invoice2);
-                _context.Add(invoice3);
-
-                _context.SaveChanges();
-            }
-
             if (!_context.User.Any())
             {
                 var org = _context.Organisation.First();
@@ -137,7 +45,7 @@ namespace WebApp.Models
                     Email = "guest@guest.com",
                     Name = "guest",
                     Password = _cryptography.HashMD5("guest"),
-                    Active = true,  
+                    Active = true,
                     Organisation = org
                 };
 
@@ -164,7 +72,104 @@ namespace WebApp.Models
                 _context.User.Add(user3);
 
                 _context.SaveChanges();
-            }            
+            }
+
+            if (!_context.Invoice.Any())
+            {
+                var user = _context.User.FirstOrDefault(u => u.Email == "guest@guest.com");
+
+                var invoice1 = new Invoice()
+                {
+                    InvoiceNumber = "20171005-001",
+                    DateCreated = new DateTime(2017, 10, 5),
+                    DateDue = new DateTime(2017, 10, 17),
+                    ClientName = "Electrocal Commission",
+                    ClientContactPerson = "Glen Clarke",
+                    ClientContact = "530/546A Memorial Ave\\r\\nChristchurch Airport\\r\\nChristchurch 8053",
+                    Email = "ec@example.com",
+                    PaymentId = _cryptography.GenerateTempPassword(12),
+                    Status = InvoiceStatus.Draft,
+                    GstRate = .15m,
+                    GstNumber = "96-712-561",
+                    CharitiesNumber = "CC20097",
+                    Creator = user,
+                    InvoiceLine = new List<InvoiceLine>()
+                    {
+                        new InvoiceLine()
+                        {
+                            Description = "Fundraising Dinner",
+                            Quantity = 1,
+                            UnitPrice = 25,
+                            Amount = 25
+                        }
+                    }
+                };
+
+                var invoice2 = new Invoice()
+                {
+                    InvoiceNumber = "20171113-001",
+                    DateCreated = new DateTime(2017, 11, 13),
+                    DateDue = new DateTime(2017, 11, 27),
+                    ClientName = "Jason Carpets",
+                    ClientContact = "297 Moorhouse Ave\\r\\nSydenham\\r\\nChristchurch 8011",
+                    Email = "jc@example.com",
+                    PaymentId = _cryptography.GenerateTempPassword(12),
+                    Status = InvoiceStatus.Sent,
+                    GstRate = .15m,
+                    GstNumber = "96-712-561",
+                    CharitiesNumber = "CC20097",
+                    Creator = user,
+                    InvoiceLine = new List<InvoiceLine>()
+                    {
+                        new InvoiceLine()
+                        {
+                            Description = "Fundraising Dinner",
+                            Quantity = 2,
+                            UnitPrice = 25,
+                            Amount = 50
+                        }
+                    }
+                };
+
+                var invoice3 = new Invoice()
+                {
+                    InvoiceNumber = "20170909-001",
+                    DateCreated = new DateTime(2017, 9, 9),
+                    DateDue = new DateTime(2017, 9, 30),
+                    ClientName = "Transtellar",
+                    ClientContact = "52 Solmine Ave\\r\\nRiccarton\\r\\nChristchurch 8025",
+                    Email = "t@example.com",
+                    PaymentId = _cryptography.GenerateTempPassword(12),
+                    Status = InvoiceStatus.Paid,
+                    GstRate = .15m,
+                    GstNumber = "96-712-561",
+                    CharitiesNumber = "CC20097",
+                    Creator = user,
+                    InvoiceLine = new List<InvoiceLine>()
+                    {
+                        new InvoiceLine()
+                        {
+                            Description = "Fundraising Dinner",
+                            Quantity = 1,
+                            UnitPrice = 21.74M,
+                            Amount = 21.74M
+                        },
+                        new InvoiceLine()
+                        {
+                            Description = "Bookkeeping 2 hours @21.74 per hour",
+                            Quantity = 2,
+                            UnitPrice = 21.74M,
+                            Amount = 43.48M
+                        }
+                    }
+                };
+
+                _context.Add(invoice1);
+                _context.Add(invoice2);
+                _context.Add(invoice3);
+
+                _context.SaveChanges();
+            }        
         }
     }
 }

@@ -84,7 +84,14 @@ namespace WebApp
             context.Add<Invoice>(invoice);
             int count = context.SaveChanges();
 
-            if (count > 0) return invoice; else return null;
+            if (count > 0)
+            {
+                return invoice;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public string GenerateInvoiceNumber()
@@ -94,16 +101,19 @@ namespace WebApp
 
         public string GenerateOrganisationInvoiceNumber(string loginId)
         {
-            
+
             var user = context.User.Include(u => u.Organisation).FirstOrDefault(u => u.Email == loginId);
             if (user == null && user.Organisation == null)
+            {
                 return null;
+            }
 
             //var org = context.Organisation.Find(user.Organisation.Id);
 
-            var lastInvoice = context.Invoice.Where(i => i.Creator.Organisation.Id == user.Organisation.Id)
-                .OrderByDescending(i=>i.InvoiceNumber).First();
-            if(lastInvoice == null)
+            var lastInvoice = context.Invoice
+                .Where(i => i.Creator.Organisation.Id == user.Organisation.Id && i.InvoiceNumber.StartsWith(user.Organisation.Code))
+                .OrderByDescending(i => i.InvoiceNumber).First();
+            if (lastInvoice == null)
             {
                 return user.Organisation.Code + "000001";
             }
@@ -118,14 +128,17 @@ namespace WebApp
             {
                 System.Console.WriteLine(ex.ToString());
             }
-            return user.Organisation.Code + "000000";
+            return null;
         }
 
         public bool ModifyInvoice(DraftInvoice invoice)
         {
             var invoiceToUpdate = GetInvoice(invoice.InvoiceNumber);
 
-            if (invoiceToUpdate.Status != InvoiceStatus.Draft) throw new ArgumentException($"Invoice {invoice.InvoiceNumber} is not a draft and may not be modified");
+            if (invoiceToUpdate.Status != InvoiceStatus.Draft)
+            {
+                throw new ArgumentException($"Invoice {invoice.InvoiceNumber} is not a draft and may not be modified");
+            }
 
             invoiceToUpdate.ClientContactPerson = invoice.ClientContactPerson;
             invoiceToUpdate.ClientName = invoice.ClientName;
@@ -138,8 +151,14 @@ namespace WebApp
 
             Validate(invoiceToUpdate);
 
-            if (!context.ChangeTracker.HasChanges()) return true;
-            else return context.SaveChanges() > 0;
+            if (!context.ChangeTracker.HasChanges())
+            {
+                return true;
+            }
+            else
+            {
+                return context.SaveChanges() > 0;
+            }
         }
 
         public bool InvoiceExists(string invoiceNumber)
@@ -151,8 +170,15 @@ namespace WebApp
         {
             var invoice = context.Invoice.SingleOrDefault(n => n.InvoiceNumber == invoiceNumber);
 
-            if (invoice == null) throw new ArgumentOutOfRangeException();
-            if(invoice.Status != InvoiceStatus.Draft) throw new ArgumentException();
+            if (invoice == null)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            if (invoice.Status != InvoiceStatus.Draft)
+            {
+                throw new ArgumentException();
+            }
 
             context.Remove<Invoice>(invoice);
             return context.SaveChanges() > 0;
@@ -196,7 +222,7 @@ namespace WebApp
             else if (sort.Equals("amount_desc"))
             {
                 result = context.Invoice.Include("InvoiceLine").ToList();
-                result = result.OrderByDescending(i => i.GrandTotal);                
+                result = result.OrderByDescending(i => i.GrandTotal);
             }
             else if (sort.Equals("status_asc"))
             {
@@ -211,7 +237,7 @@ namespace WebApp
                 result = context.Invoice.Include("InvoiceLine").OrderBy(i => i.DateCreated).ToList();
             }
 
-            if(!string.IsNullOrEmpty(keyword))
+            if (!string.IsNullOrEmpty(keyword))
             {
                 result = result.Where(r => r.ClientName.Contains(keyword, StringComparison.CurrentCultureIgnoreCase)
                                         || r.DateCreated.ToString("dd'/'MM'/'yyyy").Contains(keyword)
@@ -219,7 +245,7 @@ namespace WebApp
                                         || r.GrandTotal.ToString().Equals(keyword)
                                         || r.Status.ToString().Contains(keyword, StringComparison.CurrentCultureIgnoreCase)
                                         || r.InvoiceNumber.Contains(keyword, StringComparison.CurrentCultureIgnoreCase)).ToList();
-            }                
+            }
             return result;
         }
     }
