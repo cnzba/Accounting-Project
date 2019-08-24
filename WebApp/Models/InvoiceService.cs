@@ -103,8 +103,8 @@ namespace WebApp
         {
 
             var user = context.User.Include(u => u.Organisation).FirstOrDefault(u => u.Email == loginId);
-            if (user == null && user.Organisation == null)
-            {
+            if (user == null || user.Organisation == null)
+            {                
                 return null;
             }
 
@@ -112,7 +112,7 @@ namespace WebApp
 
             var lastInvoice = context.Invoice
                 .Where(i => i.Creator.Organisation.Id == user.Organisation.Id && i.InvoiceNumber.StartsWith(user.Organisation.Code))
-                .OrderByDescending(i => i.InvoiceNumber).First();
+                .OrderByDescending(i => i.InvoiceNumber).FirstOrDefault();
             if (lastInvoice == null)
             {
                 return user.Organisation.Code + "000001";
