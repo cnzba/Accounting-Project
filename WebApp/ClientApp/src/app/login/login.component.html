@@ -1,19 +1,55 @@
-<div class="col-md-6 col-md-offset-3">
-    <h2>Login</h2>
-    <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
-            <label for="username">Username</label>
-            <input type="text" class="form-control" name="username" [(ngModel)]="model.username" #username="ngModel" required />
-            <div *ngIf="f.submitted && !username.valid" class="help-block">Username is required</div>
+<div class="container my-lg-5">
+    <div class="row justify-content-center my-4">
+        <div class="col-md-4">
+            <img src="../../assets/images/CBA-Logoupdated-01-1.jpeg" class="img-fluid" />
         </div>
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" name="password" [(ngModel)]="model.password" #password="ngModel" required />
-            <div *ngIf="f.submitted && !password.valid" class="help-block">Password is required</div>
+    </div>
+    <div class="row">
+        <div class="card mx-auto">
+            <div class="card-body p-0" style="width:500px;">
+                <div class="row p-0 m-0">
+                    <div class="col-md-4 d-flex justify-content-center align-items-center text-center" style="background-color: #007bff; color:white">
+                        <div class="" style="position: relative;">
+
+                            <i class="fa fa-user-o fa-3x" aria-hidden="true"></i>
+                            <div>Login</div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-8 text-center" style="">
+
+                        <label class="my-4">Login</label>
+                        <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
+                            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
+                                <input placeholder="Email" type="text" class="form-control" name="username"
+                                       [(ngModel)]="model.username" #username="ngModel" required
+                                       style="width: 100%; height: 40px; padding-left:10px;" />
+                            </div>
+
+                            <div class="form-group my-3" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+                                <input placeholder="Password" type="password" class="form-control" name="password"
+                                       [(ngModel)]="model.password" #password="ngModel" required
+                                       style="width: 100%; height: 40px; padding-left:10px;" />
+                            </div>
+                            <div class="form-group my-3">
+                                <button class="btn btn-primary" style="width: 100%; height: 40px;">Login</button>
+                            </div>
+                            <div class="form-group text-left" style="color:red;">
+                                <div *ngIf="f.submitted && !username.valid" class="help-block">Email is required</div>
+                                <div *ngIf="f.submitted && !password.valid" class="help-block">Password is required</div>
+                            </div>
+                        </form>
+                        
+                        <div class="my-2">
+                            <a class="" href="#">Forgot Password?</a>
+                        </div>
+                        <div class="mb-2">
+                            <a class="" href="#">Register</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <button class="btn btn-primary">Login</button>
-            <a [routerLink]="['/forgot-password']" class="text-primary">Forgot Password?</a>
-        </div>
-    </form>
+    </div>
 </div>

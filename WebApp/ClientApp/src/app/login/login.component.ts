@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 }
             },
             error => {
-                this.alertService.error("Login failed.");
+                this.alertService.error("User Not Found.");
                 this.spinnerService.hideSpinner();
             });
     }
