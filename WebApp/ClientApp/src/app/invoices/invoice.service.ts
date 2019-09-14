@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { IInvoice, IInvoiceLine } from './invoice';
 
@@ -35,6 +35,27 @@ export class InvoiceService {
             + "-xxx";
 
         return of({ invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" });
+    }
+
+    createNewInvoiceWithInvoiceNumber(loginId:string): Observable<IInvoice> {
+        var today = new Date();
+        var dueDate = new Date();
+        dueDate.setDate(dueDate.getDate() + 14);
+
+        var fakeInvoiceNumber = today.getFullYear()
+            + ("0" + (today.getMonth() + 1)).slice(-2)
+            + ("0" + today.getDate()).slice(-2)
+            + "-xxx";
+
+        return this.getNewInvoiceNumber(loginId).pipe(
+            map( (invoiceNo) => {
+                if (invoiceNo) {                    
+                    return { invoiceNumber: invoiceNo, clientName: "", clientContactPerson: "", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" };
+                } else {                    
+                    return { invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" };
+                }
+            }),
+        );
     }
 
     saveDraftInvoice(invoice: IInvoice): Observable<IInvoice> {
@@ -87,4 +108,7 @@ export class InvoiceService {
             .pipe(tap(data => console.log('Delete (receive): ' + JSON.stringify(data))));
     }
 
+    getNewInvoiceNumber(loginId: string): Observable<string> {
+        return this.http.get<string>(this.invoiceUrl + '/invoicenumber?login=' + loginId);
+    }
 }

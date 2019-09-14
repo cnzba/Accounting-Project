@@ -19,7 +19,9 @@ export class InvoiceResolverService {
         let id = route.paramMap.get('id');
         let data: Observable<IInvoice>;
 
-        if (id == null) data = this.invoiceService.createNewInvoice();
+        let loginId = localStorage.getItem('LoginId');
+
+        if (id == null) data = this.invoiceService.createNewInvoiceWithInvoiceNumber(loginId);
         else data = this.invoiceService.getInvoice(id);
 
         return data.pipe(take(1), catchError((err: ApiError) => {
