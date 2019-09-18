@@ -16,5 +16,7 @@ namespace WebApp
         bool DeleteInvoice(string invoiceNumber);
 
         IEnumerable<Invoice> GetAllInvoicesBy(string keyword, string sort);
+
+        string GenerateOrganisationInvoiceNumber(string loginId);
     }
 }

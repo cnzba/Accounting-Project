@@ -167,5 +167,19 @@ namespace WebApp.Controllers
 
             return Ok(invoices);
         }
+
+        [Route("invoicenumber")]
+        [HttpGet]
+        public IActionResult GetNewInvoiceNumber([FromQuery] string login)
+        {
+            string invoiceNumber = service.GenerateOrganisationInvoiceNumber(login);
+
+            if (invoiceNumber == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(invoiceNumber);
+        }
     }
 }
