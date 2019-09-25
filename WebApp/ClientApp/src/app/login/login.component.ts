@@ -16,6 +16,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     returnUrl: string;
     subscription: Subscription;
 
+    isLoginFail: boolean;
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -43,6 +45,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.authenticationService.login(this.model.username, this.model.password)
             .subscribe(
             data => {
+                this.isLoginFail = false;
                 if (data.forcePasswordChange) {
                     localStorage.setItem("forcePasswordChange", "true");
                     this.callbackService.updateNav(true);
@@ -52,9 +55,14 @@ export class LoginComponent implements OnInit, OnDestroy {
                 }
             },
             error => {
-                this.alertService.error("User Not Found.");
+                //this.alertService.error("User Not Found.");
+                this.isLoginFail = true;
                 this.spinnerService.hideSpinner();
             });
+    }
+
+    inputChanged(event) {
+        this.isLoginFail = false;
     }
 
     ngOnDestroy(): void {
