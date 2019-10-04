@@ -34,7 +34,7 @@ export class InvoiceService {
             + ("0" + today.getDate()).slice(-2)
             + "-xxx";
 
-        return of({ invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" });
+        return of({ invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", purchaseOrderNumber:"", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" });
     }
 
     createNewInvoiceWithInvoiceNumber(loginId:string): Observable<IInvoice> {
@@ -50,9 +50,9 @@ export class InvoiceService {
         return this.getNewInvoiceNumber(loginId).pipe(
             map( (invoiceNo) => {
                 if (invoiceNo) {                    
-                    return { invoiceNumber: invoiceNo, clientName: "", clientContactPerson: "", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" };
+                    return { invoiceNumber: invoiceNo, clientName: "", clientContactPerson: "", purchaseOrderNumber:"", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" };
                 } else {                    
-                    return { invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" };
+                    return { invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", purchaseOrderNumber:"", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" };
                 }
             }),
         );

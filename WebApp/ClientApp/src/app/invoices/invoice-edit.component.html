@@ -43,30 +43,14 @@
                         <label class="alert alert-danger field-error" *ngIf="formErrors.hasFieldError('Email')">{{formErrors.fieldError("Email")}}</label>
                     </div>
                 </div>
-
-                <div *ngIf="!showContact" class="row">
-                    <div class="col">
-                        <button type="button" class="btn btn-sm btn-link" (click)="addContact()">
-                            Add Contact
-                        </button>
-                    </div>
-                </div>
-
-                <div *ngIf="showContact" class="row"
-                     (mouseenter)="contactHover = true" (mouseleave)="contactHover = false">
+                
+                <div class="row">
                     <div class="col-4">
-                        <b>Client Contact Person</b>
+                        <b>Purchase Order Number</b>
                     </div>
                     <div class="col-7">
-                        <input type="text" [(ngModel)]="modifyInvoice.clientContactPerson" name="clientcontactperson" />
-                    </div>
-                    <div class="col-1">
-                        <button type="button" [class.hidden]="!contactHover"
-                                (click)="removeContact()"
-                                class="btn btn-outline-danger btn-sm">
-                            <span class="oi oi-x"></span>
-                        </button>
-                    </div>
+                        <input type="text" [(ngModel)]="modifyInvoice.purchaseOrderNumber" name="purchaseOrderNumber" maxlength="15"/>
+                    </div>                    
                 </div>
 
                 <div *ngIf="!showAddress" class="row">
