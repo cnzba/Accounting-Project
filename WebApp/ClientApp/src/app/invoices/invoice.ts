@@ -3,6 +3,7 @@ export interface IInvoice {
     dateDue: Date;
     clientName: string;
     clientContactPerson: string;
+    purchaseOrderNumber: string;
     clientContact: string;
     status: string;
    
@@ -24,6 +25,7 @@ export class Invoice implements IInvoice {
     dateDue: Date;
     clientName: string;
     clientContactPerson: string;
+    purchaseOrderNumber: string;
     clientContact: string;
     status: string;
    
@@ -39,8 +41,8 @@ export class Invoice implements IInvoice {
 
     invoiceLine: IInvoiceLine[];
 
-    constructor(){
-        this.clientName = this.clientContactPerson = this.clientContact = this.status = this.gstNumber = this.charitiesNumber = "";
+    constructor() {
+        this.clientName = this.clientContactPerson = this.clientContact = this.status = this.gstNumber = this.charitiesNumber = this.purchaseOrderNumber = "";
         this.loginId = "";
         this.gstRate = this.subTotal = this.grandTotal =0;
         this.invoiceLine = [];

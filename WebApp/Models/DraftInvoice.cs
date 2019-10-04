@@ -25,6 +25,7 @@ namespace WebApp.Models
         [Required(ErrorMessage = "The client's name is required.")]
         public string ClientName { get; set; }
         public string ClientContactPerson { get; set; }
+        public string PurchaseOrderNumber { get; set; }
         public string ClientContact { get; set; }
 
         [Required]

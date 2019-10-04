@@ -63,6 +63,7 @@ namespace WebApp
                 // copy the information supplied by the client
                 ClientName = draftInvoice.ClientName,
                 ClientContactPerson = draftInvoice.ClientContactPerson,
+                PurchaseOrderNumber = draftInvoice.PurchaseOrderNumber,
                 ClientContact = draftInvoice.ClientContact,
                 Email = draftInvoice.Email,
                 DateDue = draftInvoice.DateDue,
@@ -141,6 +142,7 @@ namespace WebApp
             }
 
             invoiceToUpdate.ClientContactPerson = invoice.ClientContactPerson;
+            invoiceToUpdate.PurchaseOrderNumber = invoice.PurchaseOrderNumber;
             invoiceToUpdate.ClientName = invoice.ClientName;
             invoiceToUpdate.ClientContact = invoice.ClientContact;
             invoiceToUpdate.DateDue = invoice.DateDue;

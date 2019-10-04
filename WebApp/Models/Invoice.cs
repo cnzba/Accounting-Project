@@ -29,6 +29,9 @@ namespace WebApp.Models
         [Required(ErrorMessage = "The client's name is required.")]
         public string ClientName { get; set; }
         public string ClientContactPerson { get; set; }
+
+        [StringLength(50)]
+        public string PurchaseOrderNumber { get; set; }
         public string ClientContact { get; set; }
         [Required]
         [EmailAddress(ErrorMessage = "The client's email address is required.")]
