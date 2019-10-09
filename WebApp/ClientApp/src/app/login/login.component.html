@@ -23,6 +23,7 @@
                         <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
                             <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
                                 <input placeholder="Email" type="text" class="form-control" name="username"
+                                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
                                        [(ngModel)]="model.username" #username="ngModel" required
                                        (ngModelChange)="inputChanged($event)"
                                        style="width: 100%; height: 40px; padding-left:10px;" />
@@ -38,7 +39,8 @@
                                 <button class="btn btn-primary" style="width: 100%; height: 40px;">Login</button>
                             </div>
                             <div class="form-group text-left" style="color:red;">
-                                <div *ngIf="f.submitted && !username.valid" class="help-block">Email is required</div>
+                                <div *ngIf="f.submitted && username.hasError('required')" class="help-block">Email is required</div>
+                                <div *ngIf="(username.hasError('pattern') && username.touched) || (f.submitted && username.hasError('pattern'))" class="help-block">Email address is not valid</div>
                                 <div *ngIf="f.submitted && !password.valid" class="help-block">Password is required</div>
                                 <div *ngIf="f.submitted && isLoginFail" class="help-block">Your Email or Password Is Not Valid</div>
                             </div>
