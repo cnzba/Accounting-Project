@@ -8,8 +8,6 @@ export interface IInvoice {
     status: string;
    
     dateCreated?: Date;
-    gstNumber?: string;
-    charitiesNumber?: string;
     gstRate?: number;
     subTotal?: number;
     grandTotal?: number;
@@ -49,6 +47,29 @@ export class Invoice implements IInvoice {
     }
 }
 
+export class InvoiceForCreation {
+    dateDue: Date;
+    clientName: string;
+    clientContactPerson: string;
+    purchaseOrderNumber: string;
+    clientContact: string;
+
+    email: string;
+    loginId: string;
+
+    invoiceLine: IInvoiceLine[];
+}
+
+export class InvoiceForUpdate {
+    dateDue: Date;
+    clientName: string;
+    clientContactPerson: string;
+    purchaseOrderNumber: string;
+    clientContact: string;
+
+    email: string;
+    invoiceLine: IInvoiceLine[];
+}
 export interface IInvoiceLine {
     itemOrder: number;
     description: string;

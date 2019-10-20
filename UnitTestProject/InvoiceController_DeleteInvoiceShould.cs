@@ -2,20 +2,22 @@
 using WebApp;
 using Moq;
 using WebApp.Controllers;
-using WebApp.Models;
+using WebApp.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using AutoMapper;
+using WebApp.Services;
 
 namespace UnitTestProject
 {
     [TestClass]
     public class InvoiceController_DeleteInvoiceShould
     {
-        private readonly ILoggerFactory logger;
+        private readonly ILogger<InvoiceController> logger;
         public InvoiceController_DeleteInvoiceShould()
         {
-            logger = new Mock<ILoggerFactory>().Object;
+            logger = new Mock<ILogger<InvoiceController>>().Object;
         }
 
         [TestMethod]
@@ -23,7 +25,8 @@ namespace UnitTestProject
         {
             //arrange
             var service = new Mock<IInvoiceService>();
-            var controller = new InvoiceController(service.Object, logger);
+            var mapper = new Mock<IMapper>();
+            var controller = new InvoiceController(service.Object, mapper.Object, logger);
 
             service.Setup(s => s.InvoiceExists(It.IsAny<String>())).Returns(false);
 
@@ -39,7 +42,8 @@ namespace UnitTestProject
         {
             //arrange
             var service = new Mock<IInvoiceService>();
-            var controller = new InvoiceController(service.Object, logger);
+            var mapper = new Mock<IMapper>();
+            var controller = new InvoiceController(service.Object, mapper.Object, logger);
 
             service.Setup(s => s.InvoiceExists(It.IsAny<String>())).Returns(true);
             service.Setup(s => s.DeleteInvoice(It.IsAny<String>())).Throws(new ArgumentException());

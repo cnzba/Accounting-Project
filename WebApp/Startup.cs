@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.EntityFrameworkCore;
-using WebApp.Models;
+using WebApp.Entities;
 using WebApp.Options;
 using CryptoService;
 using Newtonsoft.Json;
@@ -15,7 +15,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
-
+using AutoMapper;
+using WebApp.Services;
 
 namespace WebApp
 {
@@ -33,6 +34,8 @@ namespace WebApp
         {
             services.AddDbContext<CBAContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CBA_Database")));
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -43,7 +46,6 @@ namespace WebApp
             services.AddScoped<ICryptography, Cryptography>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddTransient<IEmail, Email>();
-            //services.AddSingleton<IEmailConfig, EmailConfig>();
             services.AddTransient<CBASeeder>();
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IStripePaymentService, StripePaymentService>();

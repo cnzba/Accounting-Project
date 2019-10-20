@@ -4,8 +4,9 @@ using Newtonsoft.Json;
 using Stripe;
 using System;
 using System.Collections.Generic;
+using WebApp.Services;
 
-namespace WebApp.Models
+namespace WebApp.Entities
 {
     public class StripePaymentService : IStripePaymentService
     {

@@ -1,36 +1,35 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using WebApp.Entities;
 using WebApp.Models;
 using WebApp.Options;
 
-namespace WebApp
+namespace WebApp.Services
 {
     public class InvoiceService : IInvoiceService
     {
-        private CBAContext context;
-        private CBAOptions options;
+        private readonly CBAContext context;
+        private readonly CBAOptions options;
+        private readonly IMapper mapper;
 
-        public InvoiceService(CBAContext context, IOptions<CBAOptions> optionsAccessor)
+        public InvoiceService(CBAContext context, IOptions<CBAOptions> optionsAccessor, IMapper mapper)
         {
             this.context = context;
             options = optionsAccessor.Value;
+            this.mapper = mapper;
         }
 
         private void Validate(Invoice invoice)
         {
-            Validator.ValidateObject(invoice, new ValidationContext(invoice), true);
+            Validator.ValidateObject(invoice, new System.ComponentModel.DataAnnotations.ValidationContext(invoice), true);
         }
 
         public IEnumerable<Invoice> GetAllInvoices()
-        {
-            return context.Invoice.Include("InvoiceLine").OrderBy(i => i.DateCreated).ToList();
-        }
-
-        public IEnumerable<IInvoiceHeader> GetInvoiceHeaders()
         {
             return context.Invoice.Include("InvoiceLine").OrderByDescending(i => i.DateCreated).ToList();
         }
@@ -51,34 +50,22 @@ namespace WebApp
             return invoice;
         }
 
-        public Invoice CreateInvoice(DraftInvoice draftInvoice)
+        public Invoice CreateInvoice(InvoiceForCreationDto inputInvoice)
         {
             // determine current New Zealand time
             TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("New Zealand Standard Time");
             DateTime localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
 
-            Invoice invoice = new Invoice
-            {
+            // copy information provided by the client
+            Invoice invoice = mapper.Map<Invoice>(inputInvoice);
 
-                // copy the information supplied by the client
-                ClientName = draftInvoice.ClientName,
-                ClientContactPerson = draftInvoice.ClientContactPerson,
-                PurchaseOrderNumber = draftInvoice.PurchaseOrderNumber,
-                ClientContact = draftInvoice.ClientContact,
-                Email = draftInvoice.Email,
-                DateDue = draftInvoice.DateDue,
-                InvoiceLine = draftInvoice.InvoiceLine,
-
-                // add the server generated information
-                //InvoiceNumber = GenerateInvoiceNumber(),
-                InvoiceNumber = GenerateOrganisationInvoiceNumber(draftInvoice.LoginId),
-                CharitiesNumber = options.CharitiesNumber,
-                GstNumber = options.GSTNumber,
-                GstRate = options.GSTRate,
-                DateCreated = localNow,
-                Status = InvoiceStatus.Draft,
-                Creator = context.User.FirstOrDefault(u => u.Email == draftInvoice.LoginId)
-            };
+            invoice.InvoiceNumber = GenerateOrganisationInvoiceNumber(inputInvoice.LoginId);
+            invoice.CharitiesNumber = options.CharitiesNumber;
+            invoice.GstNumber = options.GSTNumber;
+            invoice.GstRate = options.GSTRate;
+            invoice.DateCreated = localNow;
+            invoice.Status = InvoiceStatus.Draft;
+            invoice.Creator = context.User.FirstOrDefault(u => u.Email == inputInvoice.LoginId);
 
             Validate(invoice);
 
@@ -105,7 +92,7 @@ namespace WebApp
 
             var user = context.User.Include(u => u.Organisation).FirstOrDefault(u => u.Email == loginId);
             if (user == null || user.Organisation == null)
-            {                
+            {
                 return null;
             }
 
@@ -132,35 +119,21 @@ namespace WebApp
             return null;
         }
 
-        public bool ModifyInvoice(DraftInvoice invoice)
+        public void ModifyInvoice(string invoiceNumber, InvoiceForUpdateDto invoice)
         {
-            var invoiceToUpdate = GetInvoice(invoice.InvoiceNumber);
+            var invoiceToUpdate = GetInvoice(invoiceNumber);
 
             if (invoiceToUpdate.Status != InvoiceStatus.Draft)
             {
-                throw new ArgumentException($"Invoice {invoice.InvoiceNumber} is not a draft and may not be modified");
+                throw new InvalidOperationException($"Invoice {invoiceNumber} is not a draft and may not be modified");
             }
 
-            invoiceToUpdate.ClientContactPerson = invoice.ClientContactPerson;
-            invoiceToUpdate.PurchaseOrderNumber = invoice.PurchaseOrderNumber;
-            invoiceToUpdate.ClientName = invoice.ClientName;
-            invoiceToUpdate.ClientContact = invoice.ClientContact;
-            invoiceToUpdate.DateDue = invoice.DateDue;
-
-            // every time an invoice is modified, its item lines are completely rewritten
-            invoiceToUpdate.InvoiceLine.Clear();
-            invoiceToUpdate.InvoiceLine = invoice.InvoiceLine;
+            // apply invoice to invoiceToUpdate
+            mapper.Map(invoice, invoiceToUpdate);
 
             Validate(invoiceToUpdate);
 
-            if (!context.ChangeTracker.HasChanges())
-            {
-                return true;
-            }
-            else
-            {
-                return context.SaveChanges() > 0;
-            }
+            context.SaveChanges();
         }
 
         public bool InvoiceExists(string invoiceNumber)
@@ -179,7 +152,7 @@ namespace WebApp
 
             if (invoice.Status != InvoiceStatus.Draft)
             {
-                throw new ArgumentException();
+                throw new InvalidOperationException();
             }
 
             context.Remove<Invoice>(invoice);

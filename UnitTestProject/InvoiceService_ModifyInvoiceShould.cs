@@ -1,4 +1,4 @@
-﻿using WebApp.Models;
+﻿using WebApp.Entities;
 using Moq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebApp.Options;
@@ -9,6 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WebApp.Services;
+using AutoMapper;
+using WebApp.Profiles;
+using WebApp.Models;
 
 namespace UnitTestProject
 {
@@ -18,9 +22,14 @@ namespace UnitTestProject
         private readonly IOptions<CBAOptions> options;
         private readonly DbContextOptions<CBAContext> dboptions;
         private readonly Cryptography cryptography;
+        private readonly IMapper mapper;
 
         public InvoiceService_ModifyInvoiceShould()
         {
+            var config = new MapperConfiguration(opts =>
+                opts.AddProfile<InvoicesProfile>());
+
+            mapper = config.CreateMapper();
             var ioptions = new Mock<IOptions<CBAOptions>>();
             var cbaoptions = new Mock<CBAOptions>().Object;
 
@@ -41,22 +50,28 @@ namespace UnitTestProject
             var seeder = new CBASeeder(context, cryptography);
             seeder.Seed();
 
-            var service = new InvoiceService(context, options);
+            var service = new InvoiceService(context, options, mapper);
             var originalInvoice = context.Invoice.Include("InvoiceLine")
-                .SingleOrDefault(t => t.InvoiceNumber == "20171005-001");
+                .SingleOrDefault(t => t.InvoiceNumber == "ABNZ000420");
 
-            var modifiedInvoice = new DraftInvoice()
+            var modifiedInvoice = new InvoiceForUpdateDto()
             {
-                InvoiceNumber = "20171005-001",
-                ClientName = "Electrocal Commission",
-                InvoiceLine = new List<InvoiceLine>()
+                // all fields should be the same except InvoiceLine
+                ClientName = originalInvoice.ClientName,
+                ClientContact = originalInvoice.ClientContact,
+                ClientContactPerson = originalInvoice.ClientContactPerson,
+                DateDue = originalInvoice.DateDue,
+                Email = originalInvoice.Email,
+                PurchaseOrderNumber = originalInvoice.PurchaseOrderNumber,
+
+                InvoiceLine = new List<InvoiceLineDto>()
                     {
-                        new InvoiceLine()
+                        new InvoiceLineDto()
                         {
                             Description = "New Dinner",
                             Amount = 50
                         },
-                           new InvoiceLine()
+                           new InvoiceLineDto()
                         {
                             Description = "New Cookie",
                             Amount = 10
@@ -66,14 +81,13 @@ namespace UnitTestProject
 
             var expectedLineCount = context.InvoiceLine.Count()
                 - originalInvoice.InvoiceLine.Count()
-                + modifiedInvoice.InvoiceLine.Count(); 
+                + modifiedInvoice.InvoiceLine.Count();
 
             // act
-            var result = service.ModifyInvoice(modifiedInvoice);
+            service.ModifyInvoice("ABNZ000420", modifiedInvoice);
             var lineCount = context.InvoiceLine.Count();
 
             // assert
-            Assert.IsTrue(result);
             Assert.AreEqual(expectedLineCount, lineCount);
         }
 
@@ -85,28 +99,29 @@ namespace UnitTestProject
             var seeder = new CBASeeder(context, cryptography);
             seeder.Seed();
 
-            var service = new InvoiceService(context, options);
+            var service = new InvoiceService(context, options, mapper);
             Invoice invoiceToUpdate = context.Invoice.Include("InvoiceLine")
-                .SingleOrDefault(t => t.InvoiceNumber == "20171005-001");
+                .SingleOrDefault(t => t.InvoiceNumber == "ABNZ000420");
 
-            DraftInvoice invoice = new DraftInvoice()
+            InvoiceForUpdateDto invoice = new InvoiceForUpdateDto()
             {
                 // all fields should be the same except InvoiceLine
-                InvoiceNumber = invoiceToUpdate.InvoiceNumber,
                 ClientName = invoiceToUpdate.ClientName,
                 ClientContact = invoiceToUpdate.ClientContact,
                 ClientContactPerson = invoiceToUpdate.ClientContactPerson,
-                DateDue = invoiceToUpdate.DateDue
+                DateDue = invoiceToUpdate.DateDue,
+                Email = invoiceToUpdate.Email,
+                PurchaseOrderNumber = invoiceToUpdate.PurchaseOrderNumber
             };
 
-            invoice.InvoiceLine = new List<InvoiceLine>()
+            invoice.InvoiceLine = new List<InvoiceLineDto>()
                     {
-                        new InvoiceLine()
+                        new InvoiceLineDto()
                         {
                             Description = "New Dinner",
                             Amount = 50
                         },
-                           new InvoiceLine()
+                           new InvoiceLineDto()
                         {
                             Description = "New Cookie",
                             Amount = 10
@@ -114,13 +129,12 @@ namespace UnitTestProject
                     };
 
             // act
-            var result = service.ModifyInvoice(invoice);
+            service.ModifyInvoice("ABNZ000420", invoice);
 
             // assert
-            Assert.IsTrue(result);
             var cleancontext = new CBAContext(dboptions);
             Assert.AreEqual(2, cleancontext.Invoice.Include("InvoiceLine")
-                .SingleOrDefault(t => t.InvoiceNumber == "20171005-001").InvoiceLine.Count());
+                .SingleOrDefault(t => t.InvoiceNumber == "ABNZ000420").InvoiceLine.Count());
         }
     }
 }

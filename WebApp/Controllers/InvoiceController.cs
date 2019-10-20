@@ -1,43 +1,44 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.Models;
+using WebApp.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using AutoMapper;
+using WebApp.Models;
+using WebApp.Services;
 
 namespace WebApp.Controllers
 {
+    [ApiController]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [Authorize]
-    public class InvoiceController : Controller
+    public class InvoiceController : ControllerBase
     {
         private readonly IInvoiceService service;
-        private readonly ILogger logger;
-
-        public InvoiceController(IInvoiceService service, ILoggerFactory loggerFactory)
+        private readonly IMapper mapper;
+        private readonly ILogger<InvoiceController> logger;
+        public InvoiceController(IInvoiceService service, IMapper mapper, ILogger<InvoiceController> logger)
         {
             this.service = service;
-            logger = loggerFactory.CreateLogger<InvoiceController>();
+            this.mapper = mapper;
+            this.logger = logger;
         }
 
         // GET: api/invoice
         [HttpGet]
-        public IActionResult GetInvoice()
+        public ActionResult<IEnumerable<InvoiceDto>> GetInvoices()
         {
-            var invoices = service.GetInvoiceHeaders();
-
-            if (invoices == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(invoices);
+            var invoices = service.GetAllInvoices();
+            var dtoList = mapper.Map<IEnumerable<InvoiceDto>>(invoices);
+            return Ok(dtoList);
         }
 
         // GET api/invoice/5
         [HttpGet("{InvoiceNumber}")]
-        public IActionResult GetInvoice([FromRoute] string invoiceNumber)
+        public ActionResult<InvoiceDto> GetInvoice([FromRoute] string invoiceNumber)
         {
             var invoice = service.GetInvoice(invoiceNumber);
 
@@ -46,7 +47,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            return Ok(invoice);
+            return Ok(mapper.Map<InvoiceDto>(invoice));
         }
 
         // GET api/invoice/p/5 for payment without auth
@@ -67,18 +68,14 @@ namespace WebApp.Controllers
 
         // POST: api/invoice
         [HttpPost]
-        public IActionResult CreateInvoice([FromBody] DraftInvoice invoice)
+        public IActionResult CreateInvoice([FromBody] InvoiceForCreationDto invoice)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
                 Invoice created = service.CreateInvoice(invoice);
+                var createdDto = mapper.Map<InvoiceDto>(created);
                 if (created!=null)
-                    return CreatedAtAction("GetInvoice", new { InvoiceNumber = created.InvoiceNumber }, created);
+                    return CreatedAtAction("GetInvoice", new { InvoiceNumber = created.InvoiceNumber }, createdDto);
             }
             catch(ValidationException ex)
             {
@@ -95,27 +92,20 @@ namespace WebApp.Controllers
         // PUT: api/invoice/5
         [HttpPut("{InvoiceNumber}")]
         public IActionResult ModifyInvoice([FromRoute] string invoiceNumber,
-            [FromBody] DraftInvoice invoice)
+            [FromBody] InvoiceForUpdateDto invoice)
         {
-            if (!ModelState.IsValid)
-            {
-               return BadRequest(ModelState);
-            }
-
-            if (invoiceNumber != invoice.InvoiceNumber)
-            {
-                return BadRequest("Unexpected invoice number");
-            }
-
             try
             {
-                if (!service.ModifyInvoice(invoice))
+                if (!service.InvoiceExists(invoiceNumber))
                 {
-                    return BadRequest("Unable to modify invoice.");
+                    return NotFound();
                 }
-                else return Ok(service.GetInvoice(invoice.InvoiceNumber));
+
+                service.ModifyInvoice(invoiceNumber, invoice);
+                
+                return Ok(mapper.Map<InvoiceDto>(service.GetInvoice(invoiceNumber)));
             }
-            catch (ArgumentException ex)
+            catch (InvalidOperationException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -125,9 +115,7 @@ namespace WebApp.Controllers
             }
             catch (Exception ex)
             {
-                if (!service.InvoiceExists(invoiceNumber)) return NotFound();
-
-                logger.LogError(ex.Message);
+                logger.LogError(ex, ex.Message);
                 return BadRequest("Unable to modify invoice.");
             }
         }

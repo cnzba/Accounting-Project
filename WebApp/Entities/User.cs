@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-namespace WebApp.Models
+namespace WebApp.Entities
 {
     public class User
     {

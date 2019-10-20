@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ServiceUtil.Email;
-using WebApp.Models;
+using WebApp.Entities;
 
 namespace WebApp.Controllers
 {

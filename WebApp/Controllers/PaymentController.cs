@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.Models;
+using WebApp.Entities;
 
 namespace WebApp.Controllers
 {

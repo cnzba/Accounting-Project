@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System;
 
-namespace WebApp.Models
+namespace WebApp.Entities
 {
     public class PaymentModel
     {
