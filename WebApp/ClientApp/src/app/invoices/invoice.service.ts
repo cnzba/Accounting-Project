@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IInvoice, IInvoiceLine, InvoiceForCreation, InvoiceForUpdate } from './invoice';
 
 @Injectable()
@@ -57,6 +57,19 @@ export class InvoiceService {
         else response = this.createInvoice(invoice);
 
         return response;
+    }
+
+    finaliseInvoice(invoiceNumber: string): Observable<IInvoice> {
+        console.log(`Finalising invoice: ${invoiceNumber}`);
+
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+
+        return this.http.put<IInvoice>(this.invoiceUrl + '/' + invoiceNumber + '/status', JSON.stringify("Sent"), httpOptions)
+            .pipe(tap(data => console.log('Put (receive): ' + JSON.stringify(data))));
     }
 
     computeGST(invoice: IInvoice): number

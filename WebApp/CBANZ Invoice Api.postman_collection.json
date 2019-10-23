@@ -175,6 +175,84 @@
 				"description": "Update an existing invoice"
 			},
 			"response": []
+		},
+		{
+			"name": "PUT Invoice (finalise and send) ",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\"Sent\"",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44390/api/invoice/ABNZ000420/status",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44390",
+					"path": [
+						"api",
+						"invoice",
+						"ABNZ000420",
+						"status"
+					]
+				},
+				"description": "Issue and invoice by email."
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Invoice (finalise and send / unexisting) ",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\"Sent\"",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44390/api/invoice/ABNZ000420/status",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44390",
+					"path": [
+						"api",
+						"invoice",
+						"ABNZ000420",
+						"status"
+					]
+				},
+				"description": "Issue and invoice by email with incorrect invoice number."
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}

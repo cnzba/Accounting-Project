@@ -18,5 +18,6 @@ namespace WebApp.Services
         IEnumerable<Invoice> GetAllInvoicesBy(string keyword, string sort);
 
         string GenerateOrganisationInvoiceNumber(string loginId);
+        void IssueInvoice(string invoiceNumber);
     }
 }

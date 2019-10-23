@@ -223,5 +223,10 @@ namespace WebApp.Services
             }
             return result;
         }
+
+        public void IssueInvoice(string invoiceNumber)
+        {
+            // not implemented
+        }
     }
 }

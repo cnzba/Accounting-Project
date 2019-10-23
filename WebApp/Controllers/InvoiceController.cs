@@ -74,10 +74,10 @@ namespace WebApp.Controllers
             {
                 Invoice created = service.CreateInvoice(invoice);
                 var createdDto = mapper.Map<InvoiceDto>(created);
-                if (created!=null)
+                if (created != null)
                     return CreatedAtAction("GetInvoice", new { InvoiceNumber = created.InvoiceNumber }, createdDto);
             }
-            catch(ValidationException ex)
+            catch (ValidationException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -102,7 +102,7 @@ namespace WebApp.Controllers
                 }
 
                 service.ModifyInvoice(invoiceNumber, invoice);
-                
+
                 return Ok(mapper.Map<InvoiceDto>(service.GetInvoice(invoiceNumber)));
             }
             catch (InvalidOperationException ex)
@@ -118,6 +118,29 @@ namespace WebApp.Controllers
                 logger.LogError(ex, ex.Message);
                 return BadRequest("Unable to modify invoice.");
             }
+        }
+
+        // PUT: api/invoice/5/status
+        [HttpPut("{InvoiceNumber}/status")]
+        public IActionResult IssueInvoice([FromRoute] string invoiceNumber,
+            [FromBody] InvoiceStatus newStatus)
+        {
+            var invoice = service.GetInvoice(invoiceNumber);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            if (newStatus != InvoiceStatus.Sent || invoice.Status != InvoiceStatus.Draft)
+            {
+                return BadRequest("The only permitted status change is from 'Draft' to 'Sent'");
+            }
+
+            service.IssueInvoice(invoiceNumber);
+
+            return BadRequest("Finalise and send not implemented (see story 286.)");
+            // return Ok(mapper.Map<InvoiceDto>(service.GetInvoice(invoiceNumber)));
         }
 
         // DELETE api/invoice/5
@@ -166,7 +189,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            
+
             return Ok(invoiceNumber);
         }
     }

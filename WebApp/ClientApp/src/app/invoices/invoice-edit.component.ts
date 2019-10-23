@@ -59,6 +59,11 @@ export class InvoiceEditComponent implements OnInit {
         else return this.userAskedForContact;
     }
 
+    // determine whether to show the finalise and send button
+    get showFinalise(): boolean {
+        return this.modifyInvoice.status == "Draft";
+    }
+
     // button actions
     addAddress() {
         this.userAskedForAddress = true;
@@ -121,25 +126,59 @@ export class InvoiceEditComponent implements OnInit {
         return JSON.parse(JSON.stringify(invoice));
     }
 
-    onSubmit() {
+    // replace the invoice used by the form with the provided invoice
+    private updateInvoiceModel(invoice: IInvoice) {
+        this.resetInvoice = this.deepCopyInvoice(invoice);
+        this.modifyInvoice = invoice;
+    }
+
+    async onSaveDraft() {
         this.spinnerService.showSpinner();
         this.formErrors = new ApiError();
 
         this.modifyInvoice.loginId = localStorage.getItem('LoginId');
 
-        this.invoiceService.saveDraftInvoice(this.modifyInvoice)
-            .subscribe(invoice => { 
-                this.resetInvoice = this.deepCopyInvoice(invoice);
-                this.modifyInvoice = invoice;
-                this.spinnerService.hideSpinner()
-                this.alertService.success("Invoice saved");
-                console.log(invoice);
-            },
-            ((err: ApiError) => {
-                this.formErrors = err;
-                this.spinnerService.hideSpinner()
-                if (err.globalError) this.alertService.error(err.globalError);
-            }));
+        try {
+            let invoice: IInvoice = await this.invoiceService.saveDraftInvoice(this.modifyInvoice).toPromise();
+
+            this.updateInvoiceModel(invoice);
+            this.spinnerService.hideSpinner()
+            this.alertService.success("Invoice saved");
+            console.log(invoice);
+        }
+        catch (error) {
+            console.log(`There was an error finalising the invoice ${JSON.stringify(error)}`);
+            let err: ApiError = error;
+
+            this.formErrors = err;
+            this.spinnerService.hideSpinner()
+            if (err.globalError) this.alertService.error(err.globalError);
+        }
+    }
+
+    async onFinalise() {
+        console.log(`Finalising invoice ${this.modifyInvoice.invoiceNumber}`);
+        this.spinnerService.showSpinner();
+        this.formErrors = new ApiError();
+
+        this.modifyInvoice.loginId = localStorage.getItem('LoginId');
+
+        try {
+            let invoiceResult = await this.invoiceService.saveDraftInvoice(this.modifyInvoice).toPromise();
+            invoiceResult = await this.invoiceService.finaliseInvoice(invoiceResult.invoiceNumber).toPromise();
+
+            this.updateInvoiceModel(invoiceResult);
+            this.spinnerService.hideSpinner()
+            this.alertService.success("Invoice sent");
+        }
+        catch (error) {
+            console.log(`There was an error finalising the invoice ${JSON.stringify(error)}`);
+            let err: ApiError = error;
+
+            this.formErrors = err;
+            this.spinnerService.hideSpinner()
+            if (err.globalError) this.alertService.error(err.globalError);
+        }
     }
 
     onReset() {
