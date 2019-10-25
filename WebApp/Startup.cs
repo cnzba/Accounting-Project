@@ -43,13 +43,6 @@ namespace WebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddScoped<ICryptography, Cryptography>();
-            services.AddScoped<IEmailService, EmailService>();
-            services.AddTransient<IEmail, Email>();
-            services.AddTransient<CBASeeder>();
-            services.AddScoped<IInvoiceService, InvoiceService>();
-            services.AddScoped<IStripePaymentService, StripePaymentService>();
-
             services.AddMvc()
                 .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -84,8 +77,7 @@ namespace WebApp
 
 
             services.AddOptions();
-            services.Configure<CBAOptions>(Configuration);
-            services.Configure<EmailConfig>(Configuration.GetSection("EmailConfig"));
+            services.AddCNZBA(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -139,6 +131,24 @@ namespace WebApp
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+        }
+    }
+
+    public static class CNZBA_Services
+    {
+        public static void AddCNZBA(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<ICryptography, Cryptography>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddTransient<IEmail, Email>();
+            services.AddTransient<CBASeeder>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IPdfService, PdfService>();
+            services.AddScoped<IStripePaymentService, StripePaymentService>();
+
+            services.Configure<CBAOptions>(configuration);
+            services.Configure<EmailConfig>(configuration.GetSection("EmailConfig"));
+            services.Configure<PdfServiceOptions>(configuration.GetSection("PdfService"));
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApp.Entities;
 using WebApp.Models;
 
@@ -18,6 +19,6 @@ namespace WebApp.Services
         IEnumerable<Invoice> GetAllInvoicesBy(string keyword, string sort);
 
         string GenerateOrganisationInvoiceNumber(string loginId);
-        void IssueInvoice(string invoiceNumber);
+        Task IssueInvoice(string invoiceNumber);
     }
 }

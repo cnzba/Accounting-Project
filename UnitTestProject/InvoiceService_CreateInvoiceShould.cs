@@ -22,6 +22,7 @@ namespace UnitTestProject
         private readonly IOptions<CBAOptions> options;
         private readonly DbContextOptions<CBAContext> dboptions;
         private readonly IMapper mapper;
+        private readonly IPdfService pdf;
 
         public InvoiceService_CreateInvoiceShould()
         {
@@ -31,6 +32,7 @@ namespace UnitTestProject
             var config = new MapperConfiguration(opts =>
                 opts.AddProfile<InvoicesProfile>());
 
+            pdf = new Mock<IPdfService>().Object;
             mapper = config.CreateMapper();
 
             cbaoptions.SetupAllProperties();
@@ -50,7 +52,7 @@ namespace UnitTestProject
         {
             // arrange
             var context = new CBAContext(dboptions);
-            var service = new InvoiceService(context, options, mapper);
+            var service = new InvoiceService(context, options, mapper, pdf);
 
             var invoice = new InvoiceForCreationDto()
             {
@@ -89,7 +91,7 @@ namespace UnitTestProject
         {
             // arrange
             var context = new CBAContext(dboptions);
-            var service = new InvoiceService(context, options, mapper);
+            var service = new InvoiceService(context, options, mapper, pdf);
             var invoice = new InvoiceForCreationDto()
             {
                 ClientName = "",

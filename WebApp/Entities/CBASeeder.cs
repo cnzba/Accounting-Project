@@ -114,7 +114,7 @@ namespace WebApp.Entities
                     ClientContact = "297 Moorhouse Ave\\r\\nSydenham\\r\\nChristchurch 8011",
                     Email = "jc@example.com",
                     PaymentId = _cryptography.GenerateTempPassword(12),
-                    Status = InvoiceStatus.Sent,
+                    Status = InvoiceStatus.Issued,
                     GstRate = .15m,
                     GstNumber = "96-712-561",
                     CharitiesNumber = "CC20097",

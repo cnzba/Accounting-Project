@@ -10,6 +10,8 @@ import { AlertService } from "../common/alert/alert.service";
 import { ApiError } from "../common/error.service";
 import { SpinnerService } from "../common/spinner.service";
 
+import { Router } from '@angular/router';
+
 //import { AuthenticationService } from "../login/authentication.service";
 
 // TODO
@@ -25,6 +27,7 @@ import { SpinnerService } from "../common/spinner.service";
 })
 export class InvoiceEditComponent implements OnInit {
     constructor(
+        private router: Router,
         private invoiceServiceP: InvoiceService,
         private route: ActivatedRoute,
         private location: Location,
@@ -169,7 +172,8 @@ export class InvoiceEditComponent implements OnInit {
 
             this.updateInvoiceModel(invoiceResult);
             this.spinnerService.hideSpinner()
-            this.alertService.success("Invoice sent");
+            this.router.navigate(["invoices"]);
+            this.alertService.success(`Invoice ${invoiceResult.invoiceNumber} finalised and sent`);
         }
         catch (error) {
             console.log(`There was an error finalising the invoice ${JSON.stringify(error)}`);

@@ -23,11 +23,14 @@ namespace UnitTestProject
         private readonly DbContextOptions<CBAContext> dboptions;
         private readonly Cryptography cryptography;
         private readonly IMapper mapper;
+        private readonly IPdfService pdf;
 
         public InvoiceService_ModifyInvoiceShould()
         {
             var config = new MapperConfiguration(opts =>
                 opts.AddProfile<InvoicesProfile>());
+
+            pdf = new Mock<IPdfService>().Object;
 
             mapper = config.CreateMapper();
             var ioptions = new Mock<IOptions<CBAOptions>>();
@@ -50,7 +53,7 @@ namespace UnitTestProject
             var seeder = new CBASeeder(context, cryptography);
             seeder.Seed();
 
-            var service = new InvoiceService(context, options, mapper);
+            var service = new InvoiceService(context, options, mapper, pdf);
             var originalInvoice = context.Invoice.Include("InvoiceLine")
                 .SingleOrDefault(t => t.InvoiceNumber == "ABNZ000420");
 
@@ -99,7 +102,7 @@ namespace UnitTestProject
             var seeder = new CBASeeder(context, cryptography);
             seeder.Seed();
 
-            var service = new InvoiceService(context, options, mapper);
+            var service = new InvoiceService(context, options, mapper, pdf);
             Invoice invoiceToUpdate = context.Invoice.Include("InvoiceLine")
                 .SingleOrDefault(t => t.InvoiceNumber == "ABNZ000420");
 

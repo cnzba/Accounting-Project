@@ -68,7 +68,7 @@ export class InvoiceService {
             })
         };
 
-        return this.http.put<IInvoice>(this.invoiceUrl + '/' + invoiceNumber + '/status', JSON.stringify("Sent"), httpOptions)
+        return this.http.put<IInvoice>(this.invoiceUrl + '/' + invoiceNumber + '/status', JSON.stringify("Issued"), httpOptions)
             .pipe(tap(data => console.log('Put (receive): ' + JSON.stringify(data))));
     }
 

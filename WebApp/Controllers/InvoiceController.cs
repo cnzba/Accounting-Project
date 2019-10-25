@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using WebApp.Models;
 using WebApp.Services;
+using System.Threading.Tasks;
 
 namespace WebApp.Controllers
 {
@@ -122,7 +123,7 @@ namespace WebApp.Controllers
 
         // PUT: api/invoice/5/status
         [HttpPut("{InvoiceNumber}/status")]
-        public IActionResult IssueInvoice([FromRoute] string invoiceNumber,
+        public async Task<IActionResult> IssueInvoice([FromRoute] string invoiceNumber,
             [FromBody] InvoiceStatus newStatus)
         {
             var invoice = service.GetInvoice(invoiceNumber);
@@ -132,15 +133,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            if (newStatus != InvoiceStatus.Sent || invoice.Status != InvoiceStatus.Draft)
+            if (newStatus != InvoiceStatus.Issued || invoice.Status != InvoiceStatus.Draft)
             {
-                return BadRequest("The only permitted status change is from 'Draft' to 'Sent'");
+                return BadRequest("The only permitted status change is from 'Draft' to 'Issued'");
             }
 
-            service.IssueInvoice(invoiceNumber);
+            await service.IssueInvoice(invoiceNumber);
 
-            return BadRequest("Finalise and send not implemented (see story 286.)");
-            // return Ok(mapper.Map<InvoiceDto>(service.GetInvoice(invoiceNumber)));
+            return Ok(mapper.Map<InvoiceDto>(service.GetInvoice(invoiceNumber)));
         }
 
         // DELETE api/invoice/5

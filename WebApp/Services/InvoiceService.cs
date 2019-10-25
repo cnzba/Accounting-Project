@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApp.Entities;
 using WebApp.Models;
 using WebApp.Options;
@@ -16,12 +17,14 @@ namespace WebApp.Services
         private readonly CBAContext context;
         private readonly CBAOptions options;
         private readonly IMapper mapper;
+        private readonly IPdfService pdfService;
 
-        public InvoiceService(CBAContext context, IOptions<CBAOptions> optionsAccessor, IMapper mapper)
+        public InvoiceService(CBAContext context, IOptions<CBAOptions> optionsAccessor, IMapper mapper, IPdfService pdfService)
         {
             this.context = context;
             options = optionsAccessor.Value;
             this.mapper = mapper;
+            this.pdfService = pdfService;
         }
 
         private void Validate(Invoice invoice)
@@ -145,15 +148,8 @@ namespace WebApp.Services
         {
             var invoice = context.Invoice.SingleOrDefault(n => n.InvoiceNumber == invoiceNumber);
 
-            if (invoice == null)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-
-            if (invoice.Status != InvoiceStatus.Draft)
-            {
-                throw new InvalidOperationException();
-            }
+            if (invoice == null) throw new ArgumentOutOfRangeException();
+            if (invoice.Status != InvoiceStatus.Draft) throw new InvalidOperationException();
 
             context.Remove<Invoice>(invoice);
             return context.SaveChanges() > 0;
@@ -224,9 +220,28 @@ namespace WebApp.Services
             return result;
         }
 
-        public void IssueInvoice(string invoiceNumber)
+        /// <summary>
+        /// Finalise an invoice and email it to the recipient
+        /// </summary>
+        public async Task IssueInvoice(string invoiceNumber)
         {
-            // not implemented
+            var invoiceToUpdate = GetInvoice(invoiceNumber);
+            if (invoiceToUpdate == null) throw new ArgumentOutOfRangeException();
+            if (invoiceToUpdate.Status != InvoiceStatus.Draft) throw new InvalidOperationException();
+
+            invoiceToUpdate.Status = InvoiceStatus.Issued;
+
+            try
+            {
+                await pdfService.EmailPdf(invoiceToUpdate);
+            }
+            catch
+            {
+                invoiceToUpdate.Status = InvoiceStatus.Draft;
+                throw;
+            }
+
+            context.SaveChanges();
         }
     }
 }

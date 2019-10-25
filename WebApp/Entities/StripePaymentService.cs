@@ -34,7 +34,7 @@ namespace WebApp.Entities
             {
                 response.Status = "failed";
                 response.Message = "Invalid invoice number";
-            } else if (invoice.Status == InvoiceStatus.Sent)
+            } else if (invoice.Status == InvoiceStatus.Issued)
             {
                 // TODO Change test key
                 string apiKey = _env.IsDevelopment() ? "sk_test_bt2EhY73T2WBSgIi5ukAMKjx" : "sk_test_bt2EhY73T2WBSgIi5ukAMKjx";

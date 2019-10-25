@@ -57,7 +57,7 @@ export class InvoicePaymentComponent implements OnInit, OnDestroy {
         if (!this.invoice) {
             this.message = null;
             this.alertService.error("Invalid invoice number");
-        } else if (this.invoice.status === "Sent") {
+        } else if (this.invoice.status === "Issued") {
             this.message = "Valid invoice";
             this.amount = this.invoice.grandTotal * 100;
         } else if (this.invoice.status === "Paid" || this.invoice.status === "Cancelled") {
