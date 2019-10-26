@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using CryptoService;
 using Microsoft.EntityFrameworkCore;
 
-namespace WebApp.Models
+namespace WebApp.Entities
 {
     public class CBASeeder
     {
@@ -80,7 +80,7 @@ namespace WebApp.Models
 
                 var invoice1 = new Invoice()
                 {
-                    InvoiceNumber = "20171005-001",
+                    InvoiceNumber = "ABNZ000420",
                     DateCreated = new DateTime(2017, 10, 5),
                     DateDue = new DateTime(2017, 10, 17),
                     ClientName = "Electrocal Commission",
@@ -107,14 +107,14 @@ namespace WebApp.Models
 
                 var invoice2 = new Invoice()
                 {
-                    InvoiceNumber = "20171113-001",
+                    InvoiceNumber = "ABNZ000421",
                     DateCreated = new DateTime(2017, 11, 13),
                     DateDue = new DateTime(2017, 11, 27),
                     ClientName = "Jason Carpets",
                     ClientContact = "297 Moorhouse Ave\\r\\nSydenham\\r\\nChristchurch 8011",
                     Email = "jc@example.com",
                     PaymentId = _cryptography.GenerateTempPassword(12),
-                    Status = InvoiceStatus.Sent,
+                    Status = InvoiceStatus.Issued,
                     GstRate = .15m,
                     GstNumber = "96-712-561",
                     CharitiesNumber = "CC20097",
@@ -133,7 +133,7 @@ namespace WebApp.Models
 
                 var invoice3 = new Invoice()
                 {
-                    InvoiceNumber = "20170909-001",
+                    InvoiceNumber = "ABNZ000422",
                     DateCreated = new DateTime(2017, 9, 9),
                     DateDue = new DateTime(2017, 9, 30),
                     ClientName = "Transtellar",

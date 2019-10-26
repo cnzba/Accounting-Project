@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnitTestProject.AsyncClass;
 using WebApp.Controllers;
-using WebApp.Models;
+using WebApp.Entities;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace UnitTestProject

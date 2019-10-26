@@ -1,4 +1,4 @@
-﻿using WebApp.Models;
+﻿using WebApp.Entities;
 using Moq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebApp.Options;
@@ -9,7 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using WebApp.Services;
+using AutoMapper;
+using WebApp.Profiles;
 
 namespace UnitTestProject
 {
@@ -19,9 +21,17 @@ namespace UnitTestProject
         private readonly IOptions<CBAOptions> options;
         private readonly DbContextOptions<CBAContext> dboptions;
         private readonly Cryptography cryptography;
+        private readonly IMapper mapper;
+        private readonly IPdfService pdf;
 
         public InvoiceService_DeleteInvoiceShould()
         {
+            var config = new MapperConfiguration(opts =>
+                opts.AddProfile<InvoicesProfile>());
+
+            pdf = new Mock<IPdfService>().Object;
+            mapper = config.CreateMapper();
+
             var ioptions = new Mock<IOptions<CBAOptions>>();
             var cbaoptions = new Mock<CBAOptions>().Object;
 
@@ -42,10 +52,10 @@ namespace UnitTestProject
             var seeder = new CBASeeder(context, cryptography);
             seeder.Seed();
 
-            var service = new InvoiceService(context, options);
+            var service = new InvoiceService(context, options, mapper, pdf);
 
             // act
-            bool result = service.DeleteInvoice("20171005-001");
+            bool result = service.DeleteInvoice("ABNZ000420");
 
             // assert
             Assert.AreEqual(true, result);
@@ -59,14 +69,14 @@ namespace UnitTestProject
             var seeder = new CBASeeder(context, cryptography);
             seeder.Seed();
 
-            var service = new InvoiceService(context, options);
+            var service = new InvoiceService(context, options, mapper, pdf);
 
             // act
             bool result = false;
             try { 
-                service.DeleteInvoice("20171113-001");
+                service.DeleteInvoice("ABNZ000421");
             }
-            catch (ArgumentException) { result = true; }
+            catch (InvalidOperationException) { result = true; }
 
             // assert
             Assert.AreEqual(true, result);

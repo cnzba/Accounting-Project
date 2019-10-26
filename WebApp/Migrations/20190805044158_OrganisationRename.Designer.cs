@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebApp.Models;
+using WebApp.Entities;
 
 namespace WebApp.Migrations
 {
@@ -21,7 +21,7 @@ namespace WebApp.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("WebApp.Models.Invoice", b =>
+            modelBuilder.Entity("WebApp.Entities.Invoice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,7 +65,7 @@ namespace WebApp.Migrations
                     b.ToTable("Invoice");
                 });
 
-            modelBuilder.Entity("WebApp.Models.InvoiceLine", b =>
+            modelBuilder.Entity("WebApp.Entities.InvoiceLine", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -92,7 +92,7 @@ namespace WebApp.Migrations
                     b.ToTable("InvoiceLine");
                 });
 
-            modelBuilder.Entity("WebApp.Models.Organisation", b =>
+            modelBuilder.Entity("WebApp.Entities.Organisation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -132,7 +132,7 @@ namespace WebApp.Migrations
                     b.ToTable("Organisation");
                 });
 
-            modelBuilder.Entity("WebApp.Models.PaymentModel", b =>
+            modelBuilder.Entity("WebApp.Entities.PaymentModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -170,7 +170,7 @@ namespace WebApp.Migrations
                     b.ToTable("Payment");
                 });
 
-            modelBuilder.Entity("WebApp.Models.User", b =>
+            modelBuilder.Entity("WebApp.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -194,9 +194,9 @@ namespace WebApp.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("WebApp.Models.InvoiceLine", b =>
+            modelBuilder.Entity("WebApp.Entities.InvoiceLine", b =>
                 {
-                    b.HasOne("WebApp.Models.Invoice", "Invoice")
+                    b.HasOne("WebApp.Entities.Invoice", "Invoice")
                         .WithMany("InvoiceLine")
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade);

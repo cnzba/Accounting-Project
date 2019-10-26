@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.Models;
+using WebApp.Entities;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using CryptoService;

@@ -2,56 +2,50 @@
 using WebApp;
 using Moq;
 using WebApp.Controllers;
-using WebApp.Models;
+using WebApp.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using WebApp.Profiles;
+using WebApp.Services;
+using WebApp.Models;
 
 namespace UnitTestProject
 {
     [TestClass]
     public class InvoiceController_CreateInvoiceShould
     {
-        private readonly ILoggerFactory logger;
+        private readonly ILogger<InvoiceController> logger;
+        private readonly IMapper mapper;
+        private readonly InvoiceController controller;
+        private readonly Mock<IInvoiceService> service;
         public InvoiceController_CreateInvoiceShould()
         {
-            logger = new Mock<ILoggerFactory>().Object;
-        }
+            logger = new Mock<ILogger<InvoiceController>>().Object;
+            var config = new MapperConfiguration(opts =>
+                opts.AddProfile<InvoicesProfile>());
 
-        [TestMethod]
-        public void CreateInvoice_Returns400BadRequest_WhenModelStateIsInvalid()
-        {
-            //arrange
-            var service = new Mock<IInvoiceService>();
-            var controller = new InvoiceController(service.Object, logger);
+            mapper = config.CreateMapper();
 
-            controller.ModelState.AddModelError("fake", "required");
-            service.Setup(s => s.CreateInvoice(It.IsAny<DraftInvoice>())).Returns(new Invoice());
-
-            //act
-            var result = controller.CreateInvoice(new DraftInvoice());
-
-            //assert
-            Assert.IsTrue(result is BadRequestObjectResult);
+            service = new Mock<IInvoiceService>();
+            controller = new InvoiceController(service.Object, mapper, logger);
         }
 
         [TestMethod]
         public void CreateInvoice_Returns201AndInvoice_WhenInvoiceCreated()
         {
             //arrange
-            var service = new Mock<IInvoiceService>();
-            var controller = new InvoiceController(service.Object, logger);
-
-            service.Setup(s => s.CreateInvoice(It.IsAny<DraftInvoice>())).Returns(new Invoice());
+            service.Setup(s => s.CreateInvoice(It.IsAny<InvoiceForCreationDto>())).Returns(new Invoice());
 
             //act
-            var result = controller.CreateInvoice(new DraftInvoice());
+            var result = controller.CreateInvoice(new InvoiceForCreationDto());
 
             //assert
             var createdAtAction = (result is CreatedAtActionResult);
             Assert.IsTrue(createdAtAction);
 
             var created = result as CreatedAtActionResult;
-            Assert.IsTrue(created.Value is Invoice);
+            Assert.IsTrue(created.Value is InvoiceDto);
             Assert.IsTrue(created.StatusCode == 201);
         }
 
@@ -59,13 +53,10 @@ namespace UnitTestProject
         public void CreateInvoice_Returns400BadRequest_WhenInvoiceNotCreated()
         {
             //arrange
-            var service = new Mock<IInvoiceService>();
-            var controller = new InvoiceController(service.Object, logger);
-
-            service.Setup(s => s.CreateInvoice(It.IsAny<DraftInvoice>())).Returns((Invoice)null);
+            service.Setup(s => s.CreateInvoice(It.IsAny<InvoiceForCreationDto>())).Returns((Invoice)null);
 
             //act
-            var result = controller.CreateInvoice(new DraftInvoice());
+            var result = controller.CreateInvoice(new InvoiceForCreationDto());
 
             //assert
             Assert.IsTrue(result is BadRequestObjectResult);

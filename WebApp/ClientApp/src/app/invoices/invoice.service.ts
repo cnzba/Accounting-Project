@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { IInvoice, IInvoiceLine } from './invoice';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { IInvoice, IInvoiceLine, InvoiceForCreation, InvoiceForUpdate } from './invoice';
 
 @Injectable()
 export class InvoiceService {
@@ -24,20 +24,7 @@ export class InvoiceService {
         return this.http.get<IInvoice>(this.invoiceUrl + '/p/' + paymentId);
     }
 
-    createNewInvoice(): Observable<IInvoice> {
-        var today = new Date();
-        var dueDate = new Date();
-        dueDate.setDate(dueDate.getDate() + 14);
-
-        var fakeInvoiceNumber = today.getFullYear()
-            + ("0" + (today.getMonth() + 1)).slice(-2)
-            + ("0" + today.getDate()).slice(-2)
-            + "-xxx";
-
-        return of({ invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", purchaseOrderNumber:"", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" });
-    }
-
-    createNewInvoiceWithInvoiceNumber(loginId:string): Observable<IInvoice> {
+    createNewInvoice(loginId:string): Observable<IInvoice> {
         var today = new Date();
         var dueDate = new Date();
         dueDate.setDate(dueDate.getDate() + 14);
@@ -72,6 +59,19 @@ export class InvoiceService {
         return response;
     }
 
+    finaliseInvoice(invoiceNumber: string): Observable<IInvoice> {
+        console.log(`Finalising invoice: ${invoiceNumber}`);
+
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+
+        return this.http.put<IInvoice>(this.invoiceUrl + '/' + invoiceNumber + '/status', JSON.stringify("Issued"), httpOptions)
+            .pipe(tap(data => console.log('Put (receive): ' + JSON.stringify(data))));
+    }
+
     computeGST(invoice: IInvoice): number
     {
         let total: number = this.computeTotal(invoice);
@@ -86,12 +86,33 @@ export class InvoiceService {
     }
 
     private createInvoice(invoice: IInvoice): Observable<IInvoice> {
-        console.log('Post (send): ' + JSON.stringify(invoice));
-        return this.http.post<IInvoice>(this.invoiceUrl, invoice)
+        let create = new InvoiceForCreation();
+
+        create.clientContact = invoice.clientContact;
+        create.clientContactPerson = invoice.clientContactPerson;
+        create.clientName = invoice.clientName;
+        create.dateDue = invoice.dateDue;
+        create.email = invoice.email;
+        create.invoiceLine = invoice.invoiceLine;
+        create.loginId = invoice.loginId;
+        create.purchaseOrderNumber = invoice.purchaseOrderNumber;
+
+        console.log('Post (send): ' + JSON.stringify(create));
+        return this.http.post<IInvoice>(this.invoiceUrl, create)
             .pipe(tap(data => console.log('Post (receive): ' + JSON.stringify(data))));
     }
 
     private updateInvoice(invoice: IInvoice): Observable<IInvoice> {
+        let update = new InvoiceForUpdate();
+
+        update.clientContact = invoice.clientContact;
+        update.clientContactPerson = invoice.clientContactPerson;
+        update.clientName = invoice.clientName;
+        update.dateDue = invoice.dateDue;
+        update.email = invoice.email;
+        update.invoiceLine = invoice.invoiceLine;
+        update.purchaseOrderNumber = invoice.purchaseOrderNumber;
+
         console.log('Put (send): ' + JSON.stringify(invoice));
         return this.http.put<IInvoice>(this.invoiceUrl + '/' + invoice.invoiceNumber, invoice)
             .pipe(tap(data => console.log('Put (receive): ' + JSON.stringify(data))));

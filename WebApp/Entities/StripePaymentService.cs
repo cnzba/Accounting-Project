@@ -4,8 +4,9 @@ using Newtonsoft.Json;
 using Stripe;
 using System;
 using System.Collections.Generic;
+using WebApp.Services;
 
-namespace WebApp.Models
+namespace WebApp.Entities
 {
     public class StripePaymentService : IStripePaymentService
     {
@@ -33,7 +34,7 @@ namespace WebApp.Models
             {
                 response.Status = "failed";
                 response.Message = "Invalid invoice number";
-            } else if (invoice.Status == InvoiceStatus.Sent)
+            } else if (invoice.Status == InvoiceStatus.Issued)
             {
                 // TODO Change test key
                 string apiKey = _env.IsDevelopment() ? "sk_test_bt2EhY73T2WBSgIi5ukAMKjx" : "sk_test_bt2EhY73T2WBSgIi5ukAMKjx";

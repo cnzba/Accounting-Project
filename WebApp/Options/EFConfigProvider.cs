@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebApp.Models;
+using WebApp.Entities;
 
 namespace WebApp.Options
 {

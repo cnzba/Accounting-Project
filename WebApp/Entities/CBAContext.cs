@@ -2,7 +2,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace WebApp.Models
+namespace WebApp.Entities
 {
     public partial class CBAContext : DbContext
     {

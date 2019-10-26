@@ -1,0 +1,259 @@
+{
+	"info": {
+		"_postman_id": "c781fc24-9223-455b-bcef-c404a2528d21",
+		"name": "CBANZ Invoice Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44390/api/Account?Username=guest%40guest.com&Password=guest",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44390",
+					"path": [
+						"api",
+						"Account"
+					],
+					"query": [
+						{
+							"key": "Username",
+							"value": "guest%40guest.com"
+						},
+						{
+							"key": "Password",
+							"value": "guest"
+						}
+					]
+				},
+				"description": "Login in order to access the Api"
+			},
+			"response": []
+		},
+		{
+			"name": "GET Invoice (list)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44390/api/invoice",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44390",
+					"path": [
+						"api",
+						"invoice"
+					]
+				},
+				"description": "Request the list of invoices"
+			},
+			"response": []
+		},
+		{
+			"name": "GET Invoice (single)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44390/api/invoice/ABNZ000420",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44390",
+					"path": [
+						"api",
+						"invoice",
+						"ABNZ000420"
+					]
+				},
+				"description": "Get invoice ABNZ000420"
+			},
+			"response": []
+		},
+		{
+			"name": "GET Invoice (unexisting)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44390/api/invoice/ABNZ100420",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44390",
+					"path": [
+						"api",
+						"invoice",
+						"ABNZ100420"
+					]
+				},
+				"description": "Get invoice ABNZ000420"
+			},
+			"response": []
+		},
+		{
+			"name": "POST Invoice (create)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"clientContact\":\"\",\"clientContactPerson\":\"\",\"clientName\":\"John Smith\",\"dateDue\":\"2019-11-03T09:48:57.232Z\",\"email\":\"jsmith@gmail.com\",\"invoiceLine\":[{\"description\":\"Charity Dinner\",\"amount\":100,\"itemOrder\":0,\"quantity\":2,\"unitPrice\":50},{\"description\":\"Mentoring\",\"amount\":20,\"itemOrder\":1,\"quantity\":1,\"unitPrice\":20}],\"loginId\":\"guest@guest.com\",\"purchaseOrderNumber\":\"PO2342\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44390/api/invoice",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44390",
+					"path": [
+						"api",
+						"invoice"
+					]
+				},
+				"description": "Create an invoice"
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Invoice (update)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"invoiceNumber\":\"ABNZ000420\",\"clientName\":\"John Smith Junior\",\"clientContactPerson\":\"\",\"purchaseOrderNumber\":\"PO2342\",\"clientContact\":\"\",\"email\":\"jsmith@gmail.com\",\"dateDue\":\"2019-11-03T00:00:00\",\"dateCreated\":\"2019-10-20T22:52:38.0890168\",\"paymentId\":null,\"status\":\"Draft\",\"gstRate\":0.15,\"subTotal\":104,\"grandTotal\":120,\"invoiceLine\":[{\"itemOrder\":0,\"description\":\"Charity Dinner\",\"amount\":100,\"quantity\":2,\"unitPrice\":50},{\"itemOrder\":1,\"description\":\"Mentoring\",\"amount\":120,\"quantity\":6,\"unitPrice\":20}],\"loginId\":\"guest@guest.com\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44390/api/invoice/ABNZ000420",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44390",
+					"path": [
+						"api",
+						"invoice",
+						"ABNZ000420"
+					]
+				},
+				"description": "Update an existing invoice"
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Invoice (finalise and send) ",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\"Sent\"",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44390/api/invoice/ABNZ000420/status",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44390",
+					"path": [
+						"api",
+						"invoice",
+						"ABNZ000420",
+						"status"
+					]
+				},
+				"description": "Issue and invoice by email."
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Invoice (finalise and send / unexisting) ",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\"Sent\"",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44390/api/invoice/ABNZ000420/status",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44390",
+					"path": [
+						"api",
+						"invoice",
+						"ABNZ000420",
+						"status"
+					]
+				},
+				"description": "Issue and invoice by email with incorrect invoice number."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

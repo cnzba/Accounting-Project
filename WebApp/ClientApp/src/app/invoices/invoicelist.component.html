@@ -42,7 +42,7 @@
         <tbody>
             <tr *ngFor="let inv of sortedData | invoiceFilter : searchString; index as i ">
                 <ng-container *ngIf="i>=offset && i< offset +limit">
-                    <td *ngIf="inv.status==='Sent'||inv.status==='Paid'">
+                    <td *ngIf="inv.status==='Issued'||inv.status==='Paid'">
                         <a [routerLink]="['/invoices', inv.invoiceNumber]">{{inv.invoiceNumber}}</a>
 
                     </td>

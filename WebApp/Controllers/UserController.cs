@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApp.Models;
+using WebApp.Entities;
 using CryptoService;
 using System;
 using Microsoft.AspNetCore.Authorization;

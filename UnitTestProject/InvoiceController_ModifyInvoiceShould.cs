@@ -2,36 +2,22 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using WebApp;
-using WebApp.Models;
+using WebApp.Entities;
 using WebApp.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using WebApp.Services;
+using WebApp.Models;
 
 namespace UnitTestProject
 {
     [TestClass]
     public class InvoiceController_ModifyInvoiceShould
     {
-        private readonly ILoggerFactory logger;
+        private readonly ILogger<InvoiceController> logger;
         public InvoiceController_ModifyInvoiceShould()
         {
-            logger = new Mock<ILoggerFactory>().Object;
-        }
-
-        [TestMethod]
-        public void ModifyInvoice_Returns400BadRequest_WhenModelStateIsInvalid()
-        {
-            //arrange
-            var service = new Mock<IInvoiceService>();
-            var controller = new InvoiceController(service.Object, logger);
-
-            controller.ModelState.AddModelError("fake", "required");
-            service.Setup(s => s.ModifyInvoice(It.IsAny<DraftInvoice>())).Returns(true);
-
-            //act
-            var result = controller.ModifyInvoice("", new DraftInvoice() { InvoiceNumber = "" });
-
-            //assert
-            Assert.IsTrue(result is BadRequestObjectResult);
+            logger = new Mock<ILogger<InvoiceController>>().Object;
         }
 
         [TestMethod]
@@ -39,45 +25,32 @@ namespace UnitTestProject
         {
             //arrange
             var service = new Mock<IInvoiceService>();
-            var controller = new InvoiceController(service.Object, logger);
+            var mapper = new Mock<IMapper>();
+            var controller = new InvoiceController(service.Object, mapper.Object, logger);
 
-            service.Setup(s => s.ModifyInvoice(It.IsAny<DraftInvoice>())).Returns(true);
+            service.Setup(s => s.ModifyInvoice(It.IsAny<string>(), It.IsAny<InvoiceForUpdateDto>()));
+            service.Setup(s => s.InvoiceExists(It.IsAny<string>())).Returns(true);
 
             //act
-            var result = controller.ModifyInvoice("", new DraftInvoice() { InvoiceNumber = "" });
+            var result = controller.ModifyInvoice("", new InvoiceForUpdateDto());
 
             //assert
             Assert.IsTrue(result is OkObjectResult);
         }
 
         [TestMethod]
-        public void ModifyInvoice_Returns400BadRequest_WhenInvoiceNotModified()
+        public void ModifyInvoice_Returns404NotFound_WhenIncorrectRoute()
         {
             //arrange
             var service = new Mock<IInvoiceService>();
-            var controller = new InvoiceController(service.Object, logger);
-
-            service.Setup(s => s.ModifyInvoice(It.IsAny<DraftInvoice>())).Returns(false);
-
-            //act
-            var result = controller.ModifyInvoice("", new DraftInvoice() { InvoiceNumber = "" });
-
-            //assert
-            Assert.IsTrue(result is BadRequestObjectResult);
-        }
-
-        [TestMethod]
-        public void ModifyInvoice_Returns400BadRequest_WhenIncorrectRoute()
-        {
-            //arrange
-            var service = new Mock<IInvoiceService>();
-            var controller = new InvoiceController(service.Object, logger);
+            var mapper = new Mock<IMapper>();
+            var controller = new InvoiceController(service.Object, mapper.Object, logger);
 
             //act
-            var result = controller.ModifyInvoice("", new DraftInvoice() { InvoiceNumber = "x" });
+            var result = controller.ModifyInvoice("", new InvoiceForUpdateDto());
 
             //assert
-            Assert.IsTrue(result is BadRequestObjectResult);
+            Assert.IsTrue(result is NotFoundResult);
         }
     }
 }

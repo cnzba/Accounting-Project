@@ -21,7 +21,7 @@ export class InvoiceResolverService {
 
         let loginId = localStorage.getItem('LoginId');
 
-        if (id == null) data = this.invoiceService.createNewInvoiceWithInvoiceNumber(loginId);
+        if (id == null) data = this.invoiceService.createNewInvoice(loginId);
         else data = this.invoiceService.getInvoice(id);
 
         return data.pipe(take(1), catchError((err: ApiError) => {

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 
-namespace WebApp.Models
+namespace WebApp.Entities
 {
     public partial class CBAOptionsContext : DbContext
     {
