@@ -61,8 +61,10 @@ export class InvoiceService {
 
     finaliseInvoice(invoiceNumber: string): Observable<IInvoice> {
         console.log(`Finalising invoice: ${invoiceNumber}`);
+        let status = { status: "Issued" };
 
-        return this.http.put<IInvoice>(this.invoiceUrl + '/' + invoiceNumber + '/status', { "status": "Issued" })
+        console.log('Put (send): ' + JSON.stringify(status));
+        return this.http.put<IInvoice>(this.invoiceUrl + '/' + invoiceNumber + '/status', status)
             .pipe(tap(data => console.log('Put (receive): ' + JSON.stringify(data))));
     }
 
