@@ -124,8 +124,9 @@ namespace WebApp.Controllers
         // PUT: api/invoice/5/status
         [HttpPut("{InvoiceNumber}/status")]
         public async Task<IActionResult> IssueInvoice([FromRoute] string invoiceNumber,
-            [FromBody] InvoiceStatus newStatus)
+            [FromBody] InvoiceStatusDto status)
         {
+            InvoiceStatus newStatus = status.status;
             var invoice = service.GetInvoice(invoiceNumber);
 
             if (invoice == null)
