@@ -126,7 +126,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> IssueInvoice([FromRoute] string invoiceNumber,
             [FromBody] InvoiceStatusDto status)
         {
-            InvoiceStatus newStatus = status.status;
+            InvoiceStatus newStatus = status.Status;
             var invoice = service.GetInvoice(invoiceNumber);
 
             if (invoice == null)
