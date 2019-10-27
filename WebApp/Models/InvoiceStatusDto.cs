@@ -11,6 +11,6 @@ namespace WebApp.Models
     public class InvoiceStatusDto
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public InvoiceStatus status;
+        public InvoiceStatus Status { get; set; }
     }
 }
