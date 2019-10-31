@@ -13,6 +13,7 @@ using WebApp.Services;
 using AutoMapper;
 using WebApp.Profiles;
 using WebApp.Models;
+using Microsoft.Extensions.Logging;
 
 namespace UnitTestProject
 {
@@ -22,7 +23,8 @@ namespace UnitTestProject
         private readonly IOptions<CBAOptions> options;
         private readonly DbContextOptions<CBAContext> dboptions;
         private readonly IMapper mapper;
-        private readonly IPdfService pdf;
+        private readonly IPdfService pdf = new Mock<IPdfService>().Object;
+        private readonly ILogger<InvoiceService> logger = new Mock<ILogger<InvoiceService>>().Object;
 
         public InvoiceService_CreateInvoiceShould()
         {
@@ -32,7 +34,6 @@ namespace UnitTestProject
             var config = new MapperConfiguration(opts =>
                 opts.AddProfile<InvoicesProfile>());
 
-            pdf = new Mock<IPdfService>().Object;
             mapper = config.CreateMapper();
 
             cbaoptions.SetupAllProperties();
@@ -52,7 +53,7 @@ namespace UnitTestProject
         {
             // arrange
             var context = new CBAContext(dboptions);
-            var service = new InvoiceService(context, options, mapper, pdf);
+            var service = new InvoiceService(context, options, mapper, pdf, logger);
 
             var invoice = new InvoiceForCreationDto()
             {
@@ -81,9 +82,11 @@ namespace UnitTestProject
 
             // assert
             Assert.IsTrue(result != null);
-            var cleancontext = new CBAContext(dboptions);
-            Assert.IsTrue(context.Invoice.Any());
-            Assert.IsTrue(context.Invoice.FirstOrDefault().InvoiceLine.Count() == 2);
+            using (var cleancontext = new CBAContext(dboptions))
+            {
+                Assert.IsTrue(context.Invoice.Any());
+                Assert.IsTrue(context.Invoice.FirstOrDefault().InvoiceLine.Count() == 2);
+            }
         }
 
         [TestMethod]
@@ -91,7 +94,7 @@ namespace UnitTestProject
         {
             // arrange
             var context = new CBAContext(dboptions);
-            var service = new InvoiceService(context, options, mapper, pdf);
+            var service = new InvoiceService(context, options, mapper, pdf, logger);
             var invoice = new InvoiceForCreationDto()
             {
                 ClientName = "",

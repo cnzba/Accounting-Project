@@ -15,17 +15,14 @@ namespace WebApp.Services
         private readonly IEmailService emailService;
         private readonly EmailConfig emailConfig;
         private readonly PdfServiceOptions serviceConfig;
-        private readonly IHostingEnvironment env;
 
-        public PdfService(IEmailService emailService, 
-                            IOptionsSnapshot<EmailConfig> emailConfig, 
-                            IOptionsSnapshot<PdfServiceOptions> serviceConfig, 
-                            IHostingEnvironment env)
+        public PdfService(IEmailService emailService,
+                            IOptionsSnapshot<EmailConfig> emailConfig,
+                            IOptionsSnapshot<PdfServiceOptions> serviceConfig)
         {
             this.emailService = emailService;
             this.emailConfig = emailConfig.Value;
             this.serviceConfig = serviceConfig.Value;
-            this.env = env;
         }
 
         private string GetDestination(string InvoiceNumber)
@@ -73,31 +70,19 @@ namespace WebApp.Services
             var pathToTemplate = Path.Combine("EmailTemplates", serviceConfig.DefaultTemplate);
             string htmlBody = File.ReadAllText(pathToTemplate);
 
-            var email = invoice.Email;
-
-            // potentially override the email listed on the invoice (useful for testing)
-            if (serviceConfig.OverrideIssueEmail) email = serviceConfig.OverrideEmail;
-
-            bool success;
-            // only send if we have an email (OverrideEmail can be blank)
-            if (!String.IsNullOrEmpty(email))
+            Email emailContent = new Email()
             {
-                Email emailContent = new Email()
-                {
-                    To = email,
-                    Subject = $"Invoice #{invoice.InvoiceNumber}",
-                    Body = String.Format(htmlBody, invoice.ClientName, invoice.InvoiceNumber)
-                };
+                To = invoice.Email,
+                Subject = $"Invoice #{invoice.InvoiceNumber}",
+                Body = String.Format(htmlBody, invoice.ClientName, invoice.InvoiceNumber)
+            };
 
-                emailContent.Attachment.Add(attachment);
+            emailContent.Attachment.Add(attachment);
 
-                success = await emailService.SendEmail(emailConfig, emailContent);
-            }
-            else success = true;
+            bool success = await emailService.SendEmail(emailConfig, emailContent);
+            if (!success) throw new PdfServiceException("The invoice could not be emailed.") { InvoiceNumber = invoice.InvoiceNumber };
 
             DeletePdf(invoice.InvoiceNumber);
-
-            if(!success) throw new PdfServiceException("The invoice could not be emailed.") { InvoiceNumber = invoice.InvoiceNumber };
         }
     }
 }

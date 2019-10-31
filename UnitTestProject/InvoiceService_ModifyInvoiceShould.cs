@@ -13,6 +13,7 @@ using WebApp.Services;
 using AutoMapper;
 using WebApp.Profiles;
 using WebApp.Models;
+using Microsoft.Extensions.Logging;
 
 namespace UnitTestProject
 {
@@ -24,6 +25,7 @@ namespace UnitTestProject
         private readonly Cryptography cryptography;
         private readonly IMapper mapper;
         private readonly IPdfService pdf;
+        private readonly ILogger<InvoiceService> logger = new Mock<ILogger<InvoiceService>>().Object;
 
         public InvoiceService_ModifyInvoiceShould()
         {
@@ -53,7 +55,7 @@ namespace UnitTestProject
             var seeder = new CBASeeder(context, cryptography);
             seeder.Seed();
 
-            var service = new InvoiceService(context, options, mapper, pdf);
+            var service = new InvoiceService(context, options, mapper, pdf, logger);
             var originalInvoice = context.Invoice.Include("InvoiceLine")
                 .SingleOrDefault(t => t.InvoiceNumber == "ABNZ000420");
 
@@ -102,7 +104,7 @@ namespace UnitTestProject
             var seeder = new CBASeeder(context, cryptography);
             seeder.Seed();
 
-            var service = new InvoiceService(context, options, mapper, pdf);
+            var service = new InvoiceService(context, options, mapper, pdf, logger);
             Invoice invoiceToUpdate = context.Invoice.Include("InvoiceLine")
                 .SingleOrDefault(t => t.InvoiceNumber == "ABNZ000420");
 

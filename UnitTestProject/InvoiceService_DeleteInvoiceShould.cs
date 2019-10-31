@@ -12,6 +12,7 @@ using System.Linq;
 using WebApp.Services;
 using AutoMapper;
 using WebApp.Profiles;
+using Microsoft.Extensions.Logging;
 
 namespace UnitTestProject
 {
@@ -23,6 +24,7 @@ namespace UnitTestProject
         private readonly Cryptography cryptography;
         private readonly IMapper mapper;
         private readonly IPdfService pdf;
+        private readonly ILogger<InvoiceService> logger = new Mock<ILogger<InvoiceService>>().Object;
 
         public InvoiceService_DeleteInvoiceShould()
         {
@@ -52,7 +54,7 @@ namespace UnitTestProject
             var seeder = new CBASeeder(context, cryptography);
             seeder.Seed();
 
-            var service = new InvoiceService(context, options, mapper, pdf);
+            var service = new InvoiceService(context, options, mapper, pdf, logger);
 
             // act
             bool result = service.DeleteInvoice("ABNZ000420");
@@ -69,14 +71,14 @@ namespace UnitTestProject
             var seeder = new CBASeeder(context, cryptography);
             seeder.Seed();
 
-            var service = new InvoiceService(context, options, mapper, pdf);
+            var service = new InvoiceService(context, options, mapper, pdf, logger);
 
             // act
             bool result = false;
             try { 
                 service.DeleteInvoice("ABNZ000421");
             }
-            catch (InvalidOperationException) { result = true; }
+            catch (ArgumentException) { result = true; }
 
             // assert
             Assert.AreEqual(true, result);

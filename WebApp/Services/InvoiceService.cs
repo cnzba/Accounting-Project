@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -18,13 +19,20 @@ namespace WebApp.Services
         private readonly CBAOptions options;
         private readonly IMapper mapper;
         private readonly IPdfService pdfService;
+        private readonly ILogger<InvoiceService> logger;
 
-        public InvoiceService(CBAContext context, IOptions<CBAOptions> optionsAccessor, IMapper mapper, IPdfService pdfService)
+        public InvoiceService(
+            CBAContext context, 
+            IOptions<CBAOptions> optionsAccessor, 
+            IMapper mapper, 
+            IPdfService pdfService,
+            ILogger<InvoiceService> logger)
         {
             this.context = context;
             options = optionsAccessor.Value;
             this.mapper = mapper;
             this.pdfService = pdfService;
+            this.logger = logger;
         }
 
         private void Validate(Invoice invoice)
@@ -115,10 +123,14 @@ namespace WebApp.Services
                 int sn = int.Parse(invoiceSequentialNumber);
                 return user.Organisation.Code + (sn + 1).ToString("D6");
             }
-            catch (Exception ex)
+            catch (Exception ex) when (
+                ex is ArgumentNullException || 
+                ex is FormatException || 
+                ex is OverflowException)
             {
-                System.Console.WriteLine(ex.ToString());
+                logger.LogWarning(ex, "Unable to generate the next invoice number in sequence after {0}", invoiceSequentialNumber);
             }
+
             return null;
         }
 
@@ -149,7 +161,7 @@ namespace WebApp.Services
             var invoice = context.Invoice.SingleOrDefault(n => n.InvoiceNumber == invoiceNumber);
 
             if (invoice == null) throw new ArgumentOutOfRangeException();
-            if (invoice.Status != InvoiceStatus.Draft) throw new InvalidOperationException();
+            if (invoice.Status != InvoiceStatus.Draft) throw new ArgumentException();
 
             context.Remove<Invoice>(invoice);
             return context.SaveChanges() > 0;
