@@ -8,7 +8,7 @@ namespace WebApp.Controllers
     [Route("api/[controller]")]
     public class PaymentController : Controller
     {
-        private IStripePaymentService _stripePaymentService;
+        private readonly IStripePaymentService _stripePaymentService;
 
         public PaymentController(IStripePaymentService stripePaymentService)
         {
@@ -16,7 +16,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostChargeCard([FromBody] PaymentRequest request)
+        public IActionResult PostChargeCard([FromBody] PaymentRequest request)
         {
             if (!ModelState.IsValid)
             {

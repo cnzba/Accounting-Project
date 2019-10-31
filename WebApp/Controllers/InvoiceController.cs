@@ -75,16 +75,14 @@ namespace WebApp.Controllers
             {
                 Invoice created = service.CreateInvoice(invoice);
                 var createdDto = mapper.Map<InvoiceDto>(created);
-                if (created != null)
-                    return CreatedAtAction("GetInvoice", new { InvoiceNumber = created.InvoiceNumber }, createdDto);
+                if (created != null) return CreatedAtAction(
+                    "GetInvoice", 
+                    new { created.InvoiceNumber }, 
+                    createdDto);
             }
             catch (ValidationException ex)
             {
                 return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Message);
             }
 
             return BadRequest("Failed to create new invoice");
@@ -113,11 +111,6 @@ namespace WebApp.Controllers
             catch (ValidationException ex)
             {
                 return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, ex.Message);
-                return BadRequest("Unable to modify invoice.");
             }
         }
 
@@ -158,11 +151,6 @@ namespace WebApp.Controllers
             catch (ArgumentException)
             {
                 return BadRequest("Invoice had status other than draft.");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Message);
-                return BadRequest("Unable to delete invoice.");
             }
         }
 
