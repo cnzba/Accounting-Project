@@ -9,6 +9,7 @@ using AutoMapper;
 using WebApp.Profiles;
 using WebApp.Services;
 using WebApp.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace UnitTestProject
 {
@@ -50,10 +51,25 @@ namespace UnitTestProject
         }
 
         [TestMethod]
-        public void CreateInvoice_Returns400BadRequest_WhenInvoiceNotCreated()
+        public void CreateInvoice_Returns500ServerError_WhenInvoiceNotCreated()
         {
             //arrange
             service.Setup(s => s.CreateInvoice(It.IsAny<InvoiceForCreationDto>())).Returns((Invoice)null);
+
+            //act
+            var result = controller.CreateInvoice(new InvoiceForCreationDto());
+
+            //assert
+            Assert.IsTrue(result is ObjectResult);
+            var code = (result as ObjectResult).StatusCode;
+            Assert.AreEqual(500, code);
+        }
+
+        [TestMethod]
+        public void CreateInvoice_Returns400BadRequest_WhenValidationError()
+        {
+            //arrange
+            service.Setup(s => s.CreateInvoice(It.IsAny<InvoiceForCreationDto>())).Throws(new ValidationException());
 
             //act
             var result = controller.CreateInvoice(new InvoiceForCreationDto());

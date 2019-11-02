@@ -11,6 +11,7 @@ namespace UnitTestProject
     {
 
         [TestMethod]
+        [Ignore]
         public async System.Threading.Tasks.Task SendEmail_TestAsync()
         {
             IEmailService service = new EmailService();
