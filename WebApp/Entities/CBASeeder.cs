@@ -42,7 +42,7 @@ namespace WebApp.Entities
 
                 var user1 = new User()
                 {
-                    Email = "guest@guest.com",
+                    Email = "5792544c.cbanewzealand.org.nz@apac.teams.ms",
                     Name = "guest",
                     Password = _cryptography.HashMD5("guest"),
                     Active = true,
@@ -51,7 +51,7 @@ namespace WebApp.Entities
 
                 var user2 = new User()
                 {
-                    Email = "helersonlage@gmail.com",
+                    Email = "5792544c.cbanewzealand.org.nz@apac.teams.ms",
                     Name = "Helerson Lage",
                     Password = "68eacb97d86f0c4621fa2b0e17cabd8c",
                     Active = true,
@@ -60,7 +60,7 @@ namespace WebApp.Entities
 
                 var user3 = new User()
                 {
-                    Email = "j.george@cbanewzealand.org.nz",
+                    Email = "5792544c.cbanewzealand.org.nz@apac.teams.ms",
                     Name = "John George",
                     Password = _cryptography.HashMD5("john"),
                     Active = true,
