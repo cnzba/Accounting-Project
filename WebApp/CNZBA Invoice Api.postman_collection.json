@@ -11,12 +11,13 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "https://localhost:44390/api/Account?Username=guest%40guest.com&Password=guest",
+					"raw": "https://cbaaccountingwebapptest.azurewebsites.net/api/Account?Username=guest%40guest.com&Password=guest",
 					"protocol": "https",
 					"host": [
-						"localhost"
+						"cbaaccountingwebapptest",
+						"azurewebsites",
+						"net"
 					],
-					"port": "44390",
 					"path": [
 						"api",
 						"Account"
@@ -42,12 +43,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost:44390/api/invoice",
+					"raw": "https://cbaaccountingwebapptest.azurewebsites.net/api/invoice",
 					"protocol": "https",
 					"host": [
-						"localhost"
+						"cbaaccountingwebapptest",
+						"azurewebsites",
+						"net"
 					],
-					"port": "44390",
 					"path": [
 						"api",
 						"invoice"
@@ -63,12 +65,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost:44390/api/invoice/ABNZ000420",
+					"raw": "https://cbaaccountingwebapptest.azurewebsites.net/api/invoice/ABNZ000420",
 					"protocol": "https",
 					"host": [
-						"localhost"
+						"cbaaccountingwebapptest",
+						"azurewebsites",
+						"net"
 					],
-					"port": "44390",
 					"path": [
 						"api",
 						"invoice",
@@ -85,12 +88,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost:44390/api/invoice/ABNZ100420",
+					"raw": "https://cbaaccountingwebapptest.azurewebsites.net/api/invoice/ABNZ100420",
 					"protocol": "https",
 					"host": [
-						"localhost"
+						"cbaaccountingwebapptest",
+						"azurewebsites",
+						"net"
 					],
-					"port": "44390",
 					"path": [
 						"api",
 						"invoice",
@@ -123,18 +127,57 @@
 					}
 				},
 				"url": {
-					"raw": "https://localhost:44390/api/invoice",
+					"raw": "https://cbaaccountingwebapptest.azurewebsites.net/api/invoice",
 					"protocol": "https",
 					"host": [
-						"localhost"
+						"cbaaccountingwebapptest",
+						"azurewebsites",
+						"net"
 					],
-					"port": "44390",
 					"path": [
 						"api",
 						"invoice"
 					]
 				},
 				"description": "Create an invoice"
+			},
+			"response": []
+		},
+		{
+			"name": "POST Invoice (create / datedue )",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"clientContact\":\"\",\"clientContactPerson\":\"\",\"clientName\":\"John Smith\",\"dateDue\":\"2018-11-03T09:48:57.232Z\",\"email\":\"jsmith@gmail.com\",\"invoiceLine\":[{\"description\":\"Charity Dinner\",\"amount\":100,\"itemOrder\":0,\"quantity\":2,\"unitPrice\":50},{\"description\":\"Mentoring\",\"amount\":20,\"itemOrder\":1,\"quantity\":1,\"unitPrice\":20}],\"loginId\":\"guest@guest.com\",\"purchaseOrderNumber\":\"PO2342\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cbaaccountingwebapptest.azurewebsites.net/api/invoice",
+					"protocol": "https",
+					"host": [
+						"cbaaccountingwebapptest",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"invoice"
+					]
+				},
+				"description": "Create an invoice with an invalid date due (triggers custom validation error)"
 			},
 			"response": []
 		},
@@ -160,12 +203,13 @@
 					}
 				},
 				"url": {
-					"raw": "https://localhost:44390/api/invoice/ABNZ000420",
+					"raw": "https://cbaaccountingwebapptest.azurewebsites.net/api/invoice/ABNZ000420",
 					"protocol": "https",
 					"host": [
-						"localhost"
+						"cbaaccountingwebapptest",
+						"azurewebsites",
+						"net"
 					],
-					"port": "44390",
 					"path": [
 						"api",
 						"invoice",
@@ -184,13 +228,13 @@
 					{
 						"key": "Content-Type",
 						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
+						"value": "application/json",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "\"Sent\"",
+					"raw": "\"Issued\"",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -198,12 +242,13 @@
 					}
 				},
 				"url": {
-					"raw": "https://localhost:44390/api/invoice/ABNZ000420/status",
+					"raw": "https://cbaaccountingwebapptest.azurewebsites.net/api/invoice/ABNZ000420/status",
 					"protocol": "https",
 					"host": [
-						"localhost"
+						"cbaaccountingwebapptest",
+						"azurewebsites",
+						"net"
 					],
-					"port": "44390",
 					"path": [
 						"api",
 						"invoice",
@@ -229,7 +274,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "\"Sent\"",
+					"raw": "{ \n\tstatus: \"Issued\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -237,20 +282,45 @@
 					}
 				},
 				"url": {
-					"raw": "https://localhost:44390/api/invoice/ABNZ000420/status",
+					"raw": "https://cbaaccountingwebapptest.azurewebsites.net//api/invoice/ABNZ110420/status",
 					"protocol": "https",
 					"host": [
-						"localhost"
+						"cbaaccountingwebapptest",
+						"azurewebsites",
+						"net"
 					],
-					"port": "44390",
 					"path": [
+						"",
 						"api",
 						"invoice",
-						"ABNZ000420",
+						"ABNZ110420",
 						"status"
 					]
 				},
 				"description": "Issue and invoice by email with incorrect invoice number."
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Invoice",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://cbaaccountingwebapptest.azurewebsites.net/api/invoice/ABNZ000420",
+					"protocol": "https",
+					"host": [
+						"cbaaccountingwebapptest",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"invoice",
+						"ABNZ000420"
+					]
+				},
+				"description": "Delete an existing invoice"
 			},
 			"response": []
 		}
