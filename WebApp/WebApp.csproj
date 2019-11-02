@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="CBANZ Invoice Api.postman_collection.json">
+    <Content Update="CNZBA Invoice Api.postman_collection.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

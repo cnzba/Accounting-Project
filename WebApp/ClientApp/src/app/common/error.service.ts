@@ -80,17 +80,17 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                     // The web api received the request but the request wasn't correctly made.
                     // the error will either be one of:
                     // a string
-                    // a list of key/value pairs where the values are strings
-                    // a list of key/value pairs where the values are an array of strings
-                    // in both cases keys are strings and the key "" indicates a global error
+                    // an RFC standard error object (https://tools.ietf.org/html/rfc7807)
 
                     if ((typeof err.error) === "string") {
                         resultError.globalError = err.error;
                     }
                     else {
-                        for (var key in err.error) {
-                            if (Array.isArray(err.error[key])) resultError.formErrors.set(key, err.error[key][0]);
-                            else resultError.formErrors.set(key, err.error[key]);
+                        resultError.globalError = "One or more errors occurred."
+                        let errorList = err.error.errors;
+                        for (var key in errorList) {
+                            if (Array.isArray(errorList[key])) resultError.formErrors.set(key, errorList[key][0]);
+                            else resultError.formErrors.set(key, errorList[key]);
                         }
                     }
                 }

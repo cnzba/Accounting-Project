@@ -74,18 +74,21 @@ namespace WebApp.Controllers
             try
             {
                 Invoice created = service.CreateInvoice(invoice);
-                var createdDto = mapper.Map<InvoiceDto>(created);
-                if (created != null) return CreatedAtAction(
-                    "GetInvoice", 
-                    new { created.InvoiceNumber }, 
-                    createdDto);
+                if (created != null)
+                {
+                    var createdDto = mapper.Map<InvoiceDto>(created);
+                    return CreatedAtAction(
+                       "GetInvoice",
+                       new { created.InvoiceNumber },
+                       createdDto);
+                }
             }
             catch (ValidationException ex)
             {
                 return BadRequest(ex.Message);
             }
 
-            return BadRequest("Failed to create new invoice");
+            return StatusCode(500, "Failed to create new invoice.");
         }
 
         // PUT: api/invoice/5
@@ -130,6 +133,11 @@ namespace WebApp.Controllers
             if (newStatus != InvoiceStatus.Issued || invoice.Status != InvoiceStatus.Draft)
             {
                 return BadRequest("The only permitted status change is from 'Draft' to 'Issued'");
+            }
+
+            if (invoice.GrandTotal == 0m)
+            {
+                return BadRequest("The invoice must have a grand total greater than 0.");
             }
 
             await service.IssueInvoice(invoiceNumber);

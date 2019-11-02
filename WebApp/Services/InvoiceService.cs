@@ -22,9 +22,9 @@ namespace WebApp.Services
         private readonly ILogger<InvoiceService> logger;
 
         public InvoiceService(
-            CBAContext context, 
-            IOptions<CBAOptions> optionsAccessor, 
-            IMapper mapper, 
+            CBAContext context,
+            IOptions<CBAOptions> optionsAccessor,
+            IMapper mapper,
             IPdfService pdfService,
             ILogger<InvoiceService> logger)
         {
@@ -124,8 +124,8 @@ namespace WebApp.Services
                 return user.Organisation.Code + (sn + 1).ToString("D6");
             }
             catch (Exception ex) when (
-                ex is ArgumentNullException || 
-                ex is FormatException || 
+                ex is ArgumentNullException ||
+                ex is FormatException ||
                 ex is OverflowException)
             {
                 logger.LogWarning(ex, "Unable to generate the next invoice number in sequence after {0}", invoiceSequentialNumber);
@@ -240,6 +240,7 @@ namespace WebApp.Services
             var invoiceToUpdate = GetInvoice(invoiceNumber);
             if (invoiceToUpdate == null) throw new ArgumentOutOfRangeException();
             if (invoiceToUpdate.Status != InvoiceStatus.Draft) throw new InvalidOperationException();
+            if (invoiceToUpdate.GrandTotal == 0m) throw new ArgumentException("The invoice must have a grand total of greater than zero.");
 
             invoiceToUpdate.Status = InvoiceStatus.Issued;
 
