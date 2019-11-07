@@ -107,7 +107,7 @@ export class InvoiceEditComponent implements OnInit {
     }
 
     private setValueToTwoDecimal(unitPrice: number, i: number) {
-        this.modifyInvoice.invoiceLine[i].unitPrice = (Number(unitPrice).toFixed(2)).toString();        
+        this.modifyInvoice.invoiceLine[i].unitPrice = Number(unitPrice).toFixed(2);        
         this.modifyInvoice.invoiceLine[i].amount = this.modifyInvoice.invoiceLine[i].unitPrice * this.modifyInvoice.invoiceLine[i].quantity;
     }
 
