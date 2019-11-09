@@ -62,6 +62,13 @@ export class InvoicelistComponent implements OnInit {
                this.invo = this.invo.filter(inv=> inv.invoiceNumber !== invoiceNumber);
                this.offset=0;
                this.alertService.success(invoiceNumber +" has successfully been deleted!");
+                   //this.invo = this.route.snapshot.data['invoices'];
+               let delIndex = 0;
+               for (let i = 0; i < this.sortedData.length; i++) {
+                   if (this.sortedData[i].invoiceNumber == invoiceNumber)
+                       delIndex = i;
+               };
+               this.sortedData.splice(delIndex, 1);
             },
               err=> {
                 this.alertService.error("Error: the delete has failed")
