@@ -75,7 +75,7 @@ export interface IInvoiceLine {
     description: string;
     amount: number;
     quantity: number;
-    unitPrice: number;
+    unitPrice: any;
 }
 
 export class InvoiceLine implements IInvoiceLine {
