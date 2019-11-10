@@ -12,6 +12,8 @@ import { SpinnerService } from "../common/spinner.service";
 
 import { Router } from '@angular/router';
 
+import * as $ from 'jquery';
+
 //import { AuthenticationService } from "../login/authentication.service";
 
 // TODO
@@ -195,7 +197,17 @@ export class InvoiceEditComponent implements OnInit {
             this.modifyInvoice = data.invoice;
             this.resetInvoice = this.deepCopyInvoice(this.modifyInvoice);
         });
+        
+
     }
+
+    //ngAfterViewInit() {
+    //    //alert("this is test");
+    //    //document.getElementsByClassName("unitPrice")[0].innerHTML.toFixed(2);
+    //    let x = $(".unitPrice")[0].value;
+    //    $(".unitPrice")[0].value = Number(x).toFixed(2);
+    //}
+    
 
 
 }
