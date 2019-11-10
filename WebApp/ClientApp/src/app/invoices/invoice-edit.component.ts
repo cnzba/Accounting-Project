@@ -108,7 +108,6 @@ export class InvoiceEditComponent implements OnInit {
     }
 
     private setValueToTwoDecimal(unitPrice: number, i: number) {        
-        this.modifyInvoice.invoiceLine[i].unitPrice = Number(unitPrice).toFixed(2);
         this.modifyInvoice.invoiceLine[i].amount = this.modifyInvoice.invoiceLine[i].unitPrice * this.modifyInvoice.invoiceLine[i].quantity;
     }
 
@@ -200,15 +199,5 @@ export class InvoiceEditComponent implements OnInit {
         
 
     }
-
-    //ngAfterViewInit() {
-    //    //alert("this is test");
-    //    //document.getElementsByClassName("unitPrice")[0].innerHTML.toFixed(2);
-    //    let x = $(".unitPrice")[0].value;
-    //    $(".unitPrice")[0].value = Number(x).toFixed(2);
-    //}
-    
-
-
 }
 
