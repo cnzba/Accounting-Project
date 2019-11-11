@@ -53,12 +53,12 @@ export class InvoiceEditComponent implements OnInit {
 
     get showAddress(): boolean {
         if (this.requireAddress) return true;
-        else if (this.modifyInvoice.clientContact.length > 0) return true;
+        else if (this.modifyInvoice.clientContact != null && this.modifyInvoice.clientContact.length > 0) return true;
         else return this.userAskedForAddress;
     }
 
     get showContact(): boolean {
-        if (this.modifyInvoice.clientContactPerson.length > 0) return true;
+        if (this.modifyInvoice.clientContactPerson != null && this.modifyInvoice.clientContactPerson.length > 0) return true;
         else return this.userAskedForContact;
     }
 
