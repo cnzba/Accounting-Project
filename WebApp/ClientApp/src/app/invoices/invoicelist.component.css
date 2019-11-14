@@ -4,14 +4,14 @@
 .row{
     margin-left:0px;
 }
-#delete_key {
+#delete_key, #pdf_ico {
     float: right;
     margin: -3px 0px 0px 0px;
     border: 1px solid #ddd;
     background-color: #eaeaeb
 
 }
-#delete_key:hover {
+#delete_key:hover, #pdf_ico:hover {
     background-color: #939398;
 }
 

@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IInvoice, IInvoiceLine, InvoiceForCreation, InvoiceForUpdate } from './invoice';
+import { type } from 'os';
 
 @Injectable()
 export class InvoiceService {
@@ -24,7 +25,7 @@ export class InvoiceService {
         return this.http.get<IInvoice>(this.invoiceUrl + '/p/' + paymentId);
     }
 
-    createNewInvoice(loginId:string): Observable<IInvoice> {
+    createNewInvoice(loginId: string): Observable<IInvoice> {
         var today = new Date();
         var dueDate = new Date();
         dueDate.setDate(dueDate.getDate() + 14);
@@ -35,11 +36,11 @@ export class InvoiceService {
             + "-xxx";
 
         return this.getNewInvoiceNumber(loginId).pipe(
-            map( (invoiceNo) => {
-                if (invoiceNo) {                    
-                    return { invoiceNumber: invoiceNo, clientName: "", clientContactPerson: "", purchaseOrderNumber:"", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" };
-                } else {                    
-                    return { invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", purchaseOrderNumber:"", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" };
+            map((invoiceNo) => {
+                if (invoiceNo) {
+                    return { invoiceNumber: invoiceNo, clientName: "", clientContactPerson: "", purchaseOrderNumber: "", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" };
+                } else {
+                    return { invoiceNumber: fakeInvoiceNumber, clientName: "", clientContactPerson: "", purchaseOrderNumber: "", clientContact: "", dateDue: dueDate, status: 'New', dateCreated: today, gstNumber: "xx-xxx-xxx", charitiesNumber: "xxxxxxx", "gstRate": 0.15, email: "", paymentId: "", "invoiceLine": [], subTotal: 0, grandTotal: 0, loginId: "" };
                 }
             }),
         );
@@ -68,15 +69,13 @@ export class InvoiceService {
             .pipe(tap(data => console.log('Put (receive): ' + JSON.stringify(data))));
     }
 
-    computeGST(invoice: IInvoice): number
-    {
+    computeGST(invoice: IInvoice): number {
         let total: number = this.computeTotal(invoice);
         //return total - total / (1 + invoice.gstRate);
         return total * invoice.gstRate;
     }
 
-    computeTotal(invoice: IInvoice) : number
-    {
+    computeTotal(invoice: IInvoice): number {
         return invoice.invoiceLine.reduce<number>(
             (acc: number, elem: IInvoiceLine): number => acc + +elem.amount, 0);
     }
@@ -127,5 +126,14 @@ export class InvoiceService {
 
     getNewInvoiceNumber(loginId: string): Observable<string> {
         return this.http.get<string>(this.invoiceUrl + '/invoicenumber?login=' + loginId);
+    }
+
+    getPdfInvoice(invoiceNumber: string): Observable<any> {
+        return this.http.get(this.invoiceUrl + "/getPdfInvoice/" + invoiceNumber,
+            { responseType: "blob" })
+            .pipe(tap(data => {
+                var blob = new Blob([data], { type: 'application/pdf' })
+                return blob;
+            }));
     }
 }

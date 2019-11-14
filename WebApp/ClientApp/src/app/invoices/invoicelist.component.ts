@@ -9,6 +9,7 @@ import { PaginationComponent } from '../pagination/pagination.component';
 
 import { Sort } from '@angular/material';
 import { InvoiceFilterPipe } from '../pipes/invoice-filter.pipe';
+import { saveAs } from 'file-saver';
 
 
 @Component({
@@ -90,6 +91,18 @@ export class InvoicelistComponent implements OnInit {
                 default: return 0;
             }
         });
+    }
+
+    getPdfInvoice(invoiceNumber: string) {
+        this.invoiceService.getPdfInvoice(invoiceNumber)
+            .subscribe(
+                success => {
+                    saveAs(success, invoiceNumber+'.pdf');
+                },
+                err => {
+                    alert("Server error while downloading file.");
+                }
+            );
     }
    
     ngOnInit(): void {

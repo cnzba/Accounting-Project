@@ -9,6 +9,7 @@ using AutoMapper;
 using WebApp.Models;
 using WebApp.Services;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace WebApp.Controllers
 {
@@ -188,6 +189,14 @@ namespace WebApp.Controllers
             }
 
             return Ok(invoiceNumber);
+        }
+
+        [Route("getPdfInvoice/{InvoiceNumber}")]
+        [HttpGet]
+        public async Task<FileStream> getPdfInvoice([FromRoute] string invoiceNumber)
+        {
+            var file = service.getPdfInvoice(invoiceNumber);
+            return new FileStream(file, FileMode.Open, FileAccess.Read);    
         }
     }
 }
