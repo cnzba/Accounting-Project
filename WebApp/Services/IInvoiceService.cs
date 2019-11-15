@@ -20,6 +20,6 @@ namespace WebApp.Services
 
         string GenerateOrganisationInvoiceNumber(string loginId);
         Task IssueInvoice(string invoiceNumber);
-        string getPdfInvoice(string invoiceNumber);
+        string GetPdfInvoice(string invoiceNumber);
     }
 }

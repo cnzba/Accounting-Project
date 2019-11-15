@@ -85,7 +85,7 @@ namespace WebApp.Services
             DeletePdf(invoice.InvoiceNumber);
         }
 
-        public string getPdfInvoice(string invoiceNumber)
+        public string GetPdfInvoice(string invoiceNumber)
         {
             return this.CreatePdf(invoiceNumber);
         }

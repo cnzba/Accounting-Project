@@ -257,9 +257,9 @@ namespace WebApp.Services
             context.SaveChanges();
         }
 
-        public string getPdfInvoice(string invoiceNumber)
+        public string GetPdfInvoice(string invoiceNumber)
         {
-            return pdfService.getPdfInvoice(invoiceNumber);
+            return pdfService.GetPdfInvoice(invoiceNumber);
         }
     }
 }

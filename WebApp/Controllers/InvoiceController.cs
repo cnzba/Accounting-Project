@@ -193,10 +193,10 @@ namespace WebApp.Controllers
 
         [Route("getPdfInvoice/{InvoiceNumber}")]
         [HttpGet]
-        public async Task<FileStream> getPdfInvoice([FromRoute] string invoiceNumber)
+        public async Task<FileStream> GetPdfInvoice([FromRoute] string invoiceNumber)
         {
-            var file = service.getPdfInvoice(invoiceNumber);
-            return new FileStream(file, FileMode.Open, FileAccess.Read);    
+            var fileName = service.GetPdfInvoice(invoiceNumber);
+            return new FileStream(fileName, FileMode.Open, FileAccess.Read);    
         }
     }
 }

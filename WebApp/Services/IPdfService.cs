@@ -9,6 +9,6 @@ namespace WebApp.Services
     public interface IPdfService
     {
         Task EmailPdf(Invoice invoiceToSend);
-        string getPdfInvoice(string invoiceNumber);
+        string GetPdfInvoice(string invoiceNumber);
     }
 }
