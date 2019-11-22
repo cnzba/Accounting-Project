@@ -32,6 +32,7 @@ import { environment } from '../environments/environment';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
+import { ModalModule } from 'ngx-bootstrap';
 
 import { InvoiceFilterPipe } from './pipes/invoice-filter.pipe';
 
@@ -65,6 +66,7 @@ import { DatePipe } from '@angular/common';
         HttpClientModule,
         FormsModule,
         HttpModule,
+        ModalModule.forRoot(),
         
         RouterModule.forRoot([
             { path: 'login', component: LoginComponent },

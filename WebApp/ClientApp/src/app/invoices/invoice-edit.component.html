@@ -2,7 +2,7 @@
     <form #invoice="ngForm">
         <div class="row">
             <div class="col-3">
-                <a class="btn btn-secondary" role="button" [routerLink]="['/invoices']">Back To List</a>
+                <a class="btn btn-secondary" role="button" (click)="onCancel(template)">Cancel</a>
             </div>
             <div class="col">
                 <div class="float-right">                    
@@ -11,6 +11,14 @@
                 </div>
             </div>
         </div>
+        <!-- Confirm window of cancel -->
+        <ng-template #template>
+            <div class="modal-body text-center">
+                <p>All unsaved changes will be lost.  Are you sure you want to cancel?</p>
+                <button type="button" class="btn btn-default" (click)="confirm()">Yes</button>
+                <button type="button" class="btn btn-primary" (click)="decline()">No</button>
+            </div>
+        </ng-template>
 
         <div class="row">
             <div class="col-8">

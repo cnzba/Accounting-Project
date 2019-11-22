@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, SimpleChange } from '@angular/core';
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Location } from '@angular/common';
+import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal'
 
 import { Observable } from 'rxjs';
 
@@ -32,7 +33,8 @@ export class InvoiceEditComponent implements OnInit {
         private route: ActivatedRoute,
         private location: Location,
         private alertService: AlertService,
-        private spinnerService: SpinnerService) { }
+        private spinnerService: SpinnerService,
+        private modalService: BsModalService) { }
 
     invoiceService: InvoiceService = this.invoiceServiceP;
     
@@ -183,12 +185,34 @@ export class InvoiceEditComponent implements OnInit {
         }
     }
 
+    /**Methods for modal */
+    modalRef: BsModalRef;
+    orgInvoice: string; //Keep the content of the invoice when initiate the component                        
+
+    onCancel(template: TemplateRef<any>) {
+        if (JSON.stringify(this.modifyInvoice) === this.orgInvoice) {
+            console.log("no change");
+            this.router.navigate(["invoices"]);
+        } else {
+            this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+        }
+    };
+    
+    confirm(): void {
+        this.router.navigate(["invoices"]);
+        this.modalRef.hide();
+    }
+
+    decline(): void {
+        this.modalRef.hide();
+    }    
+
     ngOnInit() {
-        this.route.data.subscribe((data: { invoice: IInvoice }) => {
+        this.route.data.subscribe((data: { invoice: IInvoice }) => {            
+            this.orgInvoice = JSON.stringify(data.invoice);
             this.modifyInvoice = data.invoice;
         });
     }
-
-
+    
 }
 
