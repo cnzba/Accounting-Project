@@ -35,8 +35,7 @@ export class InvoiceEditComponent implements OnInit {
         private spinnerService: SpinnerService) { }
 
     invoiceService: InvoiceService = this.invoiceServiceP;
-    // the copy of the invoice to reset to when the reset button is pushed
-    private resetInvoice: IInvoice;
+    
 
     // the model backing the form
     modifyInvoice: IInvoice = new Invoice();
@@ -131,7 +130,6 @@ export class InvoiceEditComponent implements OnInit {
 
     // replace the invoice used by the form with the provided invoice
     private updateInvoiceModel(invoice: IInvoice) {
-        this.resetInvoice = this.deepCopyInvoice(invoice);
         this.modifyInvoice = invoice;
     }
 
@@ -185,15 +183,9 @@ export class InvoiceEditComponent implements OnInit {
         }
     }
 
-    onReset() {
-        this.alertService.clear();
-        this.modifyInvoice = this.deepCopyInvoice(this.resetInvoice);
-    }
-
     ngOnInit() {
         this.route.data.subscribe((data: { invoice: IInvoice }) => {
             this.modifyInvoice = data.invoice;
-            this.resetInvoice = this.deepCopyInvoice(this.modifyInvoice);
         });
     }
 
