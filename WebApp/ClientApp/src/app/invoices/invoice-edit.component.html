@@ -5,11 +5,9 @@
                 <a class="btn btn-secondary" role="button" [routerLink]="['/invoices']">Back To List</a>
             </div>
             <div class="col">
-                <div class="float-right">
-                    <button type="button" class="btn btn-warning" (click)="onReset()">Reset</button>
+                <div class="float-right">                    
                     <button type="submit" class="btn btn-secondary" (click)="onSaveDraft()">Save Draft</button>
                     <button *ngIf="showFinalise" type="button" class="btn btn-primary" data-toggle="modal" data-target="#finaliseModal">Finalise & Send Invoice</button>
-
                 </div>
             </div>
         </div>
