@@ -8,7 +8,7 @@ export class TwoDigitDecimaNumberDirective {
     private regex: RegExp = new RegExp(/^\d+\.?\d{0,4}$/g);
     // Allow key codes for special events. Reflect :
     // Backspace, tab, end, home
-    private specialKeys: Array<string> = ['Backspace', 'Tab', 'End', 'Home'];
+    private specialKeys: Array<string> = ['Backspace', 'Tab', 'End', 'Home', 'ArrowRight', 'ArrowLeft','Delete'];
 
     constructor(private el: ElementRef) {
     }
