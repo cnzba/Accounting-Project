@@ -33,6 +33,7 @@
     "file-saver": "^2.0.2",
     "font-awesome": "^4.7.0",
     "jquery": "^3.4.1",
+    "ng-zorro-antd": "^7.5.1",
     "ngx-bootstrap": "^5.2.0",
     "open-iconic": "^1.1.1",
     "popper.js": "^1.14.3",
