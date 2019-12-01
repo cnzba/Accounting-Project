@@ -29,9 +29,10 @@ import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
 import { SpinnerService } from "./common/spinner.service";
 import { environment } from '../environments/environment';
 
+import { NgZorroAntdModule } from "ng-zorro-antd";
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSortModule } from '@angular/material/sort';
+//import { MatSortModule } from '@angular/material/sort';
 import { ModalModule } from 'ngx-bootstrap';
 
 import { InvoiceFilterPipe } from './pipes/invoice-filter.pipe';
@@ -61,7 +62,8 @@ import { DatePipe } from '@angular/common';
     imports: [
         BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
         BrowserAnimationsModule,
-        MatSortModule,
+        NgZorroAntdModule,
+        //MatSortModule,
         AngularFontAwesomeModule,
         HttpClientModule,
         FormsModule,

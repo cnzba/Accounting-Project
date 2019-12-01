@@ -21,9 +21,15 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
-              "src/assets"
+                "src/assets",
+                {
+                    "glob": "**/*",
+                    "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                    "output": "/assets/"
+                }
             ],
             "styles": [
+                "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
                 "node_modules/bootstrap/dist/css/bootstrap.min.css",
                 "node_modules/open-iconic/font/css/open-iconic-bootstrap.min.css",
                 "src/styles.css"

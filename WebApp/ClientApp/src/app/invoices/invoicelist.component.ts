@@ -35,6 +35,8 @@ export class InvoicelistComponent implements OnInit {
 
     errorMessage: string;
 
+    isCollapsed = false;
+
     public searchString: string;
 
     // inject InvoiceService
