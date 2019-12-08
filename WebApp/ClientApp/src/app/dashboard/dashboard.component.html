@@ -1,0 +1,67 @@
+<div class="p-grid">
+    <div class="p-col-1 p-md-2 p-lg-2">
+        <p-panelMenu  [model]="items" ></p-panelMenu>
+    </div>
+    <div class="p-col-11 p-md-10 p-lg-10">
+        <p-breadcrumb [model]="breadcrumbItems"></p-breadcrumb>
+        <div class="p-grid">
+            <div class="p-col-12">
+                <h1>Account Receivables</h1>
+                <div class="p-grid">
+                    <div class="p-col-3">
+                        <p-card>
+                            <h4>Invoices issued</h4>
+                            <p>the total sum of invoices which have been raised so far</p>
+                        </p-card>
+                       
+                    </div>
+                    <div class="p-col-3">
+                        <p-card>
+                            <h4>Payment Received</h4>
+                            <p>total sum of invoices for which the payment has been made by the client, where the status of the invoice is “Paid”</p>
+                        </p-card>
+                    </div>
+                    <div class="p-col-3">
+                        <p-card>
+                            <h4>Invoices Overdue</h4>
+                            <p>the total sum of invoices which have been raised so far, where the status of the invoice is “Unpaid and Overdue”. </p>
+                        </p-card>
+                    </div>
+                    <div class="p-col-3">
+                        <p-card>Cash On Hand</p-card>
+                    </div>
+
+                </div>
+                <div class="p-grid">
+                    <div class="p-col-6">
+                        <p-card>Invoices By Status</p-card>
+                    </div>
+                    <div class="p-col-6">
+                        <p-card>Account Payable Age</p-card>
+                    </div>
+                </div>
+            </div>
+            <div class="p-col-12">
+                <h1>Account Payables</h1>
+                <div class="p-grid">
+                    <div class="p-col-3">
+                        <p-card> Total Unpaid Invoices</p-card>
+
+                    </div>
+                    <div class="p-col-3">
+                        <p-card>Invoices Due Date Today</p-card>
+                    </div>
+                    <div class="p-col-3">
+                        <p-card>Invoices Next to Due Date</p-card>
+                    </div>
+                    <div class="p-col-3">
+                        <p-card>Overdue Invoices</p-card>
+                    </div>
+                </div>
+            </div>
+            <router-outlet name="invoices"></router-outlet>
+        </div>
+        
+    </div>
+    
+</div>

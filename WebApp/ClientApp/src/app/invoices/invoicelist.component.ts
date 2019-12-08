@@ -21,7 +21,11 @@ import { error } from 'protractor';
 
 })
 export class InvoicelistComponent implements OnInit {
-    
+
+    //For test
+    data: any;
+   
+    //End
 
     // offset is the index of an invoice we want to view and is used to compute the page to show; offset = 3 for example means display the page containing the 4th invoice in the list
 
@@ -41,6 +45,27 @@ export class InvoicelistComponent implements OnInit {
     constructor(private route: ActivatedRoute, private invoiceService: InvoiceService, private alertService: AlertService, private http: Http) {
         this.invo = this.route.snapshot.data['invoices'];
         this.sortedData = this.invo.slice();
+
+        //For test
+        this.data = {
+            datasets: [{
+                backgroundColor: [
+                    '#EE6936',
+                    '#E26C80',
+                    '#944BA6'
+                ],
+                data: [10, 20, 30]
+            }],
+            
+
+            // These labels appear in the legend and in the tooltips when hovering different arcs
+            labels: [
+                'Red',
+                'Yellow',
+                'Blue'
+            ]
+        };
+            
     }
     onPageChange(offset) {
         this.offset = offset;

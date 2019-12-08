@@ -34,12 +34,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
 import { ModalModule } from 'ngx-bootstrap';
 
+//Public components from PrimeNG
+import { ChartModule } from 'primeng/chart'; //Chart components
+import { PanelMenuModule } from 'primeng/panelmenu'; //Panel Menu
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { CardModule } from 'primeng/card';
+
+
 import { InvoiceFilterPipe } from './pipes/invoice-filter.pipe';
 
 import { TwoDigitDecimaNumberDirective } from './invoices/two-digit-decima-number.directive';
 import { InputIntegerOnlyDirective } from './invoices/input-integer-only.directive';
 
 import { DatePipe } from '@angular/common';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
     declarations: [
@@ -54,6 +62,7 @@ import { DatePipe } from '@angular/common';
         InvoicePaymentComponent,
         PaginationComponent,
         PageNotFoundComponent,
+        DashboardComponent,
         InvoiceFilterPipe,
         TwoDigitDecimaNumberDirective,
         InputIntegerOnlyDirective
@@ -67,13 +76,37 @@ import { DatePipe } from '@angular/common';
         FormsModule,
         HttpModule,
         ModalModule.forRoot(),
-        
+
+
+
+        //Modules from PrimeNG
+        ChartModule,
+        BreadcrumbModule,
+        PanelMenuModule,
+        CardModule,
+
+
         RouterModule.forRoot([
+            
             { path: 'login', component: LoginComponent },
             {
-                path: 'invoices', component: InvoicelistComponent, canActivate: [AuthGuard],
-                resolve: { invoices: InvoiceListResolver }
+                path: 'main', component: DashboardComponent, canActivate: [AuthGuard],
+                children: [
+                    {
+                        path: 'invoices',
+                        component: InvoicelistComponent,
+                        outlet: 'invoices',
+                        canActivate: [AuthGuard],
+                        resolve: { invoices: InvoiceListResolver }
+                    }],
+                resolve: {invoices:InvoiceListResolver}
             },
+            //{
+            //    path: 'invoices', component: InvoicelistComponent,
+            //    canActivate: [AuthGuard],
+            //    //outlet: 'main-content',
+            //    resolve: { invoices: InvoiceListResolver }
+            //},
             { path: "invoices/:id", component: InvoicedetailComponent, canActivate: [AuthGuard] },
             {
                 path: "invoices/edit/:id", component: InvoiceEditComponent, canActivate: [AuthGuard],
@@ -87,7 +120,8 @@ import { DatePipe } from '@angular/common';
             { path: "change-password", component: ChangePasswordComponent, canActivate: [AuthGuard] },
             { path: "pay/:id", component: InvoicePaymentComponent },
             // otherwise redirect to the invoice list
-            { path: "", redirectTo: '/invoices', pathMatch: 'full' },
+            //{ path: "", redirectTo: '/invoices', pathMatch: 'full' },
+            { path: "", redirectTo: '/main', pathMatch: 'full' },
             { path: '**', component: PageNotFoundComponent }
         ], { enableTracing: false })
     ],
