@@ -90,7 +90,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
             
             { path: 'login', component: LoginComponent },
             {
-                path: 'main', component: DashboardComponent, canActivate: [AuthGuard],
+                path: 'main', component: DashboardComponent, canActivate: [AuthGuard],                
                 children: [
                     {
                         path: 'invoices',
@@ -100,6 +100,10 @@ import { DashboardComponent } from './dashboard/dashboard.component';
                         resolve: { invoices: InvoiceListResolver }
                     }],
                 resolve: {invoices:InvoiceListResolver}
+            },
+            {
+                path: 'receivables',
+                loadChildren: './receivables/receivables.module#ReceivablesModule'
             },
             //{
             //    path: 'invoices', component: InvoicelistComponent,

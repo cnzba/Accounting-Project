@@ -14,7 +14,7 @@ export class InvoicePaymentService {
     }
 
     private handleError(err: HttpErrorResponse) {
-        let errorMessage = '';
+        let errorMessage = ' ';
         if (err.error instanceof Error) {
             errorMessage = `An error occurred. Please try again.`;
             //errorMessage = `${err.error.message}`;

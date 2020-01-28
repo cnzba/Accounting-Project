@@ -13,8 +13,10 @@ export class DashboardComponent implements OnInit {
     items: MenuItem[];
     breadcrumbItems: MenuItem[];
     onMenuInvoices() {
-        this._router.navigate(['/main', { outlets: {invoices:['invoices']}}]);
+        
+        this._router.navigate(['/receivables']);
     }
+   
     ngOnInit() {
         this.breadcrumbItems = [
             { label: 'Categories' },
@@ -42,7 +44,7 @@ export class DashboardComponent implements OnInit {
                 items: [
                     { label: 'Clients', icon: 'pi pi-fw pi-minus' },
                     {
-                        label: 'Invoices'
+                        label: '**Invoices'
                         , icon: 'pi pi-fw pi-minus'
                         , command: () => this.onMenuInvoices()
                     }
