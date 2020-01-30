@@ -40,3 +40,8 @@
         transform: rotate(359deg);
     }
 }
+
+button.menu{
+    margin-right: 1rem;
+    line-height: 0.5;
+}
