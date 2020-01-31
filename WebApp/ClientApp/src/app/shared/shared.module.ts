@@ -5,8 +5,10 @@
  */
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatToolbarModule, MatIconModule, MatButtonModule, MatCardModule, MatInputModule, MatListModule, MatGridListModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule } from '@angular/material';
+import { MatToolbarModule, MatIconModule, MatButtonModule, MatCardModule, MatInputModule, MatListModule, MatGridListModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatTableModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {CdkTableModule} from '@angular/cdk/table';
+
 
 @NgModule({
     
@@ -21,7 +23,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         MatGridListModule,
         MatDialogModule,
         MatAutocompleteModule,
-        MatSidenavModule
+        MatSidenavModule,
+        MatTableModule,
          ],
     exports: [
         MatToolbarModule,
@@ -34,7 +37,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         MatGridListModule,
         MatDialogModule,
         MatAutocompleteModule,
-        MatSidenavModule
+        MatSidenavModule,
+        MatTableModule,
+
     ],
     declarations: [],
     

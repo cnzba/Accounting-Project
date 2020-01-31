@@ -33,7 +33,8 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<InvoiceDto>> GetInvoices()
         {
-            var invoices = service.GetAllInvoices();
+            var invoices = service.GetAllInvoices(); 
+            
             var dtoList = mapper.Map<IEnumerable<InvoiceDto>>(invoices);
             return Ok(dtoList);
         }

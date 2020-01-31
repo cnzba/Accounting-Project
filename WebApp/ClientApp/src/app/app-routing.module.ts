@@ -14,8 +14,6 @@ import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginComponent },
-    { path: 'core', redirectTo:'core', pathMatch:'full'},
-    // { path: 'core', component:DashboardComponent},
 
     {
         path: 'invoices', component: InvoicelistComponent, canActivate: [AuthGuard],
@@ -33,8 +31,9 @@ const routes: Routes = [
     { path: "forgot-password", component: ForgotPasswordComponent },
     { path: "change-password", component: ChangePasswordComponent, canActivate: [AuthGuard] },
     { path: "pay/:id", component: InvoicePaymentComponent },
+    //{ path: 'core', redirectTo:'core', pathMatch:'full'},
     // otherwise redirect to the invoice list
-    { path: "", redirectTo: '/invoices', pathMatch: 'full' },
+    { path: '', redirectTo:'core', pathMatch:'full' },
     //{ path: '**', component: PageNotFoundComponent }
 ];
 
