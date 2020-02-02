@@ -46,16 +46,21 @@ namespace WebApp.Services
         }
 
         public IEnumerable<Invoice> GetInvoicesByStatus(short invStatus){
+            if ((InvoiceStatus)invStatus == InvoiceStatus.Overdue){
+                return context.Invoice.Include("InvoiceLine")
+                    .Where(inv => inv.DateDue <= DateTime.Today 
+                                && inv.Status != InvoiceStatus.Paid);
+            }
             return context.Invoice.Include("InvoiceLine")
                 .Where(inv => (short)inv.Status==invStatus);
         }
 
-        public decimal GetTotalByStatus(short invStatus){
+        public IEnumerable<decimal> GetTotalByStatus(short invStatus){
             var invs = context.Invoice.Include("InvoiceLine")
                     .Where(inv => (short)inv.Status == invStatus);
             var grandTotals = invs.Select(inv => inv.GrandTotal);
-            var sumTotal = grandTotals.Sum();
-            return sumTotal;
+            
+            return grandTotals;
         }
 
         public Invoice GetInvoice(string invoiceNumber)

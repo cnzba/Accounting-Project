@@ -19,11 +19,11 @@ export class DashboardComponent implements OnInit {
 
 
   displayedColumns: string[] = ['title', 'count', 'value'];
-  issuedValue$ : Observable<number>;
+  //issuedValue$ : Observable<number>;
   receiveDataSource =[
-    {title:"Invoice Issued", count:11, value:this.issuedValue$,status:"issued"},
-    {title:"Payment Received", count:12, value:this.issuedValue$ ,status:"paid"},
-    {title:"Invoice Overdue", count:13, value:this.issuedValue$, status:"overdue"},
+    {title:"Invoice Issued", count:11, value:0,status:"issued"},
+    {title:"Payment Received", count:12, value:0 ,status:"paid"},
+    {title:"Invoice Overdue", count:13, value:0, status:"overdue"},
   
   ]
 
@@ -36,8 +36,12 @@ export class DashboardComponent implements OnInit {
   constructor(private route:Router, private http:HttpClient) { }
 
   ngOnInit() {
-    this.issuedValue$ = this.http.get<number>("/api/invoice/totalbystatus/2");
-    this.issuedValue$.subscribe(x => console.log(x));
+    this.http.get<number>("/api/invoice/totalbystatus/2")
+      .subscribe(x => this.receiveDataSource[0].value = x);
+    this.http.get<number>("/api/invoice/totalbystatus/3")
+      .subscribe(x => this.receiveDataSource[1].value = x);
+    this.http.get<number>("/api/invoice/totalbystatus/5")
+      .subscribe(x => this.receiveDataSource[2].value = x);
   }
 
   //InvoiceStatus 

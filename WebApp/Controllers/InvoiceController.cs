@@ -52,8 +52,11 @@ namespace WebApp.Controllers
 
         [HttpGet("/api/invoice/totalbystatus/{status}")]
         public ActionResult<decimal> GetInvoicesTotalByStatus(short status){
-            var total = service.GetTotalByStatus(status);
-            total = mapper.Map<decimal>(total);
+            var invoices = service.GetInvoicesByStatus(status);
+            decimal total=0;
+            foreach ( Invoice inv in invoices){
+                total +=inv.GrandTotal;
+            }
             return  Ok(total);
         }
 
