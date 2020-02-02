@@ -10,6 +10,7 @@ using WebApp.Models;
 using WebApp.Services;
 using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
 
 namespace WebApp.Controllers
 {
@@ -42,7 +43,7 @@ namespace WebApp.Controllers
         
         // GET: api/invoice/status/1 , retrive invoices by the status
         [HttpGet("/api/invoice/status/{status}")]
-        public ActionResult<IEnumerable<InvoiceDto>> GetInvoicesByStatus(short status)
+        public ActionResult<IEnumerable<InvoiceDto>> GetInvoicesByStatus(InvoiceStatus status)
         {
             var invoices = service.GetInvoicesByStatus(status); 
             
@@ -50,14 +51,40 @@ namespace WebApp.Controllers
             return Ok(dtoList);
         }
 
-        [HttpGet("/api/invoice/totalbystatus/{status}")]
-        public ActionResult<decimal> GetInvoicesTotalByStatus(short status){
-            var invoices = service.GetInvoicesByStatus(status);
+        
+        [HttpGet("/api/invoice/dashboarddata")]
+        public ActionResult<object> GetInvoicesDashboardData()
+        {
+
+            var issuedInvoices = service.GetInvoicesByStatus(InvoiceStatus.Issued);
+            var issuedCount = issuedInvoices.Count();
+            var issuedValue = GetTotalFromInvoices(issuedInvoices);
+
+            var paidInvoices = service.GetInvoicesByStatus(InvoiceStatus.Paid);
+            var paidCount = issuedInvoices.Count();
+            var paidValue = GetTotalFromInvoices(issuedInvoices);
+
+            var overdueInvoices = service.GetInvoicesByStatus(InvoiceStatus.Overdue);
+            var overdueCount = issuedInvoices.Count();
+            var overdueValue = GetTotalFromInvoices(issuedInvoices);        
+
+            var result = new {
+                issuedCount=issuedCount,
+                issuedValue=issuedValue,
+                paidValue=paidValue,
+                paidCount=paidCount,
+                overdueCount=overdueCount,
+                overdueValue=overdueValue,
+            };
+            return Ok(result);
+        }
+
+        private decimal GetTotalFromInvoices(IEnumerable<Invoice> invoices){
             decimal total=0;
-            foreach ( Invoice inv in invoices){
+            foreach ( var inv in invoices){
                 total +=inv.GrandTotal;
             }
-            return  Ok(total);
+            return total;
         }
 
         // GET api/invoice/5

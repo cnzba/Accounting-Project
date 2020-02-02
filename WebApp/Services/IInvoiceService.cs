@@ -11,7 +11,7 @@ namespace WebApp.Services
         string GenerateInvoiceNumber();
         IEnumerable<Invoice> GetAllInvoices();
 
-        IEnumerable<Invoice> GetInvoicesByStatus(short invStatus );
+        IEnumerable<Invoice> GetInvoicesByStatus(InvoiceStatus invStatus );
         Invoice GetInvoice(string invoiceNumber);
         Invoice GetInvoiceByPaymentId(string paymentId);
         bool InvoiceExists(string invoiceNumber);
@@ -24,6 +24,6 @@ namespace WebApp.Services
         Task IssueInvoice(string invoiceNumber);
         string GetPdfInvoice(string invoiceNumber);
 
-        IEnumerable<decimal> GetTotalByStatus(short invStatus);
+        IEnumerable<decimal> GetTotalByStatus(InvoiceStatus invStatus);
     }
 }

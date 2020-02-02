@@ -36,6 +36,18 @@ export class DashboardComponent implements OnInit {
   constructor(private route:Router, private http:HttpClient) { }
 
   ngOnInit() {
+
+    /*此处重构，一个request获取所有Receivable的data：
+    // Issued: count, value
+    //Payble: count, value
+    //Overdue:count, value
+    {
+      issued:{
+        count:--
+        value:--
+      },
+      ---
+    }*/
     this.http.get<number>("/api/invoice/totalbystatus/2")
       .subscribe(x => this.receiveDataSource[0].value = x);
     this.http.get<number>("/api/invoice/totalbystatus/3")
