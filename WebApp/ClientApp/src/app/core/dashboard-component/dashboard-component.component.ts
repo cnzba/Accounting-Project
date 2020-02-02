@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { DashboardRecivableData } from '../domain';
 
 @Component({
   selector: 'app-dashboard-component',
@@ -21,9 +22,9 @@ export class DashboardComponent implements OnInit {
   displayedColumns: string[] = ['title', 'count', 'value'];
   //issuedValue$ : Observable<number>;
   receiveDataSource =[
-    {title:"Invoice Issued", count:11, value:0,status:"issued"},
-    {title:"Payment Received", count:12, value:0 ,status:"paid"},
-    {title:"Invoice Overdue", count:13, value:0, status:"overdue"},
+    {title:"Invoice Issued", count:0, value:0,status:"issued"},
+    {title:"Payment Received", count:0, value:0 ,status:"paid"},
+    {title:"Invoice Overdue", count:0, value:0, status:"overdue"},
   
   ]
 
@@ -48,12 +49,15 @@ export class DashboardComponent implements OnInit {
       },
       ---
     }*/
-    this.http.get<number>("/api/invoice/totalbystatus/2")
-      .subscribe(x => this.receiveDataSource[0].value = x);
-    this.http.get<number>("/api/invoice/totalbystatus/3")
-      .subscribe(x => this.receiveDataSource[1].value = x);
-    this.http.get<number>("/api/invoice/totalbystatus/5")
-      .subscribe(x => this.receiveDataSource[2].value = x);
+    this.http.get<DashboardRecivableData>("/api/invoice/dashboarddata")
+      .subscribe(data => {
+        this.receiveDataSource[0].value = data.issuedValue,
+        this.receiveDataSource[0].count = data.issuedCount,
+        this.receiveDataSource[1].value = data.paidValue,
+        this.receiveDataSource[1].count = data.paidCount,
+        this.receiveDataSource[2].value = data.overdueValue,
+        this.receiveDataSource[2].count = data.overdueCount
+      });
   }
 
   //InvoiceStatus 

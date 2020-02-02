@@ -61,12 +61,12 @@ namespace WebApp.Controllers
             var issuedValue = GetTotalFromInvoices(issuedInvoices);
 
             var paidInvoices = service.GetInvoicesByStatus(InvoiceStatus.Paid);
-            var paidCount = issuedInvoices.Count();
-            var paidValue = GetTotalFromInvoices(issuedInvoices);
+            var paidCount = paidInvoices.Count();
+            var paidValue = GetTotalFromInvoices(paidInvoices);
 
             var overdueInvoices = service.GetInvoicesByStatus(InvoiceStatus.Overdue);
-            var overdueCount = issuedInvoices.Count();
-            var overdueValue = GetTotalFromInvoices(issuedInvoices);        
+            var overdueCount = overdueInvoices.Count();
+            var overdueValue = GetTotalFromInvoices(overdueInvoices);        
 
             var result = new {
                 issuedCount=issuedCount,
