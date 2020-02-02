@@ -17,6 +17,10 @@ export class InvoiceService {
         return this.http.get<IInvoice[]>(this.invoiceUrl);
     }
 
+    getInvoicesBySatus(status:string): Observable<IInvoice[]> {
+        return this.http.get<IInvoice[]>(this.invoiceUrl+'/status/'+status);
+    }
+
     getInvoice(invoiceNumber: string): Observable<IInvoice> {
         return this.http.get<IInvoice>(this.invoiceUrl + '/' + invoiceNumber);
     }

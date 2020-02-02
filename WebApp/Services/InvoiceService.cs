@@ -45,6 +45,19 @@ namespace WebApp.Services
             return context.Invoice.Include("InvoiceLine").OrderByDescending(i => i.DateCreated).ToList();
         }
 
+        public IEnumerable<Invoice> GetInvoicesByStatus(short invStatus){
+            return context.Invoice.Include("InvoiceLine")
+                .Where(inv => (short)inv.Status==invStatus);
+        }
+
+        public decimal GetTotalByStatus(short invStatus){
+            var invs = context.Invoice.Include("InvoiceLine")
+                    .Where(inv => (short)inv.Status == invStatus);
+            var grandTotals = invs.Select(inv => inv.GrandTotal);
+            var sumTotal = grandTotals.Sum();
+            return sumTotal;
+        }
+
         public Invoice GetInvoice(string invoiceNumber)
         {
             var invoice = context.Invoice.Include("InvoiceLine")

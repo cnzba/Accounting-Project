@@ -39,6 +39,24 @@ namespace WebApp.Controllers
             return Ok(dtoList);
         }
 
+        
+        // GET: api/invoice/status/1 , retrive invoices by the status
+        [HttpGet("/api/invoice/status/{status}")]
+        public ActionResult<IEnumerable<InvoiceDto>> GetInvoicesByStatus(short status)
+        {
+            var invoices = service.GetInvoicesByStatus(status); 
+            
+            var dtoList = mapper.Map<IEnumerable<InvoiceDto>>(invoices);
+            return Ok(dtoList);
+        }
+
+        [HttpGet("/api/invoice/totalbystatus/{status}")]
+        public ActionResult<decimal> GetInvoicesTotalByStatus(short status){
+            var total = service.GetTotalByStatus(status);
+            total = mapper.Map<decimal>(total);
+            return  Ok(total);
+        }
+
         // GET api/invoice/5
         [HttpGet("{InvoiceNumber}")]
         public ActionResult<InvoiceDto> GetInvoice([FromRoute] string invoiceNumber)

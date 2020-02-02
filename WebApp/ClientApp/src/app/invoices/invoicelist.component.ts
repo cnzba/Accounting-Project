@@ -11,6 +11,8 @@ import { Sort } from '@angular/material';
 import { InvoiceFilterPipe } from '../pipes/invoice-filter.pipe';
 import { saveAs } from 'file-saver';
 import { error } from 'protractor';
+import { stat } from 'fs';
+import { datepickerAnimation } from 'ngx-bootstrap/datepicker/datepicker-animations';
 
 
 @Component({
@@ -39,8 +41,28 @@ export class InvoicelistComponent implements OnInit {
 
     // inject InvoiceService
     constructor(private route: ActivatedRoute, private invoiceService: InvoiceService, private alertService: AlertService, private http: Http) {
-        this.invo = this.route.snapshot.data['invoices'];
-        this.sortedData = this.invo.slice();
+        let status = this.route.snapshot.queryParams["status"];
+//        this.route.queryParams.subscribe(param =>{console.log(param["status"])})
+        this.invo = this.route.snapshot.data['invoices'];        
+        let allInvoices = this.invo.slice();
+        if (status && status == "overdue"){
+            this.sortedData = allInvoices.filter(
+                invoice => { 
+                    let due = new Date(invoice.dateDue);
+                    return due.getTime()< Date.now() 
+                        && invoice.status.toLowerCase() != "paid";
+                }
+            )
+        }else if (status){
+            this.sortedData = allInvoices.filter(
+                            invoice => invoice.status.toLowerCase() == status.toLowerCase());
+        }else{
+            this.sortedData = allInvoices;            
+        }
+       
+        
+        
+//        this.sortedData = 
     }
     onPageChange(offset) {
         this.offset = offset;
