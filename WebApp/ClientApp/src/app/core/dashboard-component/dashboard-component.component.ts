@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { DashboardRecivableData } from '../domain';
+import { CoreService } from '../services';
 
 @Component({
   selector: 'app-dashboard-component',
@@ -11,6 +11,7 @@ import { DashboardRecivableData } from '../domain';
 })
 export class DashboardComponent implements OnInit {
 
+  //Data for the matirial tables.
   displayedColumns: string[] = ['title', 'count', 'value'];
   //issuedValue$ : Observable<number>;
   receiveDataSource =[
@@ -20,17 +21,23 @@ export class DashboardComponent implements OnInit {
   
   ]
 
+  //This is mock data, will be replaced when complete the payment module.
   payDataSource = [
     {title:"Expenditures", count:21, value:223},
     {title:"Payment made", count:22, value:2343},
     {title:"Payment Overdue", count:23, value:243},
   ]
 
-  constructor(private route:Router, private http:HttpClient) { }
+  constructor(private route:Router, 
+    private http:HttpClient,
+    private coreService:CoreService
+    ) { }
 
   ngOnInit() {
-
-    this.http.get<DashboardRecivableData>("/api/invoice/dashboarddata")
+    
+    //Retrive data needed for receivable part.
+    //this.http.get<DashboardRecivableData>("/api/invoice/dashboarddata")
+      this.coreService.getDashboardReiceivableData()
       .subscribe(data => {
 
         //Invoice Issued
