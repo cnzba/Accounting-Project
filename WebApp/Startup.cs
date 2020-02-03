@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using AutoMapper;
 using WebApp.Services;
+using DinkToPdf.Contracts;
+using DinkToPdf;
 
 namespace WebApp
 {
@@ -149,6 +151,8 @@ namespace WebApp
             services.Configure<CBAOptions>(configuration);
             services.Configure<EmailConfig>(configuration.GetSection("EmailConfig"));
             services.Configure<PdfServiceOptions>(configuration.GetSection("PdfService"));
+            //add pdf converter
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }
     }
 }
