@@ -179,6 +179,10 @@ export class InvoiceEditComponent implements OnInit {
         }
     }
 
+    onShowFinalise(template: TemplateRef<any>){
+        this.modalRef = this.modalService.show(template,{class:'modal-sm'});
+    }
+
     /**Methods for modal */
     modalRef: BsModalRef;
     orgInvoice: string; //Keep the content of the invoice when initiate the component                        

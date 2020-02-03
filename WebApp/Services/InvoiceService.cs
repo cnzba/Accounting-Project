@@ -49,15 +49,18 @@ namespace WebApp.Services
             if (invStatus == InvoiceStatus.Overdue){
                 return context.Invoice.Include("InvoiceLine")
                     .Where(inv => inv.DateDue <= DateTime.Today 
-                                && inv.Status != InvoiceStatus.Paid);
+                                && inv.Status != InvoiceStatus.Paid
+                                && inv.DateCreated.Year.ToString()== DateTime.Now.Year.ToString());
             }
             return context.Invoice.Include("InvoiceLine")
-                .Where(inv => inv.Status==invStatus);
+                .Where(inv => inv.Status==invStatus
+                            && inv.DateCreated.Year.ToString()== DateTime.Now.Year.ToString());
         }
 
         public IEnumerable<decimal> GetTotalByStatus(InvoiceStatus invStatus){
             var invs = context.Invoice.Include("InvoiceLine")
-                    .Where(inv => inv.Status == invStatus);
+                    .Where(inv => inv.Status == invStatus
+                                && inv.DateCreated.Year.ToString()== DateTime.Now.Year.ToString());
             var grandTotals = invs.Select(inv => inv.GrandTotal);
             
             return grandTotals;
@@ -278,6 +281,21 @@ namespace WebApp.Services
         public string GetPdfInvoice(string invoiceNumber)
         {
             return pdfService.GetPdfInvoice(invoiceNumber);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }
