@@ -51,13 +51,13 @@ export class InvoicelistComponent implements OnInit {
                     let due = new Date(invoice.dateDue);
                     return due.getTime()< Date.now() 
                         && invoice.status.toLowerCase() != "paid"
-                        && +invoice.dateCreated.slice(0,4) == (new Date).getFullYear();
+                        && +invoice.dateCreated.toString().slice(0,4) == (new Date).getFullYear();
                 }
             )
         }else if (status){
             this.sortedData = allInvoices.filter(
                     invoice => invoice.status.toLowerCase() == status.toLowerCase()
-                            && +invoice.dateCreated.slice(0,4) == (new Date).getFullYear());
+                            && +invoice.dateCreated.toString().slice(0,4) == (new Date).getFullYear());
         }else{
             this.sortedData = allInvoices;            
         }

@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
     //Retrive data needed for receivable part.
     //this.http.get<DashboardRecivableData>("/api/invoice/dashboarddata")
       this.coreService.getDashboardReiceivableData()
-      .subscribe(data => {
+      .subscribe(data => { 
 
         //Invoice Issued
         this.receiveDataSource[0].value = data.issuedValue,
