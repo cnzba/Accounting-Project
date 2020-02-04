@@ -177,11 +177,19 @@ export class InvoiceEditComponent implements OnInit {
             this.spinnerService.hideSpinner()
             if (err.globalError) this.alertService.error(err.globalError);
         }
+        finally{
+            this.modalRef.hide();
+        }
     }
 
     onShowFinalise(template: TemplateRef<any>){
-        this.modalRef = this.modalService.show(template,{class:'modal-sm'});
+        this.modalRef = this.modalService.show(template,{class:'modal-md'});
     }
+
+    onCancelFinalise(): void{
+        this.modalRef.hide();
+    }
+
 
     /**Methods for modal */
     modalRef: BsModalRef;
@@ -205,6 +213,7 @@ export class InvoiceEditComponent implements OnInit {
         this.modalRef.hide();
     }    
 
+    
     ngOnInit() {
         this.route.data.subscribe((data: { invoice: IInvoice }) => {            
             this.orgInvoice = JSON.stringify(data.invoice);

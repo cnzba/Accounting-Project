@@ -233,26 +233,28 @@
 
         <!-- Confirm window of cancel -->
         <ng-template #finalTemplate>
+            <!-- Utilise a click method to close the modal to solve the problem that the pop up modal dialog is gray and not clickable. -->
+            <!-- This is the orignial code to define the modal -->
             <!-- <div id="finaliseModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="finaliseModalLabel" aria-hidden="true"> -->
-                <!-- TODO：The modal can not be closed -->
+            <div id="finaliseModal" >
                 <div class="modal-dialog" role="document">
                     <!-- Modal content-->
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" id="finaliseModalLabel">Are you sure?</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onCancelFinalise()"><span aria-hidden="true">&times;</span></button>
                         </div>
                         <div class="modal-body">
                             <p>Are you sure you want to finalise invoice {{modifyInvoice.invoiceNumber}} and send this to the customer?</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onCancelFinalise()">No</button>
                             <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="onFinalise()">Yes</button>
                         </div>
                     </div>
 
                 </div>
-            <!-- </div> -->
+            </div>
         </ng-template>
     </form>
 </div>
