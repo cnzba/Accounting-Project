@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using DinkToPdf;
+using DinkToPdf.Contracts;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using ServiceUtil.Email;
 using System;
@@ -13,14 +15,17 @@ namespace WebApp.Services
     public class PdfService : IPdfService
     {
         private readonly IEmailService emailService;
+        private readonly IConverter converter;
         private readonly EmailConfig emailConfig;
         private readonly PdfServiceOptions serviceConfig;
 
         public PdfService(IEmailService emailService,
                             IOptionsSnapshot<EmailConfig> emailConfig,
-                            IOptionsSnapshot<PdfServiceOptions> serviceConfig)
+                            IOptionsSnapshot<PdfServiceOptions> serviceConfig,
+                            IConverter converter)
         {
             this.emailService = emailService;
+            this.converter = converter;
             this.emailConfig = emailConfig.Value;
             this.serviceConfig = serviceConfig.Value;
         }
@@ -41,15 +46,37 @@ namespace WebApp.Services
         /// <returns>The filename/path of the generated pdf</returns>
         private string CreatePdf(string InvoiceNumber)
         {
-            DeletePdf(InvoiceNumber);
+            try
+            {
+                DeletePdf(InvoiceNumber);
 
-            // copy sample to use as fake generated invoice pdf
-            var source = "EmailTemplates/invoice_sample.pdf";
-            var destination = GetDestination(InvoiceNumber);
+                var doc = new HtmlToPdfDocument()
+                {
+                    GlobalSettings = {
+                    ColorMode = ColorMode.Color,
+                    Orientation = Orientation.Portrait,
+                    PaperSize = PaperKind.A4,
+                    Margins = new MarginSettings() { Top = 10 }
+                },
+                    Objects = {
+                    new ObjectSettings()
+                    {
+                       HtmlContent = @"<html><body><div>Hello</div></body></html>",
+                    }
+                }
+                };
 
-            File.Copy(source, destination);
+                byte[] pdf = converter.Convert(doc);
 
-            return destination;
+                var destination = GetDestination(InvoiceNumber);
+                File.WriteAllBytes(destination, pdf);
+
+                return destination;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }   
         }
 
         /// <summary>

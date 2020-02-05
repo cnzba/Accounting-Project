@@ -193,10 +193,18 @@ namespace WebApp.Controllers
 
         [Route("getPdfInvoice/{InvoiceNumber}")]
         [HttpGet]
-        public async Task<FileStream> GetPdfInvoice([FromRoute] string invoiceNumber)
+        public IActionResult GetPdfInvoice([FromRoute] string invoiceNumber)
         {
-            var fileName = service.GetPdfInvoice(invoiceNumber);
-            return new FileStream(fileName, FileMode.Open, FileAccess.Read);    
+            try
+            {
+                var fileName = service.GetPdfInvoice(invoiceNumber);
+                return Ok(new FileStream(fileName, FileMode.Open, FileAccess.Read));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to get pdf invoice {ex}");
+            }
+               
         }
     }
 }
