@@ -27,7 +27,7 @@
                         <b>Due Date</b>
                     </div>
                     <div class="col-7">
-                        <input type="date" [ngModel]="modifyInvoice.dateDue | date:'yyyy-MM-dd'" (ngModelChange)="modifyInvoice.dateDue = $event" name="duedate" />
+                        <input type="date" [ngModel]="modifyInvoice.dateDue | date:'yyyy-MM-dd'" (onfocusout)="modifyInvoice.dateDue = $event" name="duedate" />
                         <label class="alert alert-danger field-error" *ngIf="formErrors.hasFieldError('DateDue')">{{formErrors.fieldError("DateDue")}}</label>
                     </div>
                 </div>
