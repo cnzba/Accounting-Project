@@ -19,7 +19,7 @@
   </mat-list-item>
   
   <h4 matSubheader>Account Receivables</h4>
-  <mat-list-item [routerLink]="['/invoice/new']"> 
+  <mat-list-item [routerLink]="['/invoice/new']" [ngStyle]="{'background-color': 'lightblue'}"> 
     <mat-icon matListIcon>note_add</mat-icon>
     <span matLine>Create Invoice</span>
   </mat-list-item>
@@ -27,9 +27,9 @@
     <mat-icon matListIcon>playlist_add</mat-icon>
     <span matLine>Create Items</span>
   </mat-list-item>
-  <mat-list-item> 
+  <mat-list-item matLine [routerLink]="['/invoices']" [ngStyle]="{'background-color': 'lightblue'}"> 
     <mat-icon matListIcon>zoom_in</mat-icon>
-    <span matLine [routerLink]="['/invoices']">Invoice Tracker</span>
+    <span >Invoice Tracker</span>
   </mat-list-item>
   <mat-list-item> 
     <mat-icon matListIcon>update</mat-icon>
