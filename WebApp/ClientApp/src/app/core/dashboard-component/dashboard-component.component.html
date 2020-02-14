@@ -1,4 +1,4 @@
-<ng-container  class="container">
+<div  class="container">
   <mat-card>
     <mat-card-title>
       <h4>Receivable</h4>
@@ -32,9 +32,11 @@
         <tr mat-row 
           *matRowDef="let row; columns: displayedColumns;"
           (click)="onClickInvoiceRow(row)"></tr>
-      </table>
- 
+      </table> 
     </mat-card-content>
+    <mat-card-footer>
+      <span>*Only show the invoices issued in this year(2020). </span>
+    </mat-card-footer>
   </mat-card>
   <mat-card>
     <mat-card-title>
@@ -61,5 +63,8 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
     </mat-card-content>
+    <mat-card-footer>
+      <span>*It's just a sample card. </span>
+    </mat-card-footer>
   </mat-card>
-</ng-container>
+</div>
