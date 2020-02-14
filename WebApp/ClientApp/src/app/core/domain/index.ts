@@ -1,1 +1,1 @@
-export * from './dashboardRecivableData';
+export * from './DashboardReceivableData';

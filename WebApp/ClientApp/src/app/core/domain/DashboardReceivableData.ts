@@ -1,4 +1,4 @@
-export class DashboardRecivableData {
+export class DashboardReceivableData {
     issuedCount:number;
     issuedValue:number;
     paidValue: number;
