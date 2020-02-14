@@ -24,6 +24,5 @@ namespace WebApp.Services
         Task IssueInvoice(string invoiceNumber);
         string GetPdfInvoice(string invoiceNumber);
 
-        IEnumerable<decimal> GetTotalByStatus(InvoiceStatus invStatus);
     }
 }

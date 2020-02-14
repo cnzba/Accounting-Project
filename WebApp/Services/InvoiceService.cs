@@ -46,25 +46,20 @@ namespace WebApp.Services
         }
 
         public IEnumerable<Invoice> GetInvoicesByStatus(InvoiceStatus invStatus){
+            TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("New Zealand Standard Time");
+            DateTime localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
             if (invStatus == InvoiceStatus.Overdue){
                 return context.Invoice.Include("InvoiceLine")
                     .Where(inv => inv.DateDue <= DateTime.Today 
                                 && inv.Status != InvoiceStatus.Paid
-                                && inv.DateCreated.Year.ToString()== DateTime.Now.Year.ToString());
+                                //&& inv.DateCreated.Year.ToString()== DateTime.Now.Year.ToString());
+                                && inv.DateCreated.Year.ToString()== localNow.Year.ToString());
             }
             return context.Invoice.Include("InvoiceLine")
                 .Where(inv => inv.Status==invStatus
-                            && inv.DateCreated.Year.ToString()== DateTime.Now.Year.ToString());
+                            && inv.DateCreated.Year.ToString()== localNow.Year.ToString());
         }
 
-        public IEnumerable<decimal> GetTotalByStatus(InvoiceStatus invStatus){
-            var invs = context.Invoice.Include("InvoiceLine")
-                    .Where(inv => inv.Status == invStatus
-                                && inv.DateCreated.Year.ToString()== DateTime.Now.Year.ToString());
-            var grandTotals = invs.Select(inv => inv.GrandTotal);
-            
-            return grandTotals;
-        }
 
         public Invoice GetInvoice(string invoiceNumber)
         {
