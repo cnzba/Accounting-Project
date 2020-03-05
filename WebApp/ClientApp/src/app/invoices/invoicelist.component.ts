@@ -98,7 +98,9 @@ export class InvoicelistComponent implements OnInit {
         this.invoiceService.getPdfInvoice(invoiceNumber)
             .subscribe(
                 success => {
-                    saveAs(success, invoiceNumber + '.pdf');
+                    let blob = new Blob([success], { type: 'application/pdf' });
+                    let urlDownloaded = URL.createObjectURL(blob);
+                    window.open(urlDownloaded);
                 },
                 error => {
                     alert('Server error while downloading file.');

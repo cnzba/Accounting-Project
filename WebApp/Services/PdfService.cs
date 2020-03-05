@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApp.Entities;
+using WebApp.Models;
 
 namespace WebApp.Services
 {
@@ -16,16 +17,19 @@ namespace WebApp.Services
     {
         private readonly IEmailService emailService;
         private readonly IConverter converter;
+        private readonly IViewRenderService viewRenderService;
         private readonly EmailConfig emailConfig;
         private readonly PdfServiceOptions serviceConfig;
 
         public PdfService(IEmailService emailService,
                             IOptionsSnapshot<EmailConfig> emailConfig,
                             IOptionsSnapshot<PdfServiceOptions> serviceConfig,
-                            IConverter converter)
+                            IConverter converter,
+                            IViewRenderService viewRenderService)
         {
             this.emailService = emailService;
             this.converter = converter;
+            this.viewRenderService = viewRenderService;
             this.emailConfig = emailConfig.Value;
             this.serviceConfig = serviceConfig.Value;
         }
@@ -49,6 +53,13 @@ namespace WebApp.Services
             try
             {
                 DeletePdf(InvoiceNumber);
+                DinkToPDF dinkToPdf = new DinkToPDF()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "First",
+                    LastName = "Last"
+                };
+                var _htmlContent = viewRenderService.RenderToStringAsync("DinkToPDF", dinkToPdf);
 
                 var doc = new HtmlToPdfDocument()
                 {
@@ -61,7 +72,7 @@ namespace WebApp.Services
                     Objects = {
                     new ObjectSettings()
                     {
-                       HtmlContent = @"<html><body><div>Hello</div></body></html>",
+                       HtmlContent = _htmlContent
                     }
                 }
                 };
