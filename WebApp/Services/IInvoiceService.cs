@@ -10,6 +10,8 @@ namespace WebApp.Services
         Invoice CreateInvoice(InvoiceForCreationDto invoice);
         string GenerateInvoiceNumber();
         IEnumerable<Invoice> GetAllInvoices();
+
+        IEnumerable<Invoice> GetInvoicesByStatus(InvoiceStatus invStatus );
         Invoice GetInvoice(string invoiceNumber);
         Invoice GetInvoiceByPaymentId(string paymentId);
         bool InvoiceExists(string invoiceNumber);
@@ -21,5 +23,6 @@ namespace WebApp.Services
         string GenerateOrganisationInvoiceNumber(string loginId);
         Task IssueInvoice(string invoiceNumber);
         string GetPdfInvoice(string invoiceNumber);
+
     }
 }

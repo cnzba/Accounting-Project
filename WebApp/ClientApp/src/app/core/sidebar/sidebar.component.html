@@ -1,0 +1,78 @@
+<mat-nav-list>
+  <mat-list-item [routerLink]="['/core']"> 
+    <mat-icon matListIcon>home</mat-icon>
+    <span matLine>Home</span>
+  </mat-list-item>
+
+  <h4 matSubheader>System Masters</h4>
+  <mat-list-item>
+    <mat-icon matListIcon>domain</mat-icon>
+    <span matLine>Organisation Master</span>
+  </mat-list-item>
+  <mat-list-item>
+    <mat-icon matListIcon>person</mat-icon>
+    <span matLine>User Master</span>
+  </mat-list-item>
+  <mat-list-item>
+    <mat-icon matListIcon>people</mat-icon>
+    <span matLine>Client Master</span>
+  </mat-list-item>
+  
+  <h4 matSubheader>Account Receivables</h4>
+  <mat-list-item [routerLink]="['/invoice/new']" [ngStyle]="{'background-color': 'lightblue'}"> 
+    <mat-icon matListIcon>note_add</mat-icon>
+    <span matLine>Create Invoice</span>
+  </mat-list-item>
+  <mat-list-item> 
+    <mat-icon matListIcon>playlist_add</mat-icon>
+    <span matLine>Create Items</span>
+  </mat-list-item>
+  <mat-list-item matLine [routerLink]="['/invoices']" [ngStyle]="{'background-color': 'lightblue'}"> 
+    <mat-icon matListIcon>zoom_in</mat-icon>
+    <span >Invoice Tracker</span>
+  </mat-list-item>
+  <mat-list-item> 
+    <mat-icon matListIcon>update</mat-icon>
+    <span matLine>Update Payments</span>
+  </mat-list-item>
+  <mat-list-item> 
+    <mat-icon matListIcon>post_add</mat-icon>
+    <span matLine>Create Customer Return</span>
+  </mat-list-item>
+  <mat-list-item> 
+    <mat-icon matListIcon>work</mat-icon>
+    <span matLine>Process Customer Return</span>
+  </mat-list-item>
+
+  <h4 matSubheader>Account Payables</h4>
+  <mat-list-item> 
+    <mat-icon matListIcon>post_add</mat-icon>
+    <span matLine>Create Bill</span>
+  </mat-list-item>
+  <mat-list-item> 
+    <mat-icon matListIcon>person_add</mat-icon>
+    <span matLine>Supplier Master</span>
+  </mat-list-item>
+  <mat-list-item> 
+    <mat-icon matListIcon>payment</mat-icon>
+    <span matLine>Pay Bill</span>
+  </mat-list-item>
+  <mat-list-item> 
+    <mat-icon matListIcon>person_add</mat-icon>
+    <span matLine>Create Supplier Return</span>
+  </mat-list-item>
+  <mat-list-item> 
+    <mat-icon matListIcon>work</mat-icon>
+    <span matLine>Process Supplier Return</span>
+  </mat-list-item>
+
+
+</mat-nav-list>
+
+<!-- This is sample
+<mat-list-item> 
+  <mat-icon matListIcon>calendar_today</mat-icon>
+  <span matLine>Week View</span>
+  <span matLine matSubHeader>View projects weekly</span>
+</mat-list-item> -->
+

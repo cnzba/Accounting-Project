@@ -7,6 +7,7 @@ import { AlertService } from "./common/alert/alert.service";
 import { Router, Event, NavigationStart, NavigationEnd, NavigationError, NavigationCancel } from '@angular/router';
 import { CallbackService } from './common/callback.service';
 import { SpinnerService } from "./common/spinner.service";
+import { MatSidenavModule } from '@angular/material';
 
 @Component({
     selector: 'app-root',
@@ -56,6 +57,10 @@ export class AppComponent {
             });
         this.forcePasswordChange = localStorage.getItem("forcePasswordChange") === "true";
 
+    }
+
+    onLogout(){
+        console.log("logout click");
     }
 
     checkRouterEvent(routerEvent: Event): void {

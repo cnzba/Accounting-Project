@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AlertComponent } from './common/alert/alert.component';
@@ -40,6 +39,9 @@ import { TwoDigitDecimaNumberDirective } from './invoices/two-digit-decima-numbe
 import { InputIntegerOnlyDirective } from './invoices/input-integer-only.directive';
 
 import { DatePipe } from '@angular/common';
+import { AppRoutingModule } from './app-routing.module';
+import { SharedModule } from './shared';
+import { CoreModule } from './core';
 
 @NgModule({
     declarations: [
@@ -67,29 +69,9 @@ import { DatePipe } from '@angular/common';
         FormsModule,
         HttpModule,
         ModalModule.forRoot(),
-        
-        RouterModule.forRoot([
-            { path: 'login', component: LoginComponent },
-            {
-                path: 'invoices', component: InvoicelistComponent, canActivate: [AuthGuard],
-                resolve: { invoices: InvoiceListResolver }
-            },
-            { path: "invoices/:id", component: InvoicedetailComponent, canActivate: [AuthGuard] },
-            {
-                path: "invoices/edit/:id", component: InvoiceEditComponent, canActivate: [AuthGuard],
-                resolve: { invoice: InvoiceResolverService }
-            },
-            {
-                path: "invoice/new", component: InvoiceEditComponent,
-                resolve: { invoice: InvoiceResolverService }
-            },
-            { path: "forgot-password", component: ForgotPasswordComponent },
-            { path: "change-password", component: ChangePasswordComponent, canActivate: [AuthGuard] },
-            { path: "pay/:id", component: InvoicePaymentComponent },
-            // otherwise redirect to the invoice list
-            { path: "", redirectTo: '/invoices', pathMatch: 'full' },
-            { path: '**', component: PageNotFoundComponent }
-        ], { enableTracing: false })
+        AppRoutingModule,
+        SharedModule,
+        CoreModule
     ],
     providers: [
         DatePipe,

@@ -45,6 +45,22 @@ namespace WebApp.Services
             return context.Invoice.Include("InvoiceLine").OrderByDescending(i => i.DateCreated).ToList();
         }
 
+        public IEnumerable<Invoice> GetInvoicesByStatus(InvoiceStatus invStatus){
+            TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("New Zealand Standard Time");
+            DateTime localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
+            if (invStatus == InvoiceStatus.Overdue){
+                return context.Invoice.Include("InvoiceLine")
+                    .Where(inv => inv.DateDue <= DateTime.Today 
+                                && inv.Status != InvoiceStatus.Paid
+                                //&& inv.DateCreated.Year.ToString()== DateTime.Now.Year.ToString());
+                                && inv.DateCreated.Year.ToString()== localNow.Year.ToString());
+            }
+            return context.Invoice.Include("InvoiceLine")
+                .Where(inv => inv.Status==invStatus
+                            && inv.DateCreated.Year.ToString()== localNow.Year.ToString());
+        }
+
+
         public Invoice GetInvoice(string invoiceNumber)
         {
             var invoice = context.Invoice.Include("InvoiceLine")
@@ -260,6 +276,21 @@ namespace WebApp.Services
         public string GetPdfInvoice(string invoiceNumber)
         {
             return pdfService.GetPdfInvoice(invoiceNumber);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }
