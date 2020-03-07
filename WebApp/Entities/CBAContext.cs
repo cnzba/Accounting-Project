@@ -15,6 +15,7 @@ namespace WebApp.Entities
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<PaymentModel> Payment { get; set; }
         public virtual DbSet<Organisation> Organisation { get; set; }
+        public virtual DbSet<Customer> Customer { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
