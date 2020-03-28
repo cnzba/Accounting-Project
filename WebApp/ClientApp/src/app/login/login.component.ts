@@ -5,6 +5,7 @@ import { AlertService } from "../common/alert/alert.service";
 import { CallbackService } from '../common/callback.service';
 import { Subscription } from 'rxjs';
 import { SpinnerService } from "../common/spinner.service";
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-login',
@@ -15,8 +16,15 @@ export class LoginComponent implements OnInit, OnDestroy {
     model: any = {};
     returnUrl: string;
     subscription: Subscription;
-
     isLoginFail: boolean;
+
+    userLogin = new FormGroup({
+        username: new FormControl('', [
+            Validators.required,
+            Validators.pattern("[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}")]),
+        password: new FormControl('', [
+            Validators.required])
+    }); 
 
     constructor(
         private route: ActivatedRoute,
@@ -42,7 +50,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     login() {
         this.spinnerService.showSpinner();
-        this.authenticationService.login(this.model.username, this.model.password)
+        console.log(this.getUsername.value);
+
+        this.authenticationService.login(this.getUsername.value, this.getPassword.value)
             .subscribe(
             data => {
                 this.isLoginFail = false;
@@ -67,5 +77,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+    }
+
+    get getUsername() {
+        return this.userLogin.get('username')
+    }
+
+    get getPassword() {
+        return this.userLogin.get('password')
     }
 }
