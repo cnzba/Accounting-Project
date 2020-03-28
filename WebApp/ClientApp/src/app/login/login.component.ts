@@ -50,7 +50,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     login() {
         this.spinnerService.showSpinner();
-        console.log(this.getUsername.value);
 
         this.authenticationService.login(this.getUsername.value, this.getPassword.value)
             .subscribe(
