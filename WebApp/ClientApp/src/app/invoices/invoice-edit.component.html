@@ -174,9 +174,8 @@
             </div>
 
             <div class="col-1">
-                <input [ngModel]="il.unitPrice | number:'1.2-2'" (ngModelChange)="updateInvoiceLineAmountByUnitPrice($event,i)"
-                       [ngModelOptions]="{updateOn:'blur'}"
-                       class="form-control text-right" type="text" name="unitPrice{{i}}" appTwoDigitDecimaNumber />
+                <input currencyMask [(ngModel)]="il.unitPrice" [options]="{ prefix: '', thousands: ',', decimal: '.' }" name="unitPrice{{i}}"
+                       (ngModelChange)="updateInvoiceLineAmountByUnitPrice($event,i)"/>
             </div>
 
             <div class="col-2">
