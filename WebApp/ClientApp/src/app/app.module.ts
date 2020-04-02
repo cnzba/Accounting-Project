@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AlertComponent } from './common/alert/alert.component';
@@ -67,6 +67,7 @@ import { CoreModule } from './core';
         AngularFontAwesomeModule,
         HttpClientModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpModule,
         ModalModule.forRoot(),
         AppRoutingModule,
