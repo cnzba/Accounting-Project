@@ -1,0 +1,70 @@
+<h2>Register page</h2>
+<div class="register-container">
+  <form [formGroup]="form" (ngSubmit)="onSubmit(form,$event)" fxFlex fxLayout="row" fxLayout.xs="column">
+    <mat-card fxFlex="1 1 auto">
+      <mat-tab-group>
+
+        <mat-tab label="User Information">
+          <div class="form-content">
+
+            <!-- TODO: add red * to compulsory fields -->
+            <mat-form-field>
+              <input matInput placeholder="First Name" formControlName="firstName">
+              <mat-error *ngFor="let item of form.controls['firstName'].errors | keyvalue">{{item.key}} is {{item.value}}</mat-error>
+
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput placeholder="Last Name" formControlName="lastName">
+              <mat-error>{{form.controls['lastName'].errors | json}}</mat-error>
+
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput placeholder="Email" formControlName="email">
+              <mat-error>{{form.controls['email'].errors | json}}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput placeholder="Phone Number" formControlName="phoneNumber">
+              <mat-error>{{form.controls['phoneNumber'].errors | json}}</mat-error>
+            </mat-form-field>
+
+            <div formGroupName="passwords" class="form-content">
+              <mat-form-field>
+                <input matInput placeholder="Password" formControlName="password">
+                <mat-error>{{form.get('passwords').controls['password'].errors | json}}</mat-error>
+
+              </mat-form-field>
+
+              <mat-form-field>
+                <input matInput placeholder="Confirm Password" formControlName="confirmedPassword">
+                <mat-error>{{form.get('passwords').controls['confirmedPassword'].errors | json}}</mat-error>
+              </mat-form-field>
+            </div>
+
+
+          </div>
+        </mat-tab>
+
+
+
+        <mat-tab label="Organisation Information" class="form-content">
+          <div class="form-content">
+
+            <!-- TODO: Input organisation information
+              <mat-form-field>
+              <input matInput placeholder="First Name">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput placeholder="Last Name">
+            </mat-form-field> -->
+          </div>
+
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+    <button type="submit" [disabled]="!form.valid">Submit</button>
+  </form>
+</div>

@@ -19,6 +19,10 @@ using AutoMapper;
 using WebApp.Services;
 using DinkToPdf.Contracts;
 using DinkToPdf;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace WebApp
 {
@@ -38,6 +42,39 @@ namespace WebApp
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            //The configuration of user identity
+            //services.AddDefaultIdentity<CBAUser>( 
+            //    options =>
+            //{
+            //    options.User = new UserOptions
+            //    {
+            //        RequireUniqueEmail = true
+            //    };
+
+            //    options.Password = new PasswordOptions
+            //    {
+            //        RequiredLength = 8,
+            //        RequireDigit = true,
+            //        RequireUppercase = true
+            //    };
+
+            //}
+            //)
+            
+
+            //Set the requirement of the password, email and email confirmation.
+            services.AddDefaultIdentity<CBAUser>(options =>
+            {
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = false;
+                options.User.RequireUniqueEmail = true;
+                
+            }).AddDefaultUI()
+            .AddEntityFrameworkStores<CBAContext>(); 
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -55,22 +92,47 @@ namespace WebApp
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            // Cookie Authentication 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
-            {
-                options.Cookie.Name = "InvoiceCbaNZ";
-                // Controls how much time the authentication ticket stored in the cookie will remain valid from the point it is created.
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(240);
+            //JWT Authentication
 
-                // ensures a 401 instead of 404 response if authorization fails
-                // (404 comes because default is to redirect to asp.net core login page, which doesn't exist
-                // as we are just a web api)
-                options.Events.OnRedirectToLogin = context =>
+            var key = Encoding.UTF8.GetBytes("1234567890123456");
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer( x => {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = false;
+                x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
-                    context.Response.StatusCode = 401;
-                    return Task.CompletedTask;
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
+
+
+            
+
+            #region Cookie authentication, deprived.
+            // Cookie Authentication 
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            //{
+            //    options.Cookie.Name = "InvoiceCbaNZ";
+            //    // Controls how much time the authentication ticket stored in the cookie will remain valid from the point it is created.
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(240);
+
+            //    // ensures a 401 instead of 404 response if authorization fails
+            //    // (404 comes because default is to redirect to asp.net core login page, which doesn't exist
+            //    // as we are just a web api)
+            //    options.Events.OnRedirectToLogin = context =>
+            //    {
+            //        context.Response.StatusCode = 401;
+            //        return Task.CompletedTask;
+            //    };
+            //}); 
+            #endregion
 
             services.AddSwaggerGen(c =>
             {

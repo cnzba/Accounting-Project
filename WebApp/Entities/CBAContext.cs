@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace WebApp.Entities
 {
-    public partial class CBAContext : IdentityDbContext
+    public partial class CBAContext : IdentityDbContext<CBAUser>
     {
         // Constuctor do not remove (DI)
         public CBAContext() { }

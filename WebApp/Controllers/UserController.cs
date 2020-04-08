@@ -6,6 +6,8 @@ using WebApp.Entities;
 using CryptoService;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using WebApp.Models;
 
 namespace WebApp.Controllers
 {
@@ -14,17 +16,26 @@ namespace WebApp.Controllers
 
     public class UserController : Controller
     {
+        private UserManager<CBAUser> _userManager;
+        //private SignInManager<CBAUser> _signInManager;
         private readonly CBAContext _context;
 
         //Dependency Injection
         private readonly ICryptography _crypto;
 
-        public UserController(CBAContext context, ICryptography crypto)
+        public UserController(CBAContext context, 
+            ICryptography crypto,
+            UserManager<CBAUser> userManager
+            //SignInManager<CBAUser> signInManager
+            )
         {
             _context = context;
 
             //Dependency Injection
             _crypto = crypto;
+            _userManager = userManager;
+
+
         }
 
         // GET: api/User
@@ -49,7 +60,7 @@ namespace WebApp.Controllers
 
         // GET: api/User/5
         [HttpGet("{login}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetUser([FromRoute] string login)
         {
             if (!ModelState.IsValid)
@@ -57,13 +68,14 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _context.User.SingleOrDefaultAsync(m => m.Email.Equals(login));
+            //var user = await _context.User.SingleOrDefaultAsync(m => m.Email.Equals(login));
+            var user = await _userManager.FindByEmailAsync(login);
 
             if (user == null)
             {
                 return NotFound();
             }
-
+            
             return Ok(user);
         }
 
@@ -112,27 +124,50 @@ namespace WebApp.Controllers
 
         // POST: api/User
         [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> PostUser([FromBody] User user)
+        //[Authorize]
+        public async Task<IActionResult> PostUser([FromBody]CBAUserModel modelUser)
         {
-
-
-            if (!ModelState.IsValid)
+            var cbaUser = new CBAUser()
             {
-                return BadRequest(ModelState);
+                Email = modelUser.Email,
+                FirstName = modelUser.FirstName,
+                LastName = modelUser.LastName,
+                PhoneNumber = modelUser.PhoneNumber,
+                UserName = modelUser.Email
+            };
+
+            try
+            {
+                var result = await _userManager.CreateAsync(cbaUser, modelUser.Password);
+                return Ok(result);
+
+            }catch(Exception ex)
+            {
+                throw ex;
             }
 
-            if (LoginExists(user.Email))
-            {
-                return BadRequest("Login Invalid");
-            }
 
 
-            user.Password = _crypto.HashMD5(user.Password);
-            _context.User.Add(user);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUsers", new { id = user.Id }, user);
+            #region Old code
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
+
+            //if (LoginExists(user.Email))
+            //{
+            //    return BadRequest("Login Invalid");
+            //}
+
+
+            //user.Password = _crypto.HashMD5(user.Password);
+            //_context.User.Add(user);
+            //await _context.SaveChangesAsync();
+
+            //return CreatedAtAction("GetUsers", new { id = user.Id }, user); 
+            #endregion
+
         }
 
         // DELETE: api/User/5

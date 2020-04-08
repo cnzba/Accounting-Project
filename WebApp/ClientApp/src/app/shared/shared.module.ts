@@ -5,9 +5,10 @@
  */
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatToolbarModule, MatIconModule, MatButtonModule, MatCardModule, MatInputModule, MatListModule, MatGridListModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatTableModule } from '@angular/material';
+import { MatToolbarModule, MatIconModule, MatButtonModule, MatCardModule, MatInputModule, MatListModule, MatGridListModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatTableModule, MatFormFieldModule, MatFormFieldControl, MatTabsModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {CdkTableModule} from '@angular/cdk/table';
+import { ReactiveFormsModule } from "@angular/forms";
 
 
 @NgModule({
@@ -25,6 +26,9 @@ import {CdkTableModule} from '@angular/cdk/table';
         MatAutocompleteModule,
         MatSidenavModule,
         MatTableModule,
+        MatFormFieldModule,
+        MatTabsModule,
+        ReactiveFormsModule
          ],
     exports: [
         MatToolbarModule,
@@ -39,6 +43,9 @@ import {CdkTableModule} from '@angular/cdk/table';
         MatAutocompleteModule,
         MatSidenavModule,
         MatTableModule,
+        MatFormFieldModule,
+        MatTabsModule,
+        ReactiveFormsModule
 
     ],
     declarations: [],
