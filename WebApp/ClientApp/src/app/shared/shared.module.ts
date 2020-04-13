@@ -5,10 +5,13 @@
  */
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatToolbarModule, MatIconModule, MatButtonModule, MatCardModule, MatInputModule, MatListModule, MatGridListModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatTableModule, MatFormFieldModule, MatFormFieldControl, MatTabsModule } from '@angular/material';
+import { MatToolbarModule, MatIconModule, MatButtonModule, MatCardModule, 
+    MatInputModule, MatListModule, MatGridListModule, MatDialogModule, 
+    MatAutocompleteModule, MatSidenavModule, MatTableModule, MatFormFieldModule,
+     MatFormFieldControl, MatTabsModule, MatSelectModule, MatCheckboxModule, MAT_CHECKBOX_CLICK_ACTION } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {CdkTableModule} from '@angular/cdk/table';
-import { ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 
 
 @NgModule({
@@ -28,7 +31,10 @@ import { ReactiveFormsModule } from "@angular/forms";
         MatTableModule,
         MatFormFieldModule,
         MatTabsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        FormsModule
          ],
     exports: [
         MatToolbarModule,
@@ -45,8 +51,15 @@ import { ReactiveFormsModule } from "@angular/forms";
         MatTableModule,
         MatFormFieldModule,
         MatTabsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        FormsModule
 
+    ],
+
+    providers:[
+        {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
     ],
     declarations: [],
     

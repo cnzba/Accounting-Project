@@ -8,6 +8,8 @@ import { Router, Event, NavigationStart, NavigationEnd, NavigationError, Navigat
 import { CallbackService } from './common/callback.service';
 import { SpinnerService } from "./common/spinner.service";
 import { MatSidenavModule } from '@angular/material';
+import { isBuffer } from 'util';
+import { LoginUser } from './users/LoginUser';
 
 @Component({
     selector: 'app-root',
@@ -21,10 +23,12 @@ export class AppComponent {
     loading: boolean = true;
     forcePasswordChange: boolean = false;
 
-    currentUser: IUser;
-    showUser: boolean;
+    currentUser: LoginUser ;
+    
+    showUser: boolean ;
 
-    constructor(private authenticationService: AuthenticationService,
+    constructor(
+        private authenticationService: AuthenticationService,
         private alertService: AlertService,
         private router: Router,
         private callbackService: CallbackService,
@@ -51,16 +55,22 @@ export class AppComponent {
     ngOnInit() {
         this.alertService.success("Loading ...");
         this.authenticationService.getCurrentUser().subscribe(
-            (user: IUser) => {
-                this.currentUser = user;
+            (user:any) => {
+                this.currentUser= new LoginUser();
+                this.currentUser.name = user.UserName;
+                this.currentUser.email = user.Email;
+                this.currentUser.active=user.Active;
                 this.showUser = true;
             });
-        this.forcePasswordChange = localStorage.getItem("forcePasswordChange") === "true";
+        //this.forcePasswordChange = localStorage.getItem("forcePasswordChange") === "true";
 
     }
 
     onLogout(){
         console.log("logout click");
+        this.showUser = false;
+        localStorage.removeItem('token');
+        this.router.navigate(['/login']);
     }
 
     checkRouterEvent(routerEvent: Event): void {

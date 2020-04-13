@@ -13,5 +13,12 @@ namespace WebApp.Entities
 
         [PersonalData]
         public string LastName { get; set; }
+
+        [PersonalData]
+        public bool IsActive { get; set; }
+
+        //public int OrganisationID { get; set; }
+
+        public virtual Organisation Organisation { get; set; }
     }
 }

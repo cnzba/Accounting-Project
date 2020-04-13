@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(private route:Router, 
     private http:HttpClient,
-    private coreService:CoreService
+    private coreService:CoreService,
     ) { }
 
   ngOnInit() {
@@ -38,8 +38,8 @@ export class DashboardComponent implements OnInit {
     //Retrive data needed for receivable part.
     //this.http.get<DashboardRecivableData>("/api/invoice/dashboarddata")
       this.coreService.getDashboardReiceivableData()
-      .subscribe(data => { 
-
+      .subscribe(
+        data => { 
         //Invoice Issued
         this.receiveDataSource[0].value = data.issuedValue,
         this.receiveDataSource[0].count = data.issuedCount,
@@ -49,6 +49,9 @@ export class DashboardComponent implements OnInit {
         //Invoice Overdue
         this.receiveDataSource[2].value = data.overdueValue,
         this.receiveDataSource[2].count = data.overdueCount
+      },
+      err => {
+        console.log(err);
       });
   }
 

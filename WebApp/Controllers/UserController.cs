@@ -41,7 +41,8 @@ namespace WebApp.Controllers
         // GET: api/User
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetUser()
+        [Route("Users")]
+        public async Task<IActionResult> GetUsers()
         {
             if (!ModelState.IsValid)
             {
@@ -59,17 +60,19 @@ namespace WebApp.Controllers
         }
 
         // GET: api/User/5
-        [HttpGet("{login}")]
-        //[Authorize]
-        public async Task<IActionResult> GetUser([FromRoute] string login)
+        [HttpGet()]
+        [Authorize]
+        [Route("User")]
+        public async Task<IActionResult> GetUser()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            string userId = User.Claims.First(c => c.Type == "UserID").Value;
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
             //var user = await _context.User.SingleOrDefaultAsync(m => m.Email.Equals(login));
-            var user = await _userManager.FindByEmailAsync(login);
+            var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
@@ -124,21 +127,34 @@ namespace WebApp.Controllers
 
         // POST: api/User
         [HttpPost]
-        //[Authorize]
-        public async Task<IActionResult> PostUser([FromBody]CBAUserModel modelUser)
+        public async Task<IActionResult> PostUser([FromBody]UserRegDto regUser)
         {
             var cbaUser = new CBAUser()
             {
-                Email = modelUser.Email,
-                FirstName = modelUser.FirstName,
-                LastName = modelUser.LastName,
-                PhoneNumber = modelUser.PhoneNumber,
-                UserName = modelUser.Email
+                Email = regUser.Email,
+                FirstName = regUser.FirstName,
+                LastName = regUser.LastName,
+                PhoneNumber = regUser.PhoneNumber,
+                UserName = regUser.Email,
+                Organisation = new Organisation
+                {
+                    Name = regUser.OrgName,
+                    Code = regUser.OrgCode,
+                    StreetAddressOne = regUser.StreetAddrL1,
+                    StreetAddressTwo = regUser.StreetAddrL2,
+                    City = regUser.City,
+                    Country = regUser.Country,
+                    PhoneNumber = regUser.OrgPhoneNumber,
+                    Logo = regUser.LogoURL,
+                    CharitiesNumber = regUser.CharitiesNumber,
+                    GSTNumber = regUser.GSTNumber,
+                    CreatedAt = DateTime.Now,                     
+                }
             };
 
             try
             {
-                var result = await _userManager.CreateAsync(cbaUser, modelUser.Password);
+                var result = await _userManager.CreateAsync(cbaUser, regUser.Password);
                 return Ok(result);
 
             }catch(Exception ex)

@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Authentication;
 using CryptoService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace WebApp.Controllers
 {
@@ -38,7 +41,8 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(Login loginModel)
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody]Login loginModel)
         {
             //loginModel.RememberMe = false;
             //var (LoginOk, userName) = LoginUser(loginModel.Username, loginModel.Password);
@@ -47,24 +51,39 @@ namespace WebApp.Controllers
             //                                   loginModel.RememberMe,
             //                                   lockoutOnFailure:false);
             var curUser = await _userManager.FindByNameAsync(loginModel.Username);
-            bool isValidUser = await _userManager.CheckPasswordAsync(curUser, loginModel.Password);
+            if (curUser == null) return BadRequest(new { message = "The user is not exist" });
 
+            bool isValidPassword = await _userManager.CheckPasswordAsync(curUser, loginModel.Password);
+            if (!isValidPassword) return BadRequest(new { message = "The password is not correct" });
 
-            if (isValidUser)
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-                var claims = new List<Claim> {
-                    new Claim(ClaimTypes.Name, loginModel.Username)
-                };
+                Subject = new ClaimsIdentity(new Claim[] {
+                    new Claim("UserID", curUser.Id.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(120),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes("1234567890123456")), SecurityAlgorithms.HmacSha256Signature)
+            };
 
-                var userIdentity = new ClaimsIdentity(claims, "login");
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.WriteToken(securityToken);
+            return Ok(new { token });
+            //if (isValidUser)
+            //{
+            //    var claims = new List<Claim> {
+            //        new Claim(ClaimTypes.Name, loginModel.Username)
+            //    };
 
-                ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
-                await HttpContext.SignInAsync(principal);
+            //    var userIdentity = new ClaimsIdentity(claims, "login");
 
-                //return Ok(value: userName);
-                return Ok(value:curUser.Email);
-            }
-            return BadRequest();
+            //    ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
+            //    await HttpContext.SignInAsync(principal);
+
+            //    //return Ok(value: userName);
+            //    return Ok(value:curUser.Email);
+            //}
         }
 
 

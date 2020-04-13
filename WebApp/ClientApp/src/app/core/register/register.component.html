@@ -2,7 +2,7 @@
 <div class="register-container">
   <form [formGroup]="form" (ngSubmit)="onSubmit(form,$event)" fxFlex fxLayout="row" fxLayout.xs="column">
     <mat-card fxFlex="1 1 auto">
-      <mat-tab-group>
+      <mat-tab-group [dynamicHeight]="true" [selectedIndex]="selectedTab" (selectChange)="onTabChange($event.index)">
 
         <mat-tab label="User Information">
           <div class="form-content">
@@ -10,7 +10,8 @@
             <!-- TODO: add red * to compulsory fields -->
             <mat-form-field>
               <input matInput placeholder="First Name" formControlName="firstName">
-              <mat-error *ngFor="let item of form.controls['firstName'].errors | keyvalue">{{item.key}} is {{item.value}}</mat-error>
+              <mat-error *ngFor="let item of form.controls['firstName'].errors | keyvalue">{{item.key}} is
+                {{item.value}}</mat-error>
 
             </mat-form-field>
 
@@ -42,8 +43,10 @@
                 <mat-error>{{form.get('passwords').controls['confirmedPassword'].errors | json}}</mat-error>
               </mat-form-field>
             </div>
-
-
+          </div>
+          <div class="full-width" fxLayout="row">
+            <button mat-raised-button type="button" (click)="nextTab()">Next Step</button>
+            <span class="fill-remaining-space"></span>
           </div>
         </mat-tab>
 
@@ -51,15 +54,61 @@
 
         <mat-tab label="Organisation Information" class="form-content">
           <div class="form-content">
-
-            <!-- TODO: Input organisation information
-              <mat-form-field>
-              <input matInput placeholder="First Name">
+            <mat-form-field>
+              <input matInput placeholder="Organisation Name" formControlName="orgName">
             </mat-form-field>
 
             <mat-form-field>
-              <input matInput placeholder="Last Name">
-            </mat-form-field> -->
+              <input matInput placeholder="Organisation Short Code" formControlName="orgCode">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput placeholder="Street address line 1" formControlName="streetAddrL1">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput placeholder="Street address line 2" formControlName="streetAddrL2">
+            </mat-form-field>
+
+            <div class="full-width" fxLayout="row">
+              <mat-form-field>
+                <mat-select placeholder="Select a country" [(ngModel)]="selectedCountry" formControlName="country">
+                  <mat-option *ngFor="let country of countries" [value]='country.name'>
+                    {{country.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput placeholder="City / Town" formControlName="city">
+              </mat-form-field>
+            </div>
+
+            <mat-form-field>
+              <input matInput placeholder="Phone number" formControlName="orgPhoneNumber">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput placeholder="Upload the logo" formControlName="logoUrl">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput placeholder="Charities Number" formControlName="charitiesNumber">
+            </mat-form-field>
+
+            <div class="full-width" fxLayout="row">
+              <mat-checkbox (change)="toggleGST($event)">GST Registed?</mat-checkbox>
+              <span *ngIf="displayInputGST">
+                <mat-form-field>
+                  <input matInput placeholder="Input your GST number: " formControlName="gstNumber"
+                    >
+                </mat-form-field>
+              </span>
+            </div>
+
+          </div>
+          <div class="full-width" fxLayout="row">
+            <button mat-raised-button type="button" (click)="prevTab()">Previous Step</button>
+            <span class="fill-remaining-space"></span>
           </div>
 
         </mat-tab>

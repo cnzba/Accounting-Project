@@ -94,7 +94,7 @@ namespace WebApp
 
             //JWT Authentication
 
-            var key = Encoding.UTF8.GetBytes("1234567890123456");
+            var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -108,6 +108,7 @@ namespace WebApp
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
+                    ValidateAudience =false,
                     ClockSkew = TimeSpan.Zero
                 };
             });

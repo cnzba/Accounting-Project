@@ -75,6 +75,13 @@ namespace WebApp.Entities
                 entity.Property(e => e.City).IsRequired();
                 entity.Property(e => e.Country).IsRequired();
             });
+
+            modelBuilder.Entity<CBAUser>(entity =>
+           {
+               entity.HasOne(u => u.Organisation).WithMany(o => o.Users);
+               entity.Property(u => u.IsActive).IsRequired();
+
+           });
         }
     }
 }

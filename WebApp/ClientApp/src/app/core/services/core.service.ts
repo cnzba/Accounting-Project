@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DashboardReceivableData } from '../domain';
 
 @Injectable({
@@ -11,7 +11,8 @@ import { DashboardReceivableData } from '../domain';
 export class CoreService {
     constructor (private http:HttpClient){}
     getDashboardReiceivableData(){
-       return this.http.get<DashboardReceivableData>("/api/invoice/dashboarddata");
+        //Intercept the header in login/auth.interceptor.ts
+        return this.http.get<DashboardReceivableData>("/api/invoice/dashboarddata");
     }
     
 }

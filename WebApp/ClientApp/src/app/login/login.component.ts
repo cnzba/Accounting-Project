@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
-import { AuthenticationService } from "./authentication.service";
+//import { AuthenticationService } from "./authentication.service";
 import { AlertService } from "../common/alert/alert.service";
 import { CallbackService } from '../common/callback.service';
 import { Subscription } from 'rxjs';
 import { SpinnerService } from "../common/spinner.service";
+import { NgForm } from '@angular/forms';
+import { UserService } from '../users/user.service';
 
 @Component({
     selector: 'app-login',
@@ -21,16 +23,17 @@ export class LoginComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService,
+        //private authenticationService: AuthenticationService,        
         private alertService: AlertService,
         private callbackService: CallbackService,
-        private spinnerService: SpinnerService) {
+        private spinnerService: SpinnerService,
+        private userService:UserService) {
         this.subscription = callbackService.updateNavObs$.subscribe();
     }
 
     ngOnInit() {
         // reset login status
-        this.authenticationService.logout().subscribe();
+        //this.authenticationService.logout().subscribe();
 
         // get return url from route parameters or default to '/'
         if (this.route.snapshot.paramMap.has('returnUrl'))
@@ -42,23 +45,49 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     login() {
         this.spinnerService.showSpinner();
-        this.authenticationService.login(this.model.username, this.model.password)
-            .subscribe(
-            data => {
-                this.isLoginFail = false;
-                if (data.forcePasswordChange) {
-                    localStorage.setItem("forcePasswordChange", "true");
-                    this.callbackService.updateNav(true);
-                    this.router.navigate(["change-password"]);
-                } else {
-                    this.router.navigate([this.returnUrl]);
-                }
+        this.userService.login(this.model).subscribe(
+            (res:any) => {
+                var token = JSON.parse(res._body).token;
+                localStorage.setItem('token',token);
+                this.router.navigateByUrl('/core');
             },
-            error => {
-                //this.alertService.error("User Not Found.");
-                this.isLoginFail = true;
-                this.spinnerService.hideSpinner();
-            });
+            err => {
+                if(err.status == 400){
+                    this.alertService.error("Incorrect username or password");                    
+                    this.spinnerService.hideSpinner();
+                }else{
+                    console.log(err);
+                }
+            }
+
+
+        );
+
+        // this.authenticationService.login(this.model.username, this.model.password)
+        //     .subscribe(
+        //     (res: any) => {
+        //         console.log(res.token);
+        //         localStorage.setItem('token',res.token);
+        //         this.router.navigateByUrl('/core');
+        //         // this.isLoginFail = false;
+        //         // if (data.forcePasswordChange) {
+        //         //     localStorage.setItem("forcePasswordChange", "true");
+        //         //     this.callbackService.updateNav(true);
+        //         //     this.router.navigate(["change-password"]);
+        //         // } else {
+        //         //     this.router.navigate([this.returnUrl]);
+        //         // }
+        //     },
+        //     error => {
+        //         //this.alertService.error("User Not Found.");
+        //         // this.isLoginFail = true;
+        //         // this.spinnerService.hideSpinner();
+        //         if (error.status == 400){
+        //             this.alertService.error("Incorrect username or password");
+        //         }else{
+        //             console.log(error);
+        //         }
+        //     });
     }
 
     inputChanged(event) {
