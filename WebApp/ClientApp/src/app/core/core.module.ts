@@ -4,7 +4,8 @@ import { SharedModule } from '../shared';
 import { DashboardComponent } from './dashboard-component';
 import {CoreRoutingModule} from './core-routing.module';
 import { RegisterComponent } from "./register";
-import { UserRegisterService } from './services';
+import { UserRegisterService, CheckUserExistService } from './services';
+import { RegErrTranslate } from '../pipes/regsiterInputErr.pipe';
 
 @NgModule({
   imports: [
@@ -21,11 +22,13 @@ import { UserRegisterService } from './services';
 
   providers:[
     UserRegisterService,
+    CheckUserExistService
   ],
   declarations: [
     SidebarComponent,
     DashboardComponent,
-    RegisterComponent
+    RegisterComponent,
+    RegErrTranslate
 
   ]
 })

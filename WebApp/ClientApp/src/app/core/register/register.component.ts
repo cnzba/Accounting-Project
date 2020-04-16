@@ -1,10 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl,Validators, FormBuilder } from '@angular/forms';
-import { UserRegisterService } from "../services";
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { UserRegisterService, } from "../services";
 import { CBAUser } from '../domain/CBAUser';
 import { Router } from '@angular/router';
 import { CBAOrg } from '../domain/CBAOrg';
 import { Country } from '../domain/Country';
+import { Observable, observable } from 'rxjs';
+import { flatMap,map} from "rxjs/operators";
+import { UserValidators } from '../validators/user.validator';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -15,6 +18,10 @@ export class RegisterComponent implements OnInit{
   public displayInputGST = true;
   private regUser:CBAUser;
   private regOrg:CBAOrg;
+  logoImgUrl ="/assets/images/logo_placeholder.png";
+
+
+  //TODO: Setup a country list.
   countries : Country[] = 
   [
     {name: 'New Zealand', code: 'NZ'}, 
@@ -35,17 +42,21 @@ export class RegisterComponent implements OnInit{
   form:FormGroup;
   constructor(private fb:FormBuilder,
               private userRegService:UserRegisterService,
-              private router: Router){ 
+              private router: Router,
+              private checkUserExistService:UserValidators){ 
       this.regUser = new CBAUser();
       this.regOrg = new CBAOrg();
     }
 
   ngOnInit() {
     this.form = this.fb.group({
-      email: ['',Validators.compose([
+      email: ['',
+      Validators.compose([
         Validators.required,
         Validators.email,
-      ])],
+      ]),
+      this.checkUserExistService.emailExistValidator()
+      ],
       firstName:['',Validators.compose([
         Validators.required,      
       ])],
@@ -59,7 +70,8 @@ export class RegisterComponent implements OnInit{
 
       passwords:this.fb.group({
         password: ['',Validators.compose([
-          Validators.required,        
+          Validators.required,
+          Validators.minLength(5)        
         ])],
         confirmedPassword:['',Validators.compose([
           Validators.required,  
@@ -99,7 +111,7 @@ export class RegisterComponent implements OnInit{
 
       //TODO: Upload and display logo
       logoUrl:['',Validators.compose([
-        //Validators.required,      
+        Validators.required,      
       ])],
 
       charitiesNumber:['',Validators.compose([
@@ -111,6 +123,7 @@ export class RegisterComponent implements OnInit{
       ])],
     })    
   }
+  
 
   comparePasswords(fb:FormGroup){
     let confirmPswrdCtrl = fb.get('confirmedPassword');
@@ -177,6 +190,18 @@ export class RegisterComponent implements OnInit{
     } else{
       this.displayInputGST=true;
     }
-
   }
+
+  public uploadFinished =(event) =>{
+    let url = event.dbPath;
+    this.logoImgUrl= url;
+    this.form.get('logoUrl').setValue(url);
+  }
+
+  // public createImgPath = () =>{
+    
+  //     return `https://localhost:44390/${this.logoImgUrl}`;
+  // }
+
+  
 }

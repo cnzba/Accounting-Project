@@ -10,37 +10,36 @@
             <!-- TODO: add red * to compulsory fields -->
             <mat-form-field>
               <input matInput placeholder="First Name" formControlName="firstName">
-              <mat-error *ngFor="let item of form.controls['firstName'].errors | keyvalue">{{item.key}} is
-                {{item.value}}</mat-error>
+              <mat-error>{{form.controls['firstName'].errors | regerrtranslate}}</mat-error>
 
             </mat-form-field>
 
             <mat-form-field>
               <input matInput placeholder="Last Name" formControlName="lastName">
-              <mat-error>{{form.controls['lastName'].errors | json}}</mat-error>
+              <mat-error>{{form.controls['lastName'].errors | regerrtranslate}}</mat-error>
 
             </mat-form-field>
 
             <mat-form-field>
               <input matInput placeholder="Email" formControlName="email">
-              <mat-error>{{form.controls['email'].errors | json}}</mat-error>
+              <mat-error>{{form.controls['email'].errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
               <input matInput placeholder="Phone Number" formControlName="phoneNumber">
-              <mat-error>{{form.controls['phoneNumber'].errors | json}}</mat-error>
+              <mat-error>{{form.controls['phoneNumber'].errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <div formGroupName="passwords" class="form-content">
               <mat-form-field>
                 <input matInput placeholder="Password" formControlName="password">
-                <mat-error>{{form.get('passwords').controls['password'].errors | json}}</mat-error>
+                <mat-error>{{form.get('passwords').controls['password'].errors | regerrtranslate}}</mat-error>
 
               </mat-form-field>
 
               <mat-form-field>
                 <input matInput placeholder="Confirm Password" formControlName="confirmedPassword">
-                <mat-error>{{form.get('passwords').controls['confirmedPassword'].errors | json}}</mat-error>
+                <mat-error>{{form.get('passwords').controls['confirmedPassword'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -88,7 +87,11 @@
             </mat-form-field>
 
             <mat-form-field>
-              <input matInput placeholder="Upload the logo" formControlName="logoUrl">
+              <div class="upload">
+                <img alt="Preview logo" class="preview-logo" [src]="logoImgUrl" style="width:60px;height:60px;">
+                <app-upload (onUploadFinished)="uploadFinished($event)"></app-upload>                
+                <input matInput style="display: none;" formControlName="logoUrl">
+              </div>
             </mat-form-field>
 
             <mat-form-field>
@@ -99,11 +102,11 @@
               <mat-checkbox (change)="toggleGST($event)">GST Registed?</mat-checkbox>
               <span *ngIf="displayInputGST">
                 <mat-form-field>
-                  <input matInput placeholder="Input your GST number: " formControlName="gstNumber"
-                    >
+                  <input matInput placeholder="Input your GST number: " formControlName="gstNumber">
                 </mat-form-field>
               </span>
             </div>
+
 
           </div>
           <div class="full-width" fxLayout="row">

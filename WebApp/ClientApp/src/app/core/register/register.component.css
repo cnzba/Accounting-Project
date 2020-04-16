@@ -6,3 +6,12 @@
 .form-content > * {
     width : 100%;
 }
+
+.upload{
+    display:flex;
+    flex-direction: row;
+}
+
+.preview-logo{
+    width: 5rem;
+}

@@ -12,6 +12,7 @@ import { MatToolbarModule, MatIconModule, MatButtonModule, MatCardModule,
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {CdkTableModule} from '@angular/cdk/table';
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { UploadComponent } from './upload';
 
 
 @NgModule({
@@ -54,14 +55,16 @@ import { ReactiveFormsModule, FormsModule } from "@angular/forms";
         ReactiveFormsModule,
         MatSelectModule,
         MatCheckboxModule,
-        FormsModule
-
+        FormsModule,
+        UploadComponent
     ],
 
     providers:[
         {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
     ],
-    declarations: [],
+    declarations: [
+        UploadComponent,
+    ],
     
 })
 export class SharedModule {}

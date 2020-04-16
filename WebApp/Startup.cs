@@ -23,6 +23,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace WebApp
 {
@@ -80,6 +83,15 @@ namespace WebApp
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+
+            //To upload large files, set the length of upload file to max value.
+            services.Configure<FormOptions>(form =>
+            {
+                form.ValueLengthLimit = int.MaxValue;
+                form.MultipartBodyLengthLimit = int.MaxValue;
+                form.MemoryBufferThreshold = int.MaxValue;
             });
 
             services.AddMvc()
@@ -166,6 +178,13 @@ namespace WebApp
             // app.UseDefaultFiles();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), 
+                    @"Resources")),
+                RequestPath= new PathString("/Resources")
+            });
+
             app.UseSpaStaticFiles();
             app.UseCookiePolicy();
 

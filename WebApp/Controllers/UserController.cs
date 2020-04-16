@@ -8,6 +8,8 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using WebApp.Models;
+using System.IO;
+using System.Net.Http.Headers;
 
 namespace WebApp.Controllers
 {
@@ -59,7 +61,7 @@ namespace WebApp.Controllers
             return Ok(users);
         }
 
-        // GET: api/User/5
+        // GET: api/User/User
         [HttpGet()]
         [Authorize]
         [Route("User")]
@@ -80,6 +82,14 @@ namespace WebApp.Controllers
             }
             
             return Ok(user);
+        }
+
+        [HttpGet,Route("CheckUserExist/{email}")]
+        public async Task<IActionResult> CheckUserExist([FromRoute] string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return Ok("NotExist");
+            return Ok("Exist");
         }
 
         // PUT: api/User/5
@@ -162,9 +172,6 @@ namespace WebApp.Controllers
                 throw ex;
             }
 
-
-
-
             #region Old code
             //if (!ModelState.IsValid)
             //{
@@ -184,6 +191,40 @@ namespace WebApp.Controllers
             //return CreatedAtAction("GetUsers", new { id = user.Id }, user); 
             #endregion
 
+        }
+
+        [HttpPost, Route("uploadLogo")]
+        [DisableRequestSizeLimit]
+
+        public IActionResult UploadLogo()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                var folderName = Path.Combine(@"Resources", "Images");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                if (file.Length > 0)
+                {
+                    var fileName = 
+                        DateTime.Now.ToFileTime().ToString() +
+                        ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');                        ;
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    var dbPath = Path.Combine(folderName, fileName);
+
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    return Ok(new { dbPath });
+                }
+                else
+                {
+                    return BadRequest();
+                }                
+            }catch(Exception ex)
+            {
+                return StatusCode(500, $"Internal server error:{ex}");
+            }
         }
 
         // DELETE: api/User/5
