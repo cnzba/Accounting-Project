@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MatToolbarModule, MatIconModule, MatButtonModule, MatCardModule, 
     MatInputModule, MatListModule, MatGridListModule, MatDialogModule, 
     MatAutocompleteModule, MatSidenavModule, MatTableModule, MatFormFieldModule,
-     MatFormFieldControl, MatTabsModule, MatSelectModule, MatCheckboxModule, MAT_CHECKBOX_CLICK_ACTION } from '@angular/material';
+     MatFormFieldControl, MatTabsModule, MatSelectModule, MatCheckboxModule, MAT_CHECKBOX_CLICK_ACTION, ErrorStateMatcher } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {CdkTableModule} from '@angular/cdk/table';
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
@@ -35,7 +35,7 @@ import { UploadComponent } from './upload';
         ReactiveFormsModule,
         MatSelectModule,
         MatCheckboxModule,
-        FormsModule
+        FormsModule,
          ],
     exports: [
         MatToolbarModule,
@@ -56,7 +56,7 @@ import { UploadComponent } from './upload';
         MatSelectModule,
         MatCheckboxModule,
         FormsModule,
-        UploadComponent
+        UploadComponent,
     ],
 
     providers:[

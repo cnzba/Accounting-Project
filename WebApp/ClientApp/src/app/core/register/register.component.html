@@ -32,13 +32,13 @@
 
             <div formGroupName="passwords" class="form-content">
               <mat-form-field>
-                <input matInput placeholder="Password" formControlName="password">
+                <input type="password" matInput placeholder="Password" formControlName="password">
                 <mat-error>{{form.get('passwords').controls['password'].errors | regerrtranslate}}</mat-error>
 
               </mat-form-field>
 
               <mat-form-field>
-                <input matInput placeholder="Confirm Password" formControlName="confirmedPassword">
+                <input type="password" matInput placeholder="Confirm Password" formControlName="confirmedPassword">
                 <mat-error>{{form.get('passwords').controls['confirmedPassword'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
             </div>
@@ -55,35 +55,41 @@
           <div class="form-content">
             <mat-form-field>
               <input matInput placeholder="Organisation Name" formControlName="orgName">
+              <mat-error>{{form.controls['orgName'].errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
               <input matInput placeholder="Organisation Short Code" formControlName="orgCode">
+              <mat-error>{{form.controls['orgCode'].errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
               <input matInput placeholder="Street address line 1" formControlName="streetAddrL1">
+              <mat-error>{{form.controls['streetAddrL1'].errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
               <input matInput placeholder="Street address line 2" formControlName="streetAddrL2">
+              <mat-error>{{form.controls['streetAddrL2'].errors | regerrtranslate}}</mat-error>
+
             </mat-form-field>
 
             <div class="full-width" fxLayout="row">
               <mat-form-field>
-                <mat-select placeholder="Select a country" [(ngModel)]="selectedCountry" formControlName="country">
-                  <mat-option *ngFor="let country of countries" [value]='country.name'>
-                    {{country.name}}
-                  </mat-option>
+                <mat-select placeholder="Select a country" [(ngModel)]="selectedCountry" formControlName="country" [disabled]="true">                  
+                  <mat-option value="New Zealand" selected>New Zealand</mat-option>
                 </mat-select>
               </mat-form-field>
               <mat-form-field>
                 <input matInput placeholder="City / Town" formControlName="city">
+                <mat-error>{{form.controls['city'].errors | regerrtranslate}}</mat-error>
+
               </mat-form-field>
             </div>
 
             <mat-form-field>
               <input matInput placeholder="Phone number" formControlName="orgPhoneNumber">
+              <mat-error>{{form.controls['orgPhoneNumber'].errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
@@ -95,14 +101,16 @@
             </mat-form-field>
 
             <mat-form-field>
-              <input matInput placeholder="Charities Number" formControlName="charitiesNumber">
+              <input matInput placeholder="Charities Number(It's a four characters code)" formControlName="charitiesNumber">
+              <mat-error>{{form.controls['charitiesNumber'].errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <div class="full-width" fxLayout="row">
               <mat-checkbox (change)="toggleGST($event)">GST Registed?</mat-checkbox>
-              <span *ngIf="displayInputGST">
+              <span *ngIf="!displayInputGST">
                 <mat-form-field>
                   <input matInput placeholder="Input your GST number: " formControlName="gstNumber">
+                  <mat-error>{{form.controls['gstNumber'].errors | regerrtranslate}}</mat-error>
                 </mat-form-field>
               </span>
             </div>

@@ -8,6 +8,7 @@ import { Country } from '../domain/Country';
 import { Observable, observable } from 'rxjs';
 import { flatMap,map} from "rxjs/operators";
 import { UserValidators } from '../validators/user.validator';
+import {  } from "@angular/material/core";
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -19,25 +20,7 @@ export class RegisterComponent implements OnInit{
   private regUser:CBAUser;
   private regOrg:CBAOrg;
   logoImgUrl ="/assets/images/logo_placeholder.png";
-
-
-  //TODO: Setup a country list.
-  countries : Country[] = 
-  [
-    {name: 'New Zealand', code: 'NZ'}, 
-    {name:'Australia', code: 'AU'}, 
-    {name: 'Austria', code: 'AT'}, 
-    {name: 'Azerbaijan', code: 'AZ'}, 
-    {name: 'Bahamas', code: 'BS'}, 
-    {name: 'Bahrain', code: 'BH'}, 
-    {name: 'Bangladesh', code: 'BD'}, 
-    {name: 'Barbados', code: 'BB'}, 
-    {name: 'Belarus', code: 'BY'}, 
-    {name: 'Belgium', code: 'BE'}, 
-    {name: 'Belize', code: 'BZ'}, 
-    {name: 'Benin', code: 'BJ'},
-  ];
-  private selectedCountry:string;
+  selectedCountry = 'New Zealand';
 
   form:FormGroup;
   constructor(private fb:FormBuilder,
@@ -54,18 +37,21 @@ export class RegisterComponent implements OnInit{
       Validators.compose([
         Validators.required,
         Validators.email,
+        Validators.maxLength(50)
       ]),
       this.checkUserExistService.emailExistValidator()
       ],
       firstName:['',Validators.compose([
-        Validators.required,      
+        Validators.required,   
+        Validators.maxLength(50)   
       ])],
       lastName:['',Validators.compose([
-        Validators.required,       
+        Validators.required, 
+        Validators.maxLength(50)      
       ])],
 
       phoneNumber:['',Validators.compose([
-        Validators.required,      
+        Validators.required, 
       ])],
 
       passwords:this.fb.group({
@@ -82,11 +68,13 @@ export class RegisterComponent implements OnInit{
       ),
       
       orgName:['',Validators.compose([
-        Validators.required,      
+        Validators.required, 
+        Validators.maxLength(50)     
       ])],
 
       orgCode:['',Validators.compose([
-        Validators.required,      
+        Validators.required,   
+        Validators.pattern("[a-zA-Z]{4}")  
       ])],
 
       streetAddrL1:['',Validators.compose([
@@ -94,7 +82,7 @@ export class RegisterComponent implements OnInit{
       ])],
 
       streetAddrL2:['',Validators.compose([
-        Validators.required,      
+              
       ])],
 
       city:['',Validators.compose([
@@ -111,15 +99,15 @@ export class RegisterComponent implements OnInit{
 
       //TODO: Upload and display logo
       logoUrl:['',Validators.compose([
-        Validators.required,      
       ])],
 
       charitiesNumber:['',Validators.compose([
-        Validators.required,      
+        Validators.maxLength(20),      
       ])],
 
       gstNumber:['',Validators.compose([
-        Validators.required,      
+        Validators.required,  
+        Validators.maxLength(20)    
       ])],
     })    
   }
