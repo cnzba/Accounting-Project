@@ -13,7 +13,7 @@ namespace WebApp.Entities
         public string Description { get; set; }
         public decimal Amount { get; set; }
 
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public decimal UnitPrice { get; set; }
 
         // Foreign Key(s) (commented because EF Core will add them to the model automatically

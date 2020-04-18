@@ -169,8 +169,9 @@
             </div>
 
             <div class="col-1">
-                <input [ngModel]="il.quantity" (ngModelChange)="updateInvoiceLineAmountByQuantity($event,i)"
-                       class="form-control text-right" type="number" min="0" name="quantity{{i}}" appPositiveInteger />
+                <input currencyMask [ngModel]="il.quantity" (ngModelChange)="updateInvoiceLineAmountByQuantity($event,i)"
+                       class="form-control text-right" name="quantity{{i}}"
+                       [options]="{ prefix: '', thousands: ',', decimal: '.', allowNegative:false }" />
             </div>
 
             <div class="col-1">
