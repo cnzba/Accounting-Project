@@ -39,8 +39,6 @@ import { InvoiceFilterPipe } from './pipes/invoice-filter.pipe';
 import { TwoDigitDecimaNumberDirective } from './invoices/two-digit-decima-number.directive';
 import { InputIntegerOnlyDirective } from './invoices/input-integer-only.directive';
 
-import { CurrencyMaskModule } from "ng2-currency-mask"; 
-
 import { DatePipe } from '@angular/common';
 
 @NgModule({
@@ -69,7 +67,7 @@ import { DatePipe } from '@angular/common';
         FormsModule,
         HttpModule,
         ModalModule.forRoot(),
-        CurrencyMaskModule,
+        
         RouterModule.forRoot([
             { path: 'login', component: LoginComponent },
             {
