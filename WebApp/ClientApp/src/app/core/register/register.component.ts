@@ -50,18 +50,24 @@ export class RegisterComponent implements OnInit{
         Validators.maxLength(50)      
       ])],
 
-      phoneNumber:['',Validators.compose([
+      phoneNumberPrefix:['',Validators.compose([
         Validators.required, 
+        Validators.pattern("[0-9]{3}")
+      ])],
+
+      phoneNumberBody:['',Validators.compose([
+        Validators.required, 
+        Validators.pattern("[0-9]{7,10}")
       ])],
 
       passwords:this.fb.group({
         password: ['',Validators.compose([
           Validators.required,
-          Validators.minLength(5)        
+          Validators.minLength(8)        
         ])],
         confirmedPassword:['',Validators.compose([
           Validators.required,  
-          Validators.minLength(5)      
+          Validators.minLength(8)      
         ])]
       },
       {validator: this.comparePasswords}
@@ -93,11 +99,16 @@ export class RegisterComponent implements OnInit{
         Validators.required,      
       ])],
 
-      orgPhoneNumber:['',Validators.compose([
-        Validators.required,      
+      orgPhoneNumberPrefix:['',Validators.compose([
+        Validators.required, 
+        Validators.pattern("[0-9]{3}")     
       ])],
 
-      //TODO: Upload and display logo
+      orgPhoneNumberBody:['',Validators.compose([
+        Validators.required,   
+        Validators.pattern("[0-9]{7,10}")   
+      ])],
+
       logoUrl:['',Validators.compose([
       ])],
 
@@ -129,7 +140,7 @@ export class RegisterComponent implements OnInit{
     ev.preventDefault();
     console.log(JSON.stringify(value));
     console.log(valid);
-    this.regUser.phoneNumber= value.phoneNumber;
+    this.regUser.phoneNumber= value.phoneNumberPrefix+ "-"+value.phoneNumberBody;
     this.regUser.firstName= value.firstName;
     this.regUser.lastName = value.lastName;
     this.regUser.email = value.email;
@@ -140,7 +151,7 @@ export class RegisterComponent implements OnInit{
     this.regOrg.streetAddrL2 = value.streetAddrL2;
     this.regOrg.city = value.city;
     this.regOrg.country = this.selectedCountry;
-    this.regOrg.phoneNumber = value.orgPhoneNumber;
+    this.regOrg.phoneNumber = value.orgPhoneNumberPrefix + "-" + value.orgPhoneNumberBody;
     this.regOrg.logoUrl = value.logoUrl;
     this.regOrg.chritiesNumber = value.charitiesNumber;
     this.regOrg.gstNumber = value.gstNumber;

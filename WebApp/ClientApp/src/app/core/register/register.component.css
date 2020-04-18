@@ -15,3 +15,21 @@
 .preview-logo{
     width: 5rem;
 }
+
+.phone-number, .select-country{
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid rgba(0, 0, 0,.87);
+}
+
+.phone-number mat-form-field+mat-form-field{
+    margin-left: 8px;
+}
+
+.select-country mat-form-field+mat-form-field{
+    margin-left: 8px;
+}
+
+.phone-number .prefix{
+    width: 5rem;
+}
