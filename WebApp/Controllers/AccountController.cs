@@ -53,15 +53,16 @@ namespace WebApp.Controllers
             var curUser = await _userManager.FindByNameAsync(loginModel.Username);
             if (curUser == null) return BadRequest(new { message = "The user is not exist" });
 
-            bool isValidPassword = await _userManager.CheckPasswordAsync(curUser, loginModel.Password);
-            if (!isValidPassword) return BadRequest(new { message = "The password is not correct" });
+            //bool isValidPassword = await _userManager.CheckPasswordAsync(curUser, loginModel.Password);
+            var res = await _signInManager.PasswordSignInAsync(curUser, loginModel.Password, isPersistent: true, lockoutOnFailure: true);
+            if (res.IsNotAllowed) return BadRequest(new { message = "The password is not correct" });
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] {
                     new Claim("UserID", curUser.Id.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(120),
+                Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes("1234567890123456")), SecurityAlgorithms.HmacSha256Signature)
             };

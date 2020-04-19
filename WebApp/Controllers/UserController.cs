@@ -10,6 +10,10 @@ using Microsoft.AspNetCore.Identity;
 using WebApp.Models;
 using System.IO;
 using System.Net.Http.Headers;
+using Microsoft.Extensions.Logging;
+using ServiceUtil.Email;
+using System.Text.Encodings.Web;
+using Microsoft.Extensions.Options;
 
 namespace WebApp.Controllers
 {
@@ -21,26 +25,32 @@ namespace WebApp.Controllers
         private UserManager<CBAUser> _userManager;
         //private SignInManager<CBAUser> _signInManager;
         private readonly CBAContext _context;
+        private readonly IEmailService _emailService;
+        private readonly IEmailConfig _emailConfig;
 
         //Dependency Injection
         private readonly ICryptography _crypto;
+        //private ILogger _logger;
 
-        public UserController(CBAContext context, 
+        public UserController(CBAContext context,
             ICryptography crypto,
-            UserManager<CBAUser> userManager
+            UserManager<CBAUser> userManager,
             //SignInManager<CBAUser> signInManager
+            //ILogger logger,
+            IEmailService emailService,
+            IOptions<EmailConfig> emailConfig
             )
         {
             _context = context;
-
             //Dependency Injection
             _crypto = crypto;
             _userManager = userManager;
-
-
+            //_logger = logger;
+            _emailService = emailService;
+            _emailConfig = emailConfig.Value;
         }
 
-        // GET: api/User
+        // GET: api/Users
         [HttpGet]
         [Authorize]
         [Route("Users")]
@@ -92,6 +102,109 @@ namespace WebApp.Controllers
             return Ok("Exist");
         }
 
+        // POST: api/User
+        [HttpPost]
+        public async Task<IActionResult> PostUser([FromBody]UserRegDto regUser)
+        {
+            var cbaUser = new CBAUser()
+            {
+                Email = regUser.Email,
+                FirstName = regUser.FirstName,
+                LastName = regUser.LastName,
+                PhoneNumber = regUser.PhoneNumber,
+                UserName = regUser.Email,
+                Organisation = new Organisation
+                {
+                    Name = regUser.OrgName,
+                    Code = regUser.OrgCode,
+                    StreetAddressOne = regUser.StreetAddrL1,
+                    StreetAddressTwo = regUser.StreetAddrL2,
+                    City = regUser.City,
+                    Country = regUser.Country,
+                    PhoneNumber = regUser.OrgPhoneNumber,
+                    Logo = regUser.LogoURL,
+                    CharitiesNumber = regUser.CharitiesNumber,
+                    GSTNumber = regUser.GSTNumber,
+                    CreatedAt = DateTime.Now,
+                }
+            };
+
+            try
+            {
+                var result = await _userManager.CreateAsync(cbaUser, regUser.Password);
+                if (result.Succeeded)
+                {
+                    //_logger.LogInformation("User created a new account with password");
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(cbaUser);
+                    var callbackUrl ="https://"+Request.Host.Value+"/api/user/confirmEmail?userId="+cbaUser.Id+"&token="+code;
+
+
+                    Email emailContent = new Email() {
+                        To = cbaUser.Email,
+                        Subject = $"CBA user register confirmation for {cbaUser.FirstName} {cbaUser.LastName}",
+                        Body = $"Please confirm your account by <a href='{callbackUrl}'> Confirm registration </a>:{callbackUrl}"
+                    };
+
+
+                    await _emailService.SendEmail(_emailConfig, emailContent);
+                    return Ok("succeed");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        //_logger.LogError(error.ToString());                        
+                        Console.WriteLine(error.ToString());
+                    }
+                    return StatusCode(500, "Failed to create the user");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            #region Old code
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
+
+            //if (LoginExists(user.Email))
+            //{
+            //    return BadRequest("Login Invalid");
+            //}
+
+
+            //user.Password = _crypto.HashMD5(user.Password);
+            //_context.User.Add(user);
+            //await _context.SaveChangesAsync();
+
+            //return CreatedAtAction("GetUsers", new { id = user.Id }, user); 
+            #endregion
+
+        }
+        [HttpGet, Route("confirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, [FromQuery]string token)
+        {
+            var confirmUser = await _userManager.FindByIdAsync(userId);
+            if (confirmUser != null)
+            {
+                var result = await _userManager.ConfirmEmailAsync(confirmUser, token);
+                if (result.Succeeded)
+                {
+                    confirmUser.EmailConfirmed = true;
+                    await _userManager.UpdateAsync(confirmUser);
+                }
+                return Ok("succeed");
+            }
+            else
+            {
+                return StatusCode(500, "User email confirmation failed");
+            }
+        }
+
         // PUT: api/User/5
         [HttpPut("{id}")]
         [Authorize]
@@ -135,63 +248,7 @@ namespace WebApp.Controllers
             return NoContent();
         }
 
-        // POST: api/User
-        [HttpPost]
-        public async Task<IActionResult> PostUser([FromBody]UserRegDto regUser)
-        {
-            var cbaUser = new CBAUser()
-            {
-                Email = regUser.Email,
-                FirstName = regUser.FirstName,
-                LastName = regUser.LastName,
-                PhoneNumber = regUser.PhoneNumber,
-                UserName = regUser.Email,
-                Organisation = new Organisation
-                {
-                    Name = regUser.OrgName,
-                    Code = regUser.OrgCode,
-                    StreetAddressOne = regUser.StreetAddrL1,
-                    StreetAddressTwo = regUser.StreetAddrL2,
-                    City = regUser.City,
-                    Country = regUser.Country,
-                    PhoneNumber = regUser.OrgPhoneNumber,
-                    Logo = regUser.LogoURL,
-                    CharitiesNumber = regUser.CharitiesNumber,
-                    GSTNumber = regUser.GSTNumber,
-                    CreatedAt = DateTime.Now,                     
-                }
-            };
-
-            try
-            {
-                var result = await _userManager.CreateAsync(cbaUser, regUser.Password);
-                return Ok(result);
-
-            }catch(Exception ex)
-            {
-                throw ex;
-            }
-
-            #region Old code
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
-
-            //if (LoginExists(user.Email))
-            //{
-            //    return BadRequest("Login Invalid");
-            //}
-
-
-            //user.Password = _crypto.HashMD5(user.Password);
-            //_context.User.Add(user);
-            //await _context.SaveChangesAsync();
-
-            //return CreatedAtAction("GetUsers", new { id = user.Id }, user); 
-            #endregion
-
-        }
+        
 
         [HttpPost, Route("uploadLogo")]
         [DisableRequestSizeLimit]

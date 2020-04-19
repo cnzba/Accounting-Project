@@ -74,7 +74,7 @@ namespace WebApp
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = false;
                 options.User.RequireUniqueEmail = true;
-                
+                options.SignIn.RequireConfirmedEmail = true;
             }).AddDefaultUI()
             .AddEntityFrameworkStores<CBAContext>(); 
 
@@ -227,6 +227,7 @@ namespace WebApp
             services.AddTransient<IEmail, Email>();
             services.AddTransient<CBASeeder>();
             services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IPdfService, PdfService>();
             services.AddScoped<IPdfService, PdfService>();
             services.AddScoped<IStripePaymentService, StripePaymentService>();
 
