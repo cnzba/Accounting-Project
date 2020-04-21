@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, SimpleChange } from '@angular/core';
-import { ActivatedRoute, ParamMap } from "@angular/router";
+import { ActivatedRoute, ParamMap, Params } from "@angular/router";
 import { Location } from '@angular/common';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal'
 
@@ -29,18 +29,19 @@ import { Router } from '@angular/router';
 export class InvoiceEditComponent implements OnInit {
     constructor(
         private router: Router,
-        private invoiceServiceP: InvoiceService,
+        private invoiceService: InvoiceService,
         private route: ActivatedRoute,
         private location: Location,
         private alertService: AlertService,
         private spinnerService: SpinnerService,
         private modalService: BsModalService) { }
 
-    invoiceService: InvoiceService = this.invoiceServiceP;
+    //invoiceService: InvoiceService = this.invoiceServiceP;
     
 
     // the model backing the form
     modifyInvoice: IInvoice = new Invoice();
+    public invoiceNumber: string;
 
     // model for any errors on the form
     formErrors: ApiError = new ApiError();
@@ -218,6 +219,23 @@ export class InvoiceEditComponent implements OnInit {
         this.route.data.subscribe((data: { invoice: IInvoice }) => {            
             this.orgInvoice = JSON.stringify(data.invoice);
             this.modifyInvoice = data.invoice;
+        });
+    }
+
+        deleteInvoice() {
+        console.log(this.modifyInvoice);
+        // get invoice number to delete
+        const invoiceNumber = this.modifyInvoice.invoiceNumber;
+        console.log(this.modifyInvoice.invoiceNumber);
+        // Delete the invoice
+        this.invoiceService.deleteInvoice(invoiceNumber).subscribe(data => {
+            // Show delete confirmation on pae
+            this.alertService.success(invoiceNumber + " has successfully been deleted!");
+            // Navigate to create new invoice
+            this.router.navigate(['/invoices']);
+        },
+        err => {
+            this.alertService.error("Error: the delete has failed")
         });
     }
     

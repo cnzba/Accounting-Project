@@ -61,14 +61,10 @@ export class InvoicelistComponent implements OnInit {
         }else{
             this.sortedData = allInvoices;            
         }
-       
-        
-        
-//        this.sortedData = 
     }
+
     onPageChange(offset) {
         this.offset = offset;
-       
     }
     
     private _invoiceNumber: string;
@@ -79,27 +75,28 @@ export class InvoicelistComponent implements OnInit {
          this._invoiceNumber = currentInvoiceNum;
        }
     
-    deleteFieldValue(invoiceNumber: string){
-            var delete_value = this.getinvoiceNum();
-            invoiceNumber = delete_value;
-            this.invoiceService.deleteInvoice(invoiceNumber).subscribe(
-               data => {
-               //window.location.reload();
-               this.invo = this.invo.filter(inv=> inv.invoiceNumber !== invoiceNumber);
-               this.offset=0;
-               this.alertService.success(invoiceNumber +" has successfully been deleted!");
-                   //this.invo = this.route.snapshot.data['invoices'];
-               let delIndex = 0;
-               for (let i = 0; i < this.sortedData.length; i++) {
-                   if (this.sortedData[i].invoiceNumber == invoiceNumber)
-                       delIndex = i;
-               };
-               this.sortedData.splice(delIndex, 1);
+    deleteFieldValue() {
+        // get invoice number to delete
+        const invoiceNumber = this.getinvoiceNum();
+        // Delete the invoice
+        this.invoiceService.deleteInvoice(invoiceNumber).subscribe(
+            data => {
+                // Remove deleted invoice from list of invo
+                this.invo = this.invo.filter(inv => inv.invoiceNumber !== invoiceNumber);
+                // Reset pagination offset
+                this.offset = 0;
+                // Show delete confirmation on page
+                this.alertService.success(invoiceNumber + " has successfully been deleted!");
+                // find invoice index to remove from presentation list
+                let delIndex = this.sortedData.findIndex((el) => el.invoiceNumber === invoiceNumber);
+                // Remove deleted invoice from presentation list
+                if (delIndex > 0) {
+                    this.sortedData.splice(delIndex, 1);
+                }
             },
               err=> {
                 this.alertService.error("Error: the delete has failed")
             });
-
     }
        
 
