@@ -222,15 +222,19 @@ export class InvoiceEditComponent implements OnInit {
         });
     }
 
-        deleteInvoice() {
-        console.log(this.modifyInvoice);
+    deleteInvoice() {
+
+        // Only Draft invoices can be deleted. otherwise exit.
+        if (this.modifyInvoice.status !== 'Draft') {
+            this.alertService.error("You can not delete a none draft invoice.");
+            return;
+        }
+
         // get invoice number to delete
         const invoiceNumber = this.modifyInvoice.invoiceNumber;
-        console.log(this.modifyInvoice.invoiceNumber);
+
         // Delete the invoice
         this.invoiceService.deleteInvoice(invoiceNumber).subscribe(data => {
-            // Show delete confirmation on pae
-            this.alertService.success(invoiceNumber + " has successfully been deleted!");
             // Navigate to create new invoice
             this.router.navigate(['/invoices']);
         },

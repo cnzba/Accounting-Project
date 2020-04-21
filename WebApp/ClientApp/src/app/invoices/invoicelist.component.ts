@@ -76,8 +76,17 @@ export class InvoicelistComponent implements OnInit {
        }
     
     deleteFieldValue() {
+
         // get invoice number to delete
         const invoiceNumber = this.getinvoiceNum();
+
+        // Only Draft invoices can be deleted. otherwise exit.
+        let inv: IInvoice[] = this.invo.filter((el) => el.invoiceNumber === invoiceNumber);
+        if (inv.length > 0 && inv[0].status !== 'Draft') {
+            this.alertService.error("You can not delete a none draft invoice.");
+            return;
+        }
+
         // Delete the invoice
         this.invoiceService.deleteInvoice(invoiceNumber).subscribe(
             data => {
@@ -90,7 +99,7 @@ export class InvoicelistComponent implements OnInit {
                 // find invoice index to remove from presentation list
                 let delIndex = this.sortedData.findIndex((el) => el.invoiceNumber === invoiceNumber);
                 // Remove deleted invoice from presentation list
-                if (delIndex > 0) {
+                if (delIndex >= 0) {
                     this.sortedData.splice(delIndex, 1);
                 }
             },
