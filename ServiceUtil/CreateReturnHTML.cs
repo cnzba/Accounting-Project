@@ -4,8 +4,12 @@ using System.Text;
 
 namespace ServiceUtil
 {
-    public class CreateReturnHTML
+    public class CreateReturnHTML:ICreateReturnHTML
     {
+        public CreateReturnHTML()
+        {
+
+        }
         public byte[] GetHTML(string body)
         {
             StringBuilder htmlStringBuilder = new StringBuilder();

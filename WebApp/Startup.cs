@@ -232,8 +232,7 @@ namespace WebApp
             services.AddScoped<IPdfService, PdfService>();
             services.AddScoped<IStripePaymentService, StripePaymentService>();
             //Inject create return HTML service
-            //services.AddTransient<ICreateReturnHTML, CreateReturnHTML>;
-
+            services.AddTransient<ICreateReturnHTML, CreateReturnHTML>();
             services.Configure<CBAOptions>(configuration);
             services.Configure<EmailConfig>(configuration.GetSection("EmailConfig"));
             services.Configure<PdfServiceOptions>(configuration.GetSection("PdfService"));

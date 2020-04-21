@@ -15,6 +15,7 @@ using ServiceUtil.Email;
 using System.Text.Encodings.Web;
 using Microsoft.Extensions.Options;
 using System.Net;
+using ServiceUtil;
 
 namespace WebApp.Controllers
 {
@@ -28,6 +29,7 @@ namespace WebApp.Controllers
         private readonly CBAContext _context;
         private readonly IEmailService _emailService;
         private readonly IEmailConfig _emailConfig;
+        private readonly ICreateReturnHTML _createReturnHTML;
 
         //Dependency Injection
         private readonly ICryptography _crypto;
@@ -39,7 +41,8 @@ namespace WebApp.Controllers
             //SignInManager<CBAUser> signInManager
             //ILogger logger,
             IEmailService emailService,
-            IOptions<EmailConfig> emailConfig
+            IOptions<EmailConfig> emailConfig,
+            ICreateReturnHTML createReturnHTML
             )
         {
             _context = context;
@@ -49,6 +52,7 @@ namespace WebApp.Controllers
             //_logger = logger;
             _emailService = emailService;
             _emailConfig = emailConfig.Value;
+            _createReturnHTML = createReturnHTML;
         }
 
         // GET: api/Users
@@ -211,7 +215,10 @@ namespace WebApp.Controllers
                     confirmUser.EmailConfirmed = true;
                     confirmUser.IsActive = true;
                     await _userManager.UpdateAsync(confirmUser);
-                    return Ok("succeed");
+                    string message = $"Email confirmation succeed, click <a href='https://{Request.Host.Value}'> here</a> to login";
+                    var responseBody = _createReturnHTML.GetHTML(message);
+                    Response.ContentType = "text/html";
+                    await Response.Body.WriteAsync(responseBody, 0, responseBody.Length);
                 }
                 return StatusCode(500, "Fail to verify the user.");
             }
