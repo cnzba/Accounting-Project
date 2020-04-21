@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using ServiceUtil.Email;
 using System.Text.Encodings.Web;
 using Microsoft.Extensions.Options;
+using System.Net;
 
 namespace WebApp.Controllers
 {
@@ -94,6 +95,11 @@ namespace WebApp.Controllers
             return Ok(user);
         }
 
+        /// <summary>
+        /// Check if the user exists by email.
+        /// </summary>
+        /// <param name="email">Email to be checked</param>
+        /// <returns>Two string "Exist" and "NotExist"</returns>
         [HttpGet,Route("CheckUserExist/{email}")]
         public async Task<IActionResult> CheckUserExist([FromRoute] string email)
         {
@@ -102,6 +108,12 @@ namespace WebApp.Controllers
             return Ok("Exist");
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="regUser"></param>
+        /// <returns></returns>
         // POST: api/User
         [HttpPost]
         public async Task<IActionResult> PostUser([FromBody]UserRegDto regUser)
@@ -136,7 +148,8 @@ namespace WebApp.Controllers
                 {
                     //_logger.LogInformation("User created a new account with password");
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(cbaUser);
-                    var callbackUrl ="https://"+Request.Host.Value+"/api/user/confirmEmail?userId="+cbaUser.Id+"&token="+code;
+                    var transCode = WebUtility.UrlEncode(code);
+                    var callbackUrl ="https://"+Request.Host.Value+"/api/user/confirmEmail?userId="+cbaUser.Id+"&token="+transCode;
 
 
                     Email emailContent = new Email() {
@@ -189,19 +202,22 @@ namespace WebApp.Controllers
         public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, [FromQuery]string token)
         {
             var confirmUser = await _userManager.FindByIdAsync(userId);
+            //string decodeToken = WebUtility.UrlDecode(token);
             if (confirmUser != null)
             {
                 var result = await _userManager.ConfirmEmailAsync(confirmUser, token);
                 if (result.Succeeded)
                 {
                     confirmUser.EmailConfirmed = true;
+                    confirmUser.IsActive = true;
                     await _userManager.UpdateAsync(confirmUser);
+                    return Ok("succeed");
                 }
-                return Ok("succeed");
+                return StatusCode(500, "Fail to verify the user.");
             }
             else
             {
-                return StatusCode(500, "User email confirmation failed");
+                return StatusCode(500, "The user do not exist.");
             }
         }
 
