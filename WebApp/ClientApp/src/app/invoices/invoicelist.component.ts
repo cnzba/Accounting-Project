@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal'
 import { InvoiceService } from "./invoice.service";
 import { IInvoice, IInvoiceLine } from "./invoice";
 import { AlertService } from "../common/alert/alert.service";
@@ -39,8 +40,17 @@ export class InvoicelistComponent implements OnInit {
 
     public searchString: string;
 
+    /**Methods for modal */
+    modalRef: BsModalRef;
+
     // inject InvoiceService
-    constructor(private route: ActivatedRoute, private invoiceService: InvoiceService, private alertService: AlertService, private http: Http) {
+    constructor(
+        private route: ActivatedRoute,
+        private invoiceService: InvoiceService,
+        private alertService: AlertService,
+        private http: Http,
+        private modalService: BsModalService) {
+
         let status = this.route.snapshot.queryParams["status"];
 //        this.route.queryParams.subscribe(param =>{console.log(param["status"])})
         this.invo = this.route.snapshot.data['invoices'];        
@@ -66,23 +76,48 @@ export class InvoicelistComponent implements OnInit {
     onPageChange(offset) {
         this.offset = offset;
     }
-    
-    private _invoiceNumber: string;
-    getinvoiceNum():string{
-       return this._invoiceNumber;
-           } 
-    setinvoiceNum(currentInvoiceNum:string){
-         this._invoiceNumber = currentInvoiceNum;
-       }
-    
+
+
+
+
+
+
+
+
+    // Delete Process
+    // ====================================
+
+    //public _invoiceNumber: string;
+    public currentInvoiceNumber: string;
+
+    // Open dialog
+    onShowDelete(template: TemplateRef<any>, currentInvoiceNum: string) {
+        this.currentInvoiceNumber = currentInvoiceNum;
+        this.modalRef = this.modalService.show(template, { class: 'modal-md' });
+    }
+
+    // Close Dialog
+    onCancelDelete(): void {
+        this.modalRef.hide();
+    }
+
+    // User clicked yes to delete
+    onDelete() {
+        this.deleteFieldValue();
+        this.modalRef.hide();
+    }
+
+
+    // Delete Draft Invoice
     deleteFieldValue() {
 
         // get invoice number to delete
-        const invoiceNumber = this.getinvoiceNum();
+        const invoiceNumber = this.currentInvoiceNumber;
 
         // Only Draft invoices can be deleted. otherwise exit.
         let inv: IInvoice[] = this.invo.filter((el) => el.invoiceNumber === invoiceNumber);
-        if (inv.length > 0 && inv[0].status !== 'Draft') {
+
+        if (inv.length > 0 && inv[0].status !== 'Draft' && inv[0].status !== 'New') {
             this.alertService.error("You can not delete a none draft invoice.");
             return;
         }
@@ -108,6 +143,9 @@ export class InvoicelistComponent implements OnInit {
             });
     }
        
+
+
+
 
     sortData(sort: Sort) {
         const data = this.invo.slice();

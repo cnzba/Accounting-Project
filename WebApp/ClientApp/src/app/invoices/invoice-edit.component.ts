@@ -69,6 +69,8 @@ export class InvoiceEditComponent implements OnInit {
         return this.modifyInvoice.status == "Draft";
     }
 
+    
+
     // button actions
     addAddress() {
         this.userAskedForAddress = true;
@@ -187,9 +189,43 @@ export class InvoiceEditComponent implements OnInit {
         this.modalRef = this.modalService.show(template,{class:'modal-md'});
     }
 
+    
+
     onCancelFinalise(): void{
         this.modalRef.hide();
     }
+
+
+
+    // Delete Process
+    // ====================================
+    //get ShowDelete(): boolean {
+    //    return this.modifyInvoice.status == "Draft";
+    //}
+
+    // Open dialog
+    onShowDelete(template: TemplateRef<any>) {
+        this.modalRef = this.modalService.show(template, { class: 'modal-md' });
+    }
+
+    // Close Dialog
+    onCancelDelete(): void {
+        this.modalRef.hide();
+    }
+
+    // User clicked yes to delete
+    onDelete() {
+        this.modalRef.hide();
+        this.deleteInvoice();
+    }
+
+
+    
+
+
+
+
+
 
 
     /**Methods for modal */
@@ -225,7 +261,7 @@ export class InvoiceEditComponent implements OnInit {
     deleteInvoice() {
 
         // Only Draft invoices can be deleted. otherwise exit.
-        if (this.modifyInvoice.status !== 'Draft') {
+        if (this.modifyInvoice.status !== 'Draft' && this.modifyInvoice.status !== 'New') {
             this.alertService.error("You can not delete a none draft invoice.");
             return;
         }
@@ -239,7 +275,7 @@ export class InvoiceEditComponent implements OnInit {
             this.router.navigate(['/invoices']);
         },
         err => {
-            this.alertService.error("Error: the delete has failed")
+            this.alertService.error("Error: the delete has failed.")
         });
     }
     
