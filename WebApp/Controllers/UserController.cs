@@ -145,7 +145,14 @@ namespace WebApp.Controllers
                     Email emailContent = new Email() {
                         To = cbaUser.Email,
                         Subject = $"CBA user register confirmation for {cbaUser.FirstName} {cbaUser.LastName}",
-                        Body = $"Please confirm your account by <a href='{callbackUrl}'> Confirm registration </a>:{callbackUrl}"
+                        Body = $"<img src=\"https://{Request.Host.Value}/assets/images/CBA-Logoupdated-01-1.jpeg\" style=\"width:60 %; \">" +
+                            $"<div>Dear {cbaUser.FirstName}</div>" +
+                            $"<div>Please verify your email address which will enable you to log into your account and get started </div>" +
+                            $"<div style=\"background - color: #007bff; width£º50px;align-items: center;\">" +
+                            $"<a href='{callbackUrl}'> Verify My Email Address </a>" +
+                            $"</div>" +
+                            $"<div>Welcome Aboard!</div>" +
+                            $"<div>The CNBA Team</div>"
                     };
 
 
