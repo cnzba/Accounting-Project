@@ -43,6 +43,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared';
 import { CoreModule } from './core';
 
+import { CurrencyMaskModule } from "ng2-currency-mask";
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -72,7 +74,8 @@ import { CoreModule } from './core';
         ModalModule.forRoot(),
         AppRoutingModule,
         SharedModule,
-        CoreModule
+        CoreModule,
+        CurrencyMaskModule
     ],
     providers: [
         DatePipe,

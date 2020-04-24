@@ -171,14 +171,13 @@
             </div>
 
             <div class="col-1">
-                <input [ngModel]="il.quantity" (ngModelChange)="updateInvoiceLineAmountByQuantity($event,i)"
-                       class="form-control text-right" type="number" min="0" name="quantity{{i}}" appPositiveInteger />
+                <input currencyMask [ngModel]="il.quantity" (ngModelChange)="updateInvoiceLineAmountByQuantity($event,i)"
+                       [options]="{ prefix: '', thousands: ',', decimal: '.', allowNegative:false }" name="quantity{{i}}"  />
             </div>
 
             <div class="col-1">
-                <input [ngModel]="il.unitPrice | number:'1.2-2'" (ngModelChange)="updateInvoiceLineAmountByUnitPrice($event,i)"
-                       [ngModelOptions]="{updateOn:'blur'}"
-                       class="form-control text-right" type="text" name="unitPrice{{i}}" appTwoDigitDecimaNumber />
+                <input currencyMask [(ngModel)]="il.unitPrice" [options]="{ prefix: '', thousands: ',', decimal: '.' }" name="unitPrice{{i}}"
+                       (ngModelChange)="updateInvoiceLineAmountByUnitPrice($event,i)" />
             </div>
 
             <div class="col-2">
