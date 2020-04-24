@@ -46,26 +46,6 @@ namespace WebApp
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            //The configuration of user identity
-            //services.AddDefaultIdentity<CBAUser>( 
-            //    options =>
-            //{
-            //    options.User = new UserOptions
-            //    {
-            //        RequireUniqueEmail = true
-            //    };
-
-            //    options.Password = new PasswordOptions
-            //    {
-            //        RequiredLength = 8,
-            //        RequireDigit = true,
-            //        RequireUppercase = true
-            //    };
-
-            //}
-            //)
-            
-
             //Set the requirement of the password, email and email confirmation.
             services.AddDefaultIdentity<CBAUser>(options =>
             {
@@ -106,7 +86,6 @@ namespace WebApp
             });
 
             //JWT Authentication
-
             var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
             services.AddAuthentication(x =>
             {
@@ -152,8 +131,6 @@ namespace WebApp
             {
                 c.SwaggerDoc("v1", new Info { Title = "Account WEB/API", Version = "v1" });
             });
-
-
             services.AddOptions();
             services.AddCNZBA(Configuration);
         }
