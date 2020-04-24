@@ -2,6 +2,7 @@ using System.IO;
 using System.Threading.Tasks;
 using CryptoService;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -19,14 +20,16 @@ namespace WebApp.Controllers
         private readonly IEmailService emailService;
         private readonly IEmailConfig emailConfig;
         private IHostingEnvironment _env;
-
-        public ForgotPasswordController(CBAContext context, ICryptography crypto, IEmailService emailService, IOptions<EmailConfig> emailConfig, IHostingEnvironment env)
+        private UserManager<CBAUser> _userManager;
+        public ForgotPasswordController(CBAContext context, ICryptography crypto, IEmailService emailService,
+            IOptions<EmailConfig> emailConfig, IHostingEnvironment env, UserManager<CBAUser> userManager)
         {
             _context = context;
             _crypto = crypto;
             this.emailService = emailService;
             this.emailConfig = emailConfig.Value;
             _env = env;
+            _userManager = userManager;
         }
 
         // POST: api/ForgotPassword
@@ -46,12 +49,18 @@ namespace WebApp.Controllers
                 return NotFound("Invalid email");
             }
 
-            // Generate temp password, send email, set ForcePasswordChange to true
-            string tempPassword = _crypto.GenerateTempPassword(8);
+            CBAUser objCBAUser = new CBAUser()
+            {
+                Email = user.Email,             
+            };
 
-            user.Password = _crypto.HashMD5(tempPassword);
-            user.ForcePasswordChange = true;
-            await _context.SaveChangesAsync();
+            string tempPassword = await _userManager.GeneratePasswordResetTokenAsync(objCBAUser);
+            // Generate temp password, send email, set ForcePasswordChange to true
+            //string tempPassword = _crypto.GenerateTempPassword(8);
+
+            //user.Password = _crypto.HashMD5(tempPassword);
+            //user.ForcePasswordChange = true;
+            //await _context.SaveChangesAsync();
 
             var pathToFile = _env.ContentRootPath
                             + Path.DirectorySeparatorChar.ToString()

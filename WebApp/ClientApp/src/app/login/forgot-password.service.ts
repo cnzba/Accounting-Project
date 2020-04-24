@@ -9,19 +9,21 @@ export class ForgotPasswordService {
 
     constructor(private http: HttpClient) { }
 
-    sendEmail(email: string): Observable<string> {
-        return this.http.post<string>(this.url, { "email" : email }).pipe(catchError(this.handleError));
+    //sendEmail(email: string): Observable<string> {
+    sendEmail(email: string) {
+        return this.http.post(this.url, { "email": email });
+        //return this.http.post<string>(this.url, { "email" : email }).pipe(catchError(this.handleError));
     }
 
-    private handleError(err: HttpErrorResponse) {
-        let errorMessage = '';
-        if (err.error instanceof Error) {
-            errorMessage = `An error occurred. Please try again.`;
-            //errorMessage = `${err.error.message}`;
-        } else {
-            errorMessage = err.status == 504 ? `An error occurred. Please try again.` : `${err.error}`;
-        }
-        console.error(errorMessage);
-        return observableThrowError(errorMessage);
-    }
+    //private handleError(err: HttpErrorResponse) {
+    //    let errorMessage = '';
+    //    if (err.error instanceof Error) {
+    //        errorMessage = `An error occurred. Please try again.`;
+    //        //errorMessage = `${err.error.message}`;
+    //    } else {
+    //        errorMessage = err.status == 504 ? `An error occurred. Please try again.` : `${err.error}`;
+    //    }
+    //    console.error(errorMessage);
+    //    return observableThrowError(errorMessage);
+    //}
 }

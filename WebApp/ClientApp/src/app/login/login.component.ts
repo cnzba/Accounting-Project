@@ -7,6 +7,10 @@ import { Subscription } from 'rxjs';
 import { SpinnerService } from "../common/spinner.service";
 import { NgForm } from '@angular/forms';
 import { UserService } from '../users/user.service';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { ForgotPasswordComponent } from './forgot-password.component';
+//import { NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-login',
@@ -17,7 +21,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     model: any = {};
     returnUrl: string;
     subscription: Subscription;
-
+    modalRef: BsModalRef;
+    email: string = "";
     isLoginFail: boolean;
 
     constructor(
@@ -27,7 +32,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         private alertService: AlertService,
         private callbackService: CallbackService,
         private spinnerService: SpinnerService,
-        private userService:UserService) {
+        private userService: UserService,
+        private modalService: BsModalService) {
         this.subscription = callbackService.updateNavObs$.subscribe();
     }
 
@@ -97,4 +103,19 @@ export class LoginComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
     }
+
+
+    openModal() {
+
+        //let ngbModalOptions: NgbModalOptions = {
+        //    backdrop: 'static',
+        //    keyboard: false
+        //};
+
+        this.modalRef = this.modalService.show(ForgotPasswordComponent);
+        this.modalRef.content.onClose.subscribe(result => {
+            console.log('results', result);
+        })
+    }
+
 }

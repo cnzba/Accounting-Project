@@ -27,6 +27,7 @@ import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
 import { SpinnerService } from "./common/spinner.service";
 import { environment } from '../environments/environment';
+import { ResetPasswordComponent } from './login/reset-password.component';
 
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -54,6 +55,7 @@ import { AuthInterceptor } from './login/auth.interceptor';
         InvoiceEditComponent,
         ForgotPasswordComponent,
         ChangePasswordComponent,
+        ResetPasswordComponent,
         InvoicePaymentComponent,
         PaginationComponent,
         PageNotFoundComponent,
@@ -85,6 +87,7 @@ import { AuthInterceptor } from './login/auth.interceptor';
         UserService,
         ForgotPasswordService,
         ChangePasswordService,
+        ResetPasswordComponent,
         InvoicePaymentService,
         SpinnerService,
         { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
