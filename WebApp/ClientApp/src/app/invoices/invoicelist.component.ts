@@ -43,7 +43,8 @@ export class InvoicelistComponent implements OnInit {
     constructor(private route: ActivatedRoute, private invoiceService: InvoiceService, private alertService: AlertService, private http: Http) {
         let status = this.route.snapshot.queryParams["status"];
 //        this.route.queryParams.subscribe(param =>{console.log(param["status"])})
-        this.invo = this.route.snapshot.data['invoices'];        
+        this.invo = this.route.snapshot.data['invoices'];
+        //console.log(this.invo);
         let allInvoices = this.invo.slice();
         if (status && status == "overdue"){
             this.sortedData = allInvoices.filter(

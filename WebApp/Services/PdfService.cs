@@ -18,6 +18,7 @@ namespace WebApp.Services
         private readonly IConverter converter;
         private readonly EmailConfig emailConfig;
         private readonly PdfServiceOptions serviceConfig;
+        private InvoiceService invoiceService;
 
         public PdfService(IEmailService emailService,
                             IOptionsSnapshot<EmailConfig> emailConfig,
@@ -49,7 +50,9 @@ namespace WebApp.Services
             try
             {
                 DeletePdf(InvoiceNumber);
-
+                var temp = invoiceService.GetInvoice(InvoiceNumber);
+                Console.WriteLine(temp);
+                //
                 var doc = new HtmlToPdfDocument()
                 {
                     GlobalSettings = {
