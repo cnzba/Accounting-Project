@@ -40,6 +40,14 @@ namespace WebApp.Controllers
             _userManager = userManager;
         }
 
+
+        /// <summary>
+        /// 1. Check the username and password
+        /// 2. Create token and retrun it to client when succeed.
+        /// 3. Add a claim of UserID in the token.
+        /// </summary>
+        /// <param name="loginModel"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody]Login loginModel)
@@ -91,10 +99,18 @@ namespace WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync();
+            await _signInManager.SignOutAsync();
             return Ok();
         }
 
+
+        /// <summary>
+        /// This method is useless, keep it in case utilising Identity failed. 
+        /// Deprive this method when the current story completed.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         private (bool, string) LoginUser(string username, string password)
         {
             //UserController DbUser = new UserController(_context, _crypto);

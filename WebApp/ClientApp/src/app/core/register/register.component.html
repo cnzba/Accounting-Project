@@ -1,6 +1,6 @@
 <h2>Register page</h2>
 <div class="register-container">
-  <form [formGroup]="form" (ngSubmit)="onSubmit(form,$event)" fxFlex fxLayout="row" fxLayout.xs="column">
+  <form [formGroup]="form" (ngSubmit)="OnSubmit(form,$event)" fxFlex fxLayout="row" fxLayout.xs="column">
     <mat-card fxFlex="1 1 auto">
       <mat-tab-group [dynamicHeight]="true" [selectedIndex]="selectedTab" (selectChange)="onTabChange($event.index)">
 
@@ -11,7 +11,6 @@
             <mat-form-field>
               <input matInput placeholder="First Name" formControlName="firstName">
               <mat-error>{{form.controls['firstName'].errors | regerrtranslate}}</mat-error>
-
             </mat-form-field>
 
             <mat-form-field>

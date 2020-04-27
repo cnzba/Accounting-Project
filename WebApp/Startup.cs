@@ -26,6 +26,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using ServiceUtil;
 
 namespace WebApp
 {
@@ -44,26 +45,6 @@ namespace WebApp
             services.AddDbContext<CBAContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CBA_Database")));
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            //The configuration of user identity
-            //services.AddDefaultIdentity<CBAUser>( 
-            //    options =>
-            //{
-            //    options.User = new UserOptions
-            //    {
-            //        RequireUniqueEmail = true
-            //    };
-
-            //    options.Password = new PasswordOptions
-            //    {
-            //        RequiredLength = 8,
-            //        RequireDigit = true,
-            //        RequireUppercase = true
-            //    };
-
-            //}
-            //)
-            
 
             //Set the requirement of the password, email and email confirmation.
             services.AddDefaultIdentity<CBAUser>(options =>
@@ -105,7 +86,6 @@ namespace WebApp
             });
 
             //JWT Authentication
-
             var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
             services.AddAuthentication(x =>
             {
@@ -151,8 +131,6 @@ namespace WebApp
             {
                 c.SwaggerDoc("v1", new Info { Title = "Account WEB/API", Version = "v1" });
             });
-
-
             services.AddOptions();
             services.AddCNZBA(Configuration);
         }
@@ -230,7 +208,8 @@ namespace WebApp
             services.AddScoped<IPdfService, PdfService>();
             services.AddScoped<IPdfService, PdfService>();
             services.AddScoped<IStripePaymentService, StripePaymentService>();
-
+            //Inject create return HTML service
+            services.AddTransient<ICreateReturnHTML, CreateReturnHTML>();
             services.Configure<CBAOptions>(configuration);
             services.Configure<EmailConfig>(configuration.GetSection("EmailConfig"));
             services.Configure<PdfServiceOptions>(configuration.GetSection("PdfService"));
