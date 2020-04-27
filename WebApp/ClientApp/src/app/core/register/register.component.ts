@@ -9,6 +9,7 @@ import { Observable, observable } from 'rxjs';
 import { flatMap,map} from "rxjs/operators";
 import { UserValidators } from '../validators/user.validator';
 import {  } from "@angular/material/core";
+import { AlertService } from 'src/app/common/alert/alert.service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -26,7 +27,8 @@ export class RegisterComponent implements OnInit{
   constructor(private fb:FormBuilder,
               private userRegService:UserRegisterService,
               private router: Router,
-              private checkUserExistService:UserValidators){ 
+              private checkUserExistService:UserValidators,
+              private alertService:AlertService){ 
       this.regUser = new CBAUser();
       this.regOrg = new CBAOrg();
     }
@@ -157,10 +159,12 @@ export class RegisterComponent implements OnInit{
     this.regOrg.gstNumber = value.gstNumber;
     this.userRegService.registerUser(this.regUser,this.regOrg).subscribe(
       (res:any) =>{
-        if (res.succeeded){
-          //TODO: Tips the user that the regester succeed.
+        if (res == "succeed"){
           this.router.navigate(['/login'])
+          this.alertService.success("Register succeed and a confirmation email has been sent to you.")
         }else{
+          this.alertService.error("Register failed.");
+          console.log(res);
           //TODO: Tips the errors to user.
         }
       },

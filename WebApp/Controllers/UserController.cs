@@ -14,6 +14,10 @@ using Microsoft.Extensions.Logging;
 using ServiceUtil.Email;
 using System.Text.Encodings.Web;
 using Microsoft.Extensions.Options;
+using System.Net;
+using ServiceUtil;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace WebApp.Controllers
 {
@@ -27,6 +31,7 @@ namespace WebApp.Controllers
         private readonly CBAContext _context;
         private readonly IEmailService _emailService;
         private readonly IEmailConfig _emailConfig;
+        private readonly ICreateReturnHTML _createReturnHTML;
 
         //Dependency Injection
         private readonly ICryptography _crypto;
@@ -38,7 +43,8 @@ namespace WebApp.Controllers
             //SignInManager<CBAUser> signInManager
             //ILogger logger,
             IEmailService emailService,
-            IOptions<EmailConfig> emailConfig
+            IOptions<EmailConfig> emailConfig,
+            ICreateReturnHTML createReturnHTML
             )
         {
             _context = context;
@@ -48,30 +54,16 @@ namespace WebApp.Controllers
             //_logger = logger;
             _emailService = emailService;
             _emailConfig = emailConfig.Value;
+            _createReturnHTML = createReturnHTML;
         }
 
-        // GET: api/Users
-        [HttpGet]
-        [Authorize]
-        [Route("Users")]
-        public async Task<IActionResult> GetUsers()
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var users = await _context.User.ToListAsync();
-
-            if (users == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(users);
-        }
 
         // GET: api/User/User
+        /// <summary>
+        /// Get a user by UserID
+        /// UserID is in token.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet()]
         [Authorize]
         [Route("User")]
@@ -90,11 +82,16 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            
+
             return Ok(user);
         }
 
-        [HttpGet,Route("CheckUserExist/{email}")]
+        /// <summary>
+        /// Check if the user exists by email.
+        /// </summary>
+        /// <param name="email">Email to be checked</param>
+        /// <returns>Two string "Exist" and "NotExist"</returns>
+        [HttpGet, Route("CheckUserExist/{email}")]
         public async Task<IActionResult> CheckUserExist([FromRoute] string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -102,6 +99,13 @@ namespace WebApp.Controllers
             return Ok("Exist");
         }
 
+
+        /// <summary>
+        /// 1. Save the user and organisation in database
+        /// 2. If success, send a confirmation email to the user.
+        /// </summary>
+        /// <param name="regUser"></param>
+        /// <returns></returns>
         // POST: api/User
         [HttpPost]
         public async Task<IActionResult> PostUser([FromBody]UserRegDto regUser)
@@ -132,17 +136,32 @@ namespace WebApp.Controllers
             try
             {
                 var result = await _userManager.CreateAsync(cbaUser, regUser.Password);
-                if (result.Succeeded)
+                if (result != null && result.Succeeded)
                 {
                     //_logger.LogInformation("User created a new account with password");
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(cbaUser);
-                    var callbackUrl ="https://"+Request.Host.Value+"/api/user/confirmEmail?userId="+cbaUser.Id+"&token="+code;
+                    var transCode = WebUtility.UrlEncode(code);
+                    // var callbackUrl = "https://" + Request.Host.Value + "/api/user/confirmEmail?userId=" + cbaUser.Id + "&token=" + transCode;
+                    //Multiple Parameters
+                    var queryParams = new Dictionary<string, string>()
+                    {
+                        { "userId",cbaUser.Id},
+                        { "token", code}
+                    };
+                    var callbackUrl = QueryHelpers.AddQueryString($"https://{Request.Host.Value }/api/product/list", queryParams);
 
-
-                    Email emailContent = new Email() {
+                    Email emailContent = new Email()
+                    {
                         To = cbaUser.Email,
                         Subject = $"CBA user register confirmation for {cbaUser.FirstName} {cbaUser.LastName}",
-                        Body = $"Please confirm your account by <a href='{callbackUrl}'> Confirm registration </a>:{callbackUrl}"
+                        Body = $"<img src=\"{Request.Host.Value}/assets/images/CBA-Logoupdated-01-1.jpeg\" style=\"width:60 %; \">" +
+                            $"<div>Dear {cbaUser.FirstName}</div>" +
+                            $"<div>Please verify your email address which will enable you to log into your account and get started </div>" +
+                            $"<div style=\"background-color: #007bff; width£º50px;align-items:center;\">" +
+                            $"<a href='{callbackUrl}'> Verify My Email Address </a>" +
+                            $"</div>" +
+                            $"<div>Welcome Aboard!</div>" +
+                            $"<div>The CNBA Team</div>"
                     };
 
 
@@ -185,6 +204,12 @@ namespace WebApp.Controllers
             #endregion
 
         }
+        /// <summary>
+        /// Call this method when new regestered user click confirm in the confirmation email.        ///  
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="token"></param>
+        /// <returns>A succeed HTML message if succeed, or 500 if failed</returns>
         [HttpGet, Route("confirmEmail")]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, [FromQuery]string token)
         {
@@ -192,17 +217,149 @@ namespace WebApp.Controllers
             if (confirmUser != null)
             {
                 var result = await _userManager.ConfirmEmailAsync(confirmUser, token);
-                if (result.Succeeded)
+                if (result != null && result.Succeeded)
                 {
                     confirmUser.EmailConfirmed = true;
+                    confirmUser.IsActive = true;
                     await _userManager.UpdateAsync(confirmUser);
+                    string message = $"Email confirmation succeed, click <a href='https://{Request.Host.Value}'> here</a> to login";
+                    var responseBody = _createReturnHTML.GetHTML(message);
+                    Response.ContentType = "text/html";
+                    await Response.Body.WriteAsync(responseBody, 0, responseBody.Length);
                 }
-                return Ok("succeed");
+                return StatusCode(500, "Failed to verify the user.");
             }
             else
             {
-                return StatusCode(500, "User email confirmation failed");
+                return StatusCode(500, "The user does not exist.");
             }
+        }
+
+        /// <summary>
+        /// 1. Upload the logo file to server
+        /// 2. Return the full path of the logo file.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("uploadLogo")]
+        [DisableRequestSizeLimit]
+        public IActionResult UploadLogo()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                var folderName = Path.Combine(@"Resources", "Images");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                if (file.Length > 0)
+                {
+                    var fileName =
+                        DateTime.Now.ToFileTime().ToString() +
+                        ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    var dbPath = Path.Combine(folderName, fileName);
+
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    return Ok(new { dbPath });
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error:{ex}");
+            }
+        }
+
+        #region Previous codes, could be useful in the future. So keep this code for now.
+
+        // GET: api/Users
+        [HttpGet]
+        [Authorize]
+        [Route("Users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var users = await _context.User.ToListAsync();
+
+            if (users == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(users);
+        }
+        // DELETE: api/User/5
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteUser([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            _context.User.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(user);
+        }
+
+
+
+        internal User FindUser(string Name)
+        {
+            var user = new User();
+
+            try
+            {
+                user = _context.User.Where(a => a.Email.ToLower().Equals(Name.ToLower())).FirstOrDefault();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return user;
+        }
+
+        internal async Task<User> GetUserByLogin(string login)
+        {
+            var user = new User();
+
+            try
+            {
+                user = await _context.User.SingleOrDefaultAsync(a => a.Email.ToLower().Equals(login.ToLower().Trim()));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return user;
+
+        }
+
+        private bool UserExists(int id)
+        {
+            return _context.User.Any(e => e.Id == id);
+        }
+
+        private bool LoginExists(string login)
+        {
+            return _context.User.Any(e => e.Email.ToLower().Equals(login.ToLower().Trim()));
         }
 
         // PUT: api/User/5
@@ -247,106 +404,8 @@ namespace WebApp.Controllers
 
             return NoContent();
         }
+        #endregion
 
-        
-
-        [HttpPost, Route("uploadLogo")]
-        [DisableRequestSizeLimit]
-
-        public IActionResult UploadLogo()
-        {
-            try
-            {
-                var file = Request.Form.Files[0];
-                var folderName = Path.Combine(@"Resources", "Images");
-                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-                if (file.Length > 0)
-                {
-                    var fileName = 
-                        DateTime.Now.ToFileTime().ToString() +
-                        ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');                        ;
-                    var fullPath = Path.Combine(pathToSave, fileName);
-                    var dbPath = Path.Combine(folderName, fileName);
-
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        file.CopyTo(stream);
-                    }
-                    return Ok(new { dbPath });
-                }
-                else
-                {
-                    return BadRequest();
-                }                
-            }catch(Exception ex)
-            {
-                return StatusCode(500, $"Internal server error:{ex}");
-            }
-        }
-
-        // DELETE: api/User/5
-        [HttpDelete("{id}")]
-        [Authorize]
-        public async Task<IActionResult> DeleteUser([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var user = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return Ok(user);
-        }
-
-        internal User FindUser(string Name)
-        {
-            var user = new User();
-
-            try
-            {
-                user = _context.User.Where(a => a.Email.ToLower().Equals(Name.ToLower())).FirstOrDefault();
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return user;
-        }
-
-        internal async Task<User> GetUserByLogin(string login)
-        {
-            var user = new User();
-
-            try
-            {
-                user = await _context.User.SingleOrDefaultAsync(a => a.Email.ToLower().Equals(login.ToLower().Trim()));
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return user;
-
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.User.Any(e => e.Id == id);
-        }
-
-        private bool LoginExists(string login)
-        {
-            return _context.User.Any(e => e.Email.ToLower().Equals(login.ToLower().Trim()));
-        }
 
     }
 }
