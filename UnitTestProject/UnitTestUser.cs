@@ -194,7 +194,7 @@ namespace UnitTestProject
             //Mocking host address.
             _userController.ControllerContext = new ControllerContext();
             _userController.ControllerContext.HttpContext = new DefaultHttpContext();
-            _userController.ControllerContext.HttpContext.Request.Host = new HostString("https://localhost:62856");
+            //_userController.ControllerContext.HttpContext.Request.Host = new HostString("https://localhost:62856");
 
             var result = await _userController.ConfirmEmail(objCBAUser.Id, mockToken);
             Assert.AreEqual(((ObjectResult)result).Value, "succeed");
@@ -202,7 +202,7 @@ namespace UnitTestProject
         }
 
 
-        [TestMethod]
+        [TestMethod]g
         public async Task ConfirmMail_InvalidToken()
         {
             CBAUser objCBAUser = ClsCommon.GetMockObject();
