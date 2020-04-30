@@ -82,7 +82,7 @@ namespace WebApp.Controllers
             {
                 To = emailModel.Email,
                 Subject = "Request for Password Reset",
-                Body = string.Format(htmlBody, cbaUser.UserName, passwordResetLink)
+                Body = string.Format(htmlBody, cbaUser.FirstName, passwordResetLink)
             };
             if (!await emailService.SendEmail(emailConfig, emailContent))
             {

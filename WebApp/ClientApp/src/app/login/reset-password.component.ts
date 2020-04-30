@@ -5,6 +5,7 @@ import { AlertService } from '../common/alert/alert.service';
 import { Subscription } from 'rxjs';
 import { isNullOrUndefined } from 'util';
 import { NgForm } from '@angular/forms';
+import { delay } from 'rxjs/operators';
 
 @Component({
     selector: 'app-reset-password',
@@ -61,8 +62,8 @@ export class ResetPasswordComponent implements OnInit {
         this.resetPasswordService.changePassword(this.model.newPassword, this.model.confirmNewPassword, this.id, this.token)
             .subscribe(
                 data => {
-                    alert("success + " + data);
                     this.alertService.success("Password has been reset successfully..!!");
+                    delay(1000);
                     this.router.navigate(['login']);
                     this.loading = false;
                 },
