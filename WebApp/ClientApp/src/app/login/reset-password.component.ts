@@ -4,6 +4,7 @@ import { ResetPasswordService } from './reset-password.service';
 import { AlertService } from '../common/alert/alert.service';
 import { Subscription } from 'rxjs';
 import { isNullOrUndefined } from 'util';
+import { NgForm } from '@angular/forms';
 
 @Component({
     selector: 'app-reset-password',
@@ -18,7 +19,8 @@ export class ResetPasswordComponent implements OnInit {
     subscription: Subscription;
     id: number = 0;
     token: string;
-
+    isError: boolean = false;
+    emailSent: boolean = false;
     constructor(
         private resetPasswordService: ResetPasswordService,
         private alertService: AlertService,
@@ -36,15 +38,14 @@ export class ResetPasswordComponent implements OnInit {
         this.resetPasswordService.verifyToken(this.id, this.token)
             .subscribe(
                 data => {
+                    this.isError = false;
                 },
                 error => {
-                    alert("error");
-                    if (!isNullOrUndefined(error)) {
-                        if (error.statuscode == 400) {
-                                                    
-                            //this.modalRef = this.modalService.show(template);
-                            this.alertService.error(error.message);
-                        }
+
+                    this.isError = true;
+                    if (!isNullOrUndefined(error) && error.httpError.status != 400) {
+
+                       this.alertService.error(error.globalError);
                     }
                 });
     }
@@ -52,25 +53,29 @@ export class ResetPasswordComponent implements OnInit {
 
     onSubmit() {
 
+        //if (this.model.newPassword != this.model.confirmNewPassword) {
+        //    this.confirmPasswordMatchError = true;
+        //    return;
+        //}
+
         this.resetPasswordService.changePassword(this.model.newPassword, this.model.confirmNewPassword, this.id, this.token)
             .subscribe(
                 data => {
                     alert("success + " + data);
-                    this.alertService.success("Password updated ");
-
+                    this.alertService.success("Password has been reset successfully..!!");
                     this.router.navigate(['login']);
                     this.loading = false;
                 },
                 error => {
-                    if (error.status == 400) {
-                        alert("error");
-                    }
+                    //if (!isNullOrUndefined(error) && error.httpError.status == 400) {
+                    this.alertService.error(error.globalError);
+                    // }
                     this.loading = false;
                 });
     }
 
-    reset() {
-        this.model.f.reset();
-        //this.formGroup.clearValidators();
+    reset(form: NgForm) {
+        //form.resetForm();
+        form.reset();
     }
 }

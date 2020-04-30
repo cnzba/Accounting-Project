@@ -2,7 +2,7 @@
 
 namespace WebApp.Models
 {
-    public class ResetPasswordModel: VerifyTokenModel
+    public class ResetPasswordDto: VerifyTokenDto
     {
         [Required]
         public string NewPassword { get; set; }

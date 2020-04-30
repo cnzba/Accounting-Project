@@ -11,7 +11,7 @@ import { ChangePasswordComponent } from './login/change-password.component';
 import { ForgotPasswordComponent } from './login/forgot-password.component';
 import { InvoicePaymentComponent } from './payment/invoice-payment.component';
 import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
-//import { ResetPasswordComponent } from './login/reset-password.component';
+import { ResetPasswordComponent } from './login/reset-password.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -31,7 +31,7 @@ const routes: Routes = [
     },
     { path: "forgot-password", component: ForgotPasswordComponent },
     { path: "change-password", component: ChangePasswordComponent, canActivate: [AuthGuard] },
-    //{ path: "reset-password", component: ResetPasswordComponent },
+    { path: "reset-password", component: ResetPasswordComponent },
     { path: "pay/:id", component: InvoicePaymentComponent },
     //{ path: 'core', redirectTo:'core', pathMatch:'full'},
     // otherwise redirect to the invoice list

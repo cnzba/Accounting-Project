@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using CryptoService;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ServiceUtil.Email;
@@ -42,31 +44,35 @@ namespace WebApp.Controllers
                 return BadRequest("Invalid email");
             }
 
-            var user = await _context.User.SingleOrDefaultAsync(m => m.Email.Equals(emailModel.Email));
+            var cbaUser = await _userManager.FindByEmailAsync(emailModel.Email);
 
-            if (user == null)
+            if (cbaUser == null)
             {
-                return NotFound("Invalid email");
+                return BadRequest("User does not exist..!!");
             }
 
-            CBAUser objCBAUser = new CBAUser()
+            string token = await _userManager.GeneratePasswordResetTokenAsync(cbaUser);
+
+            var hostAddress = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+
+            //Multiple Parameters
+            var queryParams = new Dictionary<string, string>()
             {
-                Email = user.Email,             
+                {"id", cbaUser.Id+"" },
+                {"token", token+"" }
             };
 
-            string tempPassword = await _userManager.GeneratePasswordResetTokenAsync(objCBAUser);
-            // Generate temp password, send email, set ForcePasswordChange to true
-            //string tempPassword = _crypto.GenerateTempPassword(8);
+            string passwordResetLink = QueryHelpers.AddQueryString($"{hostAddress}/reset-password", queryParams);
 
-            //user.Password = _crypto.HashMD5(tempPassword);
-            //user.ForcePasswordChange = true;
-            //await _context.SaveChangesAsync();
-
-            var pathToFile = _env.ContentRootPath
+            var pathToFile = Directory.GetCurrentDirectory()
                             + Path.DirectorySeparatorChar.ToString()
                             + "EmailTemplates"
                             + Path.DirectorySeparatorChar.ToString()
                             + "ForgotPasswordTemplate.html";
+
+            pathToFile = Path.Combine(Directory.GetCurrentDirectory(),
+                            "EmailTemplates",
+                            "ForgotPasswordTemplate.html");
 
             StreamReader SourceReader = System.IO.File.OpenText(pathToFile);
             string htmlBody = SourceReader.ReadToEnd();
@@ -76,13 +82,13 @@ namespace WebApp.Controllers
             {
                 To = emailModel.Email,
                 Subject = "Request for Password Reset",
-                Body = string.Format(htmlBody, user.Name, tempPassword)
+                Body = string.Format(htmlBody, cbaUser.UserName, passwordResetLink)
             };
             if (!await emailService.SendEmail(emailConfig, emailContent))
             {
-                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError);
+                return BadRequest("Error has been occured during sending mail. Please try again after some time..!!");
             }
-            return Ok("Email has been sent");
+            return Ok("An email has been sent with instruction to reset your password...!!");
         }
     }
 }

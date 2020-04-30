@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace WebApp.Models
 {
-    public class VerifyTokenModel
+    public class VerifyTokenDto
     {
         [Required]
-        public int Id { get; set; }
+        public string Id { get; set; }
         [Required]
         public string Token { get; set; }
     }

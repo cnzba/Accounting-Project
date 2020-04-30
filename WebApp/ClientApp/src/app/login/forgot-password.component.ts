@@ -45,19 +45,22 @@ export class ForgotPasswordComponent implements OnInit {
                     this.model.message = data;//"An email has been sent with instruction to reset your password";
                     this.model.title = "Password Reset Email Sent";
                     this.modalRef = this.modalService.show(template);
+                    this.emailSent = true;
                     this.loading = false;
                 },
                 error => {
-                    alert("error12");
-                    if (!isNullOrUndefined(error)) {
-                        if (error.status == 400) {
-                            alert("inside");
-                            this.model.title = "Error";
-                            this.model.message = error.message;
-                            this.modalRef = this.modalService.show(template);
-                        }
+                    if (!isNullOrUndefined(error) && error.httpError.status == 400) {
+                        let errorMessage = error.globalError;
+                        this.model.title = "Error";
+                        this.model.message = errorMessage;
+                        this.modalRef = this.modalService.show(template);
                     }
                     this.loading = false;
                 });
+    }
+
+    cancel(e) {
+        e.preventDefault();
+        this.bsModalRef.hide()
     }
 }
