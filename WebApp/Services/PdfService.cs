@@ -9,6 +9,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApp.Entities;
+using Microsoft.EntityFrameworkCore;
+
+using System.Diagnostics; // remember to remove this , used for debug.console()
+using System.Xml.Linq;
 
 namespace WebApp.Services
 {
@@ -18,17 +22,19 @@ namespace WebApp.Services
         private readonly IConverter converter;
         private readonly EmailConfig emailConfig;
         private readonly PdfServiceOptions serviceConfig;
-        private InvoiceService invoiceService;
+        private readonly CBAContext context;
 
         public PdfService(IEmailService emailService,
                             IOptionsSnapshot<EmailConfig> emailConfig,
                             IOptionsSnapshot<PdfServiceOptions> serviceConfig,
-                            IConverter converter)
+                            IConverter converter,
+                            CBAContext context)
         {
             this.emailService = emailService;
             this.converter = converter;
             this.emailConfig = emailConfig.Value;
             this.serviceConfig = serviceConfig.Value;
+            this.context = context;
         }
 
         private string GetDestination(string InvoiceNumber)
@@ -45,14 +51,30 @@ namespace WebApp.Services
         /// </summary>
         /// <param name="InvoiceNumber">The invoice to create</param>
         /// <returns>The filename/path of the generated pdf</returns>
-        private string CreatePdf(string InvoiceNumber)
+        private string CreatePdf(string invoiceNumber)
         {
             try
             {
-                DeletePdf(InvoiceNumber);
-                var temp = invoiceService.GetInvoice(InvoiceNumber);
-                Console.WriteLine(temp);
-                //
+                DeletePdf(invoiceNumber);
+                var invoice = context.Invoice.Include("InvoiceLine").SingleOrDefault(t => t.InvoiceNumber == invoiceNumber);
+                
+                string charitiesNumber = invoice.CharitiesNumber;
+                string clientContact = invoice.ClientContact; // address, replace \n with <br> for html
+                string clientName = invoice.ClientName; // name
+                DateTime dateCreated = invoice.DateCreated;
+                DateTime dateDue = invoice.DateDue;
+                string email = invoice.Email;
+                decimal grandTotal = invoice.GrandTotal;
+                string gstNumber = invoice.GstNumber;
+                decimal gstRate = invoice.GstRate;
+                var invoiceLine = invoice.InvoiceLine; // collection of the item in description
+                string purchaseOrderNumber = invoice.PurchaseOrderNumber;
+
+                // there are more fields
+                XDocument temp = XDocument.Load("Services/PdfServiceHtmlModel.html");
+                temp.Descendants().Where(x => (string)x.Attribute("id") == "myidtest").FirstOrDefault().Value = "foobar"; // .Where(x => (Guid?) x.Attribute("id") == id).FirstOrDefault(); for null?
+                temp.Descendants().Where(x => (string)x.Attribute("id") == "invoiceNumber").FirstOrDefault().Value = invoiceNumber;
+                // Debug.WriteLine(charitiesNumber); 
                 var doc = new HtmlToPdfDocument()
                 {
                     GlobalSettings = {
@@ -64,14 +86,14 @@ namespace WebApp.Services
                     Objects = {
                     new ObjectSettings()
                     {
-                       HtmlContent = @"<html><body><div>Hello</div></body></html>",
+                       HtmlContent = temp.ToString(),
                     }
                 }
                 };
 
                 byte[] pdf = converter.Convert(doc);
 
-                var destination = GetDestination(InvoiceNumber);
+                var destination = GetDestination(invoiceNumber);
                 File.WriteAllBytes(destination, pdf);
 
                 return destination;
