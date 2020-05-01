@@ -156,7 +156,7 @@ namespace WebApp.Controllers
                     };
 
 
-                    await _emailService.SendEmail(_emailConfig, emailContent);
+                    var sentEmailRes = await _emailService.SendEmail(_emailConfig, emailContent);
                     return Ok("succeed");
                 }
                 else
