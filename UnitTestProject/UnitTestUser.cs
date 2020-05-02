@@ -60,6 +60,7 @@ namespace UnitTestProject
 
             _createReturnHTML = new Mock<ICreateReturnHTML>();
             _userController = new UserController(_cbaContext, _crypto.Object, _mockUserManager.Object, _emailService.Object, _emailConfig, _createReturnHTML.Object);
+
         }
 
 
@@ -191,18 +192,17 @@ namespace UnitTestProject
             _mockUserManager.Setup(x => x.ConfirmEmailAsync(It.IsAny<CBAUser>(), mockToken)).ReturnsAsync(IdentityResult.Success);
             _mockUserManager.Setup(x => x.UpdateAsync(It.IsAny<CBAUser>())).ReturnsAsync(IdentityResult.Success);
 
-            //Mocking host address.
             _userController.ControllerContext = new ControllerContext();
             _userController.ControllerContext.HttpContext = new DefaultHttpContext();
-            //_userController.ControllerContext.HttpContext.Request.Host = new HostString("https://localhost:62856");
+            _userController.ControllerContext.HttpContext.Request.Host = new HostString("https://localhost:62856");
 
             var result = await _userController.ConfirmEmail(objCBAUser.Id, mockToken);
-            Assert.AreEqual(((ObjectResult)result).Value, "succeed");
+            Assert.AreEqual(((OkResult)result).StatusCode, 200);
 
         }
 
 
-        [TestMethod]g
+        [TestMethod]
         public async Task ConfirmMail_InvalidToken()
         {
             CBAUser objCBAUser = ClsCommon.GetMockObject();
@@ -224,7 +224,17 @@ namespace UnitTestProject
         {
             Mock<HttpRequest> mockRequest = new Mock<HttpRequest>();
 
-            string path = @"F:\Ripal\Project\New folder\CBA Accounting\WebApp\ClientApp\src\assets\images\CBA-Logoupdated-01-1.jpeg";
+            //Get the absolute path to root directory of the project.
+            var curPath = Directory.GetCurrentDirectory();
+            string[] curPathList = curPath.Split("\\");
+            string rootPath = "";
+            foreach (string item in curPathList)
+            {
+                if (item == "UnitTestProject") break;
+                rootPath += item + "\\";
+            }
+
+            string path = $"{rootPath}WebApp\\ClientApp\\src\\assets\\images\\CBA-Logoupdated-01-1.jpeg";
             FileInfo fileInfo = new FileInfo(path);
             byte[] buffer = new byte[fileInfo.Length];
 

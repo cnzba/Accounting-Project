@@ -226,6 +226,8 @@ namespace WebApp.Controllers
                     var responseBody = _createReturnHTML.GetHTML(message);
                     Response.ContentType = "text/html";
                     await Response.Body.WriteAsync(responseBody, 0, responseBody.Length);
+                    return Ok();
+                    
                 }
                 return StatusCode(500, "Failed to verify the user.");
             }

@@ -1,17 +1,21 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
+using System.Threading.Tasks;
 using WebApp.Entities;
 
 namespace UnitTestProject.Common
 {
     public class ClsCommon
     {
-        public static CBAUser GetMockObject()
+
+  
+        public  static CBAUser GetMockObject()
         {
             CBAUser objCBAUser = new CBAUser()
             {
@@ -34,9 +38,17 @@ namespace UnitTestProject.Common
             mockPrincipal.Setup(x => x.Identity).Returns(identity);
             mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
 
+            //var token = _userManager.GenerateEmailConfirmationToken(objCBAUser);
+
+            //var mockToken = new Mock<>
+        
+
             var mockHttpContext = new Mock<HttpContext>();
             mockHttpContext.Setup(m => m.User).Returns(claimsPrincipal);
             return objCBAUser;
         }
+
     }
+
+    
 }
