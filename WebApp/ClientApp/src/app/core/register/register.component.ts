@@ -157,6 +157,7 @@ export class RegisterComponent implements OnInit{
     this.regOrg.logoUrl = value.logoUrl;
     this.regOrg.chritiesNumber = value.charitiesNumber;
     this.regOrg.gstNumber = value.gstNumber;
+    
     this.userRegService.registerUser(this.regUser,this.regOrg).subscribe(
       (res:any) =>{
         if (res == "succeed"){
