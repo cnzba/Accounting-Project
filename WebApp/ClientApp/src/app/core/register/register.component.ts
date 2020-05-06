@@ -1,14 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, RequiredValidator } from '@angular/forms';
+import { Component, OnInit} from '@angular/core';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { UserRegisterService, } from "../services";
 import { CBAUser } from '../domain/CBAUser';
 import { Router } from '@angular/router';
 import { CBAOrg } from '../domain/CBAOrg';
-import { Country } from '../domain/Country';
-import { Observable, observable } from 'rxjs';
-import { flatMap,map} from "rxjs/operators";
 import { UserValidators } from '../validators/user.validator';
-import {  } from "@angular/material/core";
 import { AlertService } from 'src/app/common/alert/alert.service';
 @Component({
   selector: 'app-register',
@@ -124,12 +120,6 @@ export class RegisterComponent implements OnInit{
         },
         {validator:this.validateGST}
       )
-
-      // gstNumber:['',Validators.compose([
-      //   Validators.required,  
-      //   Validators.maxLength(20)    
-      // ])],
-
     })    
   }
   
@@ -178,12 +168,11 @@ export class RegisterComponent implements OnInit{
     this.userRegService.registerUser(this.regUser,this.regOrg).subscribe(
       (res:any) =>{
         if (res == "succeed"){
-          this.router.navigate(['/login'])
-          this.alertService.success("Register succeed and a confirmation email has been sent to you.")
+          this.router.navigate(['/login']);
+          this.alertService.success("Register succeed and a confirmation email has been sent to you.");
         }else{
-          this.alertService.error("Register failed.");
           console.log(res);
-          //TODO: Tips the errors to user.
+          this.alertService.error("Register failed.")
         }
       },
       err => {
@@ -219,10 +208,6 @@ export class RegisterComponent implements OnInit{
     this.form.get('logoUrl').setValue(url);
   }
 
-  // public createImgPath = () =>{
-    
-  //     return `https://localhost:44390/${this.logoImgUrl}`;
-  // }
 
   
 }
