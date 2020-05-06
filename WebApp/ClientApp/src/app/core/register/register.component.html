@@ -9,30 +9,30 @@
 
             <!-- TODO: add red * to compulsory fields -->
             <mat-form-field>
-              <input matInput placeholder="First Name" formControlName="firstName">
+              <input matInput placeholder="First Name" formControlName="firstName" required>
               <mat-error>{{form.controls['firstName'].errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
-              <input matInput placeholder="Last Name" formControlName="lastName">
+              <input matInput placeholder="Last Name" formControlName="lastName" required>
               <mat-error>{{form.controls['lastName'].errors | regerrtranslate}}</mat-error>
 
             </mat-form-field>
 
             <mat-form-field>
-              <input matInput placeholder="Email" formControlName="email">
+              <input matInput placeholder="Email" formControlName="email" required>
               <mat-error>{{form.controls['email'].errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <div class="phone-number">              
               <mat-form-field class="prefix">
-                <input  appreance="fill" matInput placeholder="Prefix" formControlName="phoneNumberPrefix">
+                <input  appreance="fill" matInput placeholder="Prefix" formControlName="phoneNumberPrefix" required>
                 <mat-hint>3 digits</mat-hint>
                 <mat-error>{{form.controls['phoneNumberPrefix'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
 
               <mat-form-field class="number">
-                <input  appreance="fill" matInput placeholder="Phone Number" formControlName="phoneNumberBody">
+                <input  appreance="fill" matInput placeholder="Phone Number" formControlName="phoneNumberBody" required>
                 <mat-hint>7 digits</mat-hint>
                 <mat-error>{{form.controls['phoneNumberBody'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
@@ -40,13 +40,13 @@
 
             <div formGroupName="passwords" class="form-content">
               <mat-form-field >
-                <input type="password" matInput placeholder="Password" formControlName="password">
+                <input type="password" matInput placeholder="Password" formControlName="password"  required>
                 <mat-error>{{form.get('passwords').controls['password'].errors | regerrtranslate}}</mat-error>
 
               </mat-form-field>
 
               <mat-form-field >
-                <input type="password" matInput placeholder="Confirm Password" formControlName="confirmedPassword">
+                <input type="password" matInput placeholder="Confirm Password" formControlName="confirmedPassword" required>
                 <mat-error>{{form.get('passwords').controls['confirmedPassword'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
             </div>
@@ -62,12 +62,12 @@
         <mat-tab label="Organisation Information" class="form-content">
           <div class="form-content">
             <mat-form-field>
-              <input matInput placeholder="Organisation Name" formControlName="orgName">
+              <input matInput placeholder="Organisation Name" formControlName="orgName" required>
               <mat-error>{{form.controls['orgName'].errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
-              <input matInput placeholder="Organisation Short Code" formControlName="orgCode">
+              <input matInput placeholder="Organisation Short Code" formControlName="orgCode" required>
               <mat-error>{{form.controls['orgCode'].errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
@@ -84,25 +84,25 @@
 
             <div class="select-country">
               <mat-form-field>
-                <mat-select placeholder="Select a country" [(ngModel)]="selectedCountry" formControlName="country" [disabled]="true">                  
+                <mat-select placeholder="Select a country" [(ngModel)]="selectedCountry" formControlName="country" [disabled]="true" required>                  
                   <mat-option value="New Zealand" selected>New Zealand</mat-option>
                 </mat-select>
               </mat-form-field>
               <mat-form-field>
-                <input matInput placeholder="City / Town" formControlName="city">
+                <input matInput placeholder="City / Town" formControlName="city" required>
                 <mat-error>{{form.controls['city'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
             </div>
 
             <div class="phone-number">              
               <mat-form-field class="prefix">
-                <input  appreance="fill" matInput placeholder="Prefix" formControlName="orgPhoneNumberPrefix">
+                <input  appreance="fill" matInput placeholder="Prefix" formControlName="orgPhoneNumberPrefix" required>
                 <mat-hint>3 digits</mat-hint>
                 <mat-error>{{form.controls['orgPhoneNumberPrefix'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
 
               <mat-form-field class="number">
-                <input  appreance="fill" matInput placeholder="Phone Number" formControlName="orgPhoneNumberBody">
+                <input  appreance="fill" matInput placeholder="Phone Number" formControlName="orgPhoneNumberBody" required>
                 <mat-hint>7 digits</mat-hint>
                 <mat-error>{{form.controls['orgPhoneNumberBody'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
@@ -119,17 +119,22 @@
                 <app-upload (onUploadFinished)="uploadFinished($event)"></app-upload>                
                 <input matInput style="display: none;" formControlName="logoUrl">
               </div>
-            </mat-form-field>           
+            </mat-form-field>     
+            
+            <div formGroupName="inputGST" class="input-gst">
+              <span >
+                <mat-checkbox (change)="toggleGST($event)" formControlName="haveGST">GST Registed?</mat-checkbox>
+              </span>
 
-            <div class="full-width" fxLayout="row">
-              <mat-checkbox (change)="toggleGST($event)">GST Registed?</mat-checkbox>
               <span *ngIf="!displayInputGST">
                 <mat-form-field>
                   <input matInput placeholder="Input your GST number: " formControlName="gstNumber">
-                  <mat-error>{{form.controls['gstNumber'].errors | regerrtranslate}}</mat-error>
+                  <mat-error>{{form.get('inputGST').controls['gstNumber'].errors | regerrtranslate}}</mat-error>
                 </mat-form-field>
               </span>
             </div>
+
+          
 
 
           </div>

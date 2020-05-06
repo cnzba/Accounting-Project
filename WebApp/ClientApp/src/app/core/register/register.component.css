@@ -33,3 +33,9 @@
 .phone-number .prefix{
     width: 5rem;
 }
+
+.input-gst{
+    display: flex;
+    flex-direction: row;
+    padding-left: 1rem;
+}

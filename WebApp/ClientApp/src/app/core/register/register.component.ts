@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, RequiredValidator } from '@angular/forms';
 import { UserRegisterService, } from "../services";
 import { CBAUser } from '../domain/CBAUser';
 import { Router } from '@angular/router';
@@ -118,13 +118,30 @@ export class RegisterComponent implements OnInit{
         Validators.maxLength(20),      
       ])],
 
-      gstNumber:['',Validators.compose([
-        Validators.required,  
-        Validators.maxLength(20)    
-      ])],
+      inputGST:this.fb.group({
+        haveGST:[false ],
+        gstNumber:[""]
+        },
+        {validator:this.validateGST}
+      )
+
+      // gstNumber:['',Validators.compose([
+      //   Validators.required,  
+      //   Validators.maxLength(20)    
+      // ])],
+
     })    
   }
   
+  validateGST(fb:FormGroup){
+    let haveGSTCtrl = fb.get('haveGST');
+    let gstNumberCtrl = fb.get('gstNumber');
+    if (haveGSTCtrl.value && gstNumberCtrl.value==""){
+      gstNumberCtrl.setErrors({required:true});
+    }else{
+      gstNumberCtrl.setErrors(null);
+    }
+  }
 
   comparePasswords(fb:FormGroup){
     let confirmPswrdCtrl = fb.get('confirmedPassword');
