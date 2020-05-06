@@ -12,7 +12,11 @@ using WebApp.Entities;
 using Microsoft.EntityFrameworkCore;
 
 using System.Diagnostics; // remember to remove this , used for debug.console()
+using System.Xml;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
+using System.Net;
+
 
 namespace WebApp.Services
 {
@@ -59,21 +63,55 @@ namespace WebApp.Services
                 var invoice = context.Invoice.Include("InvoiceLine").SingleOrDefault(t => t.InvoiceNumber == invoiceNumber);
                 
                 string charitiesNumber = invoice.CharitiesNumber;
-                string clientContact = invoice.ClientContact; // address, replace \n with <br> for html
+                //string clientContact = invoice.ClientContact; // address, replace \n with <br> for html
+                var clientContact = Regex.Replace(invoice.ClientContact, @"\r\n?|\n", "<br />");
+
                 string clientName = invoice.ClientName; // name
-                DateTime dateCreated = invoice.DateCreated;
+                DateTime dateCreated = invoice.DateCreated; // Invoice Date
                 DateTime dateDue = invoice.DateDue;
                 string email = invoice.Email;
                 decimal grandTotal = invoice.GrandTotal;
                 string gstNumber = invoice.GstNumber;
                 decimal gstRate = invoice.GstRate;
+                var subTotal = invoice.SubTotal;
                 var invoiceLine = invoice.InvoiceLine; // collection of the item in description
                 string purchaseOrderNumber = invoice.PurchaseOrderNumber;
 
                 // there are more fields
                 XDocument temp = XDocument.Load("Services/PdfServiceHtmlModel.html");
-                temp.Descendants().Where(x => (string)x.Attribute("id") == "myidtest").FirstOrDefault().Value = "foobar"; // .Where(x => (Guid?) x.Attribute("id") == id).FirstOrDefault(); for null?
+                //temp.Descendants().Where(x => (string)x.Attribute("id") == "myidtest").FirstOrDefault().Value = "foobar"; // .Where(x => (Guid?) x.Attribute("id") == id).FirstOrDefault(); for null?
+                temp.Descendants().Where(x => (string)x.Attribute("id") == "clientName").FirstOrDefault().Value = clientName;
+
+
+                var clientContactDetails = XElement.Parse("<span>" + clientContact + "</span>");
+                temp.Descendants().Where(x => (string)x.Attribute("id") == "clientContact").FirstOrDefault().Add(clientContactDetails);
+
+
+                // https://stackoverflow.com/questions/19271080/c-sharp-xml-avoid-html-encode-using-xdocument
                 temp.Descendants().Where(x => (string)x.Attribute("id") == "invoiceNumber").FirstOrDefault().Value = invoiceNumber;
+                temp.Descendants().Where(x => (string)x.Attribute("id") == "dateCreated").FirstOrDefault().Value = dateCreated.ToString();
+                temp.Descendants().Where(x => (string)x.Attribute("id") == "gstNumber").FirstOrDefault().Value = gstNumber;
+                temp.Descendants().Where(x => (string)x.Attribute("id") == "charitiesNumber").FirstOrDefault().Value = charitiesNumber;
+                temp.Descendants().Where(x => (string)x.Attribute("id") == "purchaseOrderNumber").FirstOrDefault().Value = purchaseOrderNumber;
+ 
+                temp.Descendants().Where(x => (string)x.Attribute("id") == "dateDue").FirstOrDefault().Value = "Due Date" + dateDue.ToString();
+
+                temp.Descendants().Where(x => (string)x.Attribute("id") == "gstRate").FirstOrDefault().Value = String.Format("GST {0}%", gstRate * 100);
+
+                var gstValue = grandTotal - subTotal;
+                temp.Descendants().Where(x => (string)x.Attribute("id") == "gstValue").FirstOrDefault().Value = gstValue.ToString();
+                temp.Descendants().Where(x => (string)x.Attribute("id") == "subTotal").FirstOrDefault().Value = subTotal.ToString();
+                temp.Descendants().Where(x => (string)x.Attribute("id") == "grandTotal").FirstOrDefault().Value = grandTotal.ToString();
+
+                string holder = "<tr><td>{0}</td><td style=\"text-align: right\">{1}</td><td style=\"text-align: right\">{2}</td><td style=\"text-align: right\">{3}</td></tr>";
+                foreach (var item in invoiceLine)
+                {
+                    var testNode = XElement.Parse(String.Format(holder, item.Description, item.Quantity, item.UnitPrice, item.Amount));
+                    temp.Descendants().Where(x => (string)x.Attribute("id") == "testTable").FirstOrDefault().Add(testNode);
+                }
+                
+                
+                
                 // Debug.WriteLine(charitiesNumber); 
                 var doc = new HtmlToPdfDocument()
                 {

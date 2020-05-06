@@ -87,12 +87,12 @@
         <div style="text-align: left; vertical-align: top;">
             <div style="float: left;">
 
-                <table style="height: 200px;" width="200" summary="">
+                <table style="height: 120px" width="365" summary="">
                     <!-- makes it look linline for now> <-->
                     <tbody>
                         <tr>
-                            <td style="width: 267.333px; text-align: left; vertical-align: bottom;">
-                                <p>due date56a Apple Street<br />Central City<br /></p>
+                            <td style="width: 355px; text-align: left; vertical-align: bottom;">
+                                <p id="dateDue">due date56a Apple Street<br />Central City<br /></p>
                             </td>
                             <!-- >replace "\n" with <br><-->
                         </tr>
@@ -103,17 +103,17 @@
                 <table summary="">
                     <tbody>
                         <tr>
-                            <th style="height: 50px;" valign="bottom">Sub Total</th>
-                            <td style="height: 50px;" valign="bottom">87.40</td><!-- >have to be same height<br><-->
+                            <th style="height: 50px; text-align: left;" valign="bottom">Sub Total</th>
+                            <td id ="subTotal" style="height: 50px; text-align: right;" valign="bottom">87.40</td><!-- >have to be same height<br><-->
 
                         </tr>
                         <tr>
-                            <th>GST(15%)</th>
-                            <td>money%</td>
+                            <th id="gstRate" style="text-align: left;">15%</th>
+                            <td id="gstValue" style="text-align: right;">11</td>
                         </tr>
                         <tr>
-                            <th>Total</th>
-                            <td>87+money</td>
+                            <th style="text-align: left;">Grand Total</th>
+                            <td id="grandTotal" style="text-align: right;">87+money</td>
                         </tr>
                     </tbody>
                 </table>
@@ -122,8 +122,8 @@
         </div>
 
 
-        <p style="text-align: center;">Payment bla bla</p>
-        <p style="text-align: center;">thank 4 business</p>
+        <p style="text-align: center;">Payment can be made into our bank account using your customer number as a reference</p>
+        <p style="text-align: center;">Thank you for your business</p>
 
     </div>
 
