@@ -27,7 +27,7 @@
 }
 
 .phone-number mat-form-field+mat-form-field{
-    margin-left: 8px;
+    margin-left: 15px;
 }
 
 .select-country mat-form-field+mat-form-field{
@@ -42,4 +42,8 @@
     display: flex;
     flex-direction: row;
     padding-left: 1rem;
+}
+
+.prefix {
+    width: 6rem;
 }
