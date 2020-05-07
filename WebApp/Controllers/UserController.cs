@@ -60,10 +60,9 @@ namespace WebApp.Controllers
 
         // GET: api/User/User
         /// <summary>
-        /// Get a user by UserID
-        /// UserID is in token.
+        /// Get a user by UserID which is in the token.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>If found user, return the user, else return NotFound</returns>
         [HttpGet()]
         [Authorize]
         [Route("User")]
@@ -90,7 +89,7 @@ namespace WebApp.Controllers
         /// Check if the user exists by email.
         /// </summary>
         /// <param name="email">Email to be checked</param>
-        /// <returns>Two string "Exist" and "NotExist"</returns>
+        /// <returns>If user exist, return "Exist", or return "NotExist"</returns>
         [HttpGet,Route("CheckUserExist/{email}")]
         public async Task<IActionResult> CheckUserExist([FromRoute] string email)
         {
@@ -239,9 +238,8 @@ namespace WebApp.Controllers
 
         /// <summary>
         /// 1. Upload the logo file to server
-        /// 2. Return the full path of the logo file.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>If a valid file, then return full path of the logo file.</returns>
         [HttpPost, Route("uploadLogo")]
         [DisableRequestSizeLimit]
         public IActionResult UploadLogo()

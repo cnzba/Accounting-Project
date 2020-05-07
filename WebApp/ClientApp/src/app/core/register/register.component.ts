@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { CBAOrg } from '../domain/CBAOrg';
 import { UserValidators } from '../validators/user.validator';
 import { AlertService } from 'src/app/common/alert/alert.service';
+import { debounceTime, filter, subscribeOn } from 'rxjs/operators';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -14,20 +15,20 @@ import { AlertService } from 'src/app/common/alert/alert.service';
 export class RegisterComponent implements OnInit{
   selectedTab = 0;
   public displayInputGST = true;
-  private regUser:CBAUser;
-  private regOrg:CBAOrg;
+  private _regUser:CBAUser;
+  private _regOrg:CBAOrg;
   logoImgUrl ="/assets/images/logo_placeholder.png";
   selectedCountry = 'New Zealand';
-
   form:FormGroup;
+
   constructor(private fb:FormBuilder,
               private userRegService:UserRegisterService,
               private router: Router,
               private checkUserExistService:UserValidators,
               private alertService:AlertService){ 
-      this.regUser = new CBAUser();
-      this.regOrg = new CBAOrg();
-    }
+      this._regUser = new CBAUser();
+      this._regOrg = new CBAOrg();
+    }  
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -134,38 +135,43 @@ export class RegisterComponent implements OnInit{
   }
 
   comparePasswords(fb:FormGroup){
-    let confirmPswrdCtrl = fb.get('confirmedPassword');
-    if (confirmPswrdCtrl.errors == null || 'passwordMismatch' in confirmPswrdCtrl.errors){
-      if (fb.get('password').value != confirmPswrdCtrl.value){
+    const confirmPswrdCtrl = fb.get('confirmedPassword');
+    if (!confirmPswrdCtrl) return;
+    const confirmPwd$ = confirmPswrdCtrl.valueChanges.pipe(
+      debounceTime(300),
+      filter( v => confirmPswrdCtrl.valid)
+    )
+    confirmPwd$.subscribe( confirmPwd =>{
+      if (fb.get('password').value != confirmPwd){
         confirmPswrdCtrl.setErrors({passwordMismatch:true});
         console.log(confirmPswrdCtrl.errors);
       }        
       else
         confirmPswrdCtrl.setErrors(null);
-    }
+    })
   }
 
   onSubmit({value, valid},ev: Event){
     ev.preventDefault();
     console.log(JSON.stringify(value));
     console.log(valid);
-    this.regUser.phoneNumber= value.phoneNumberPrefix+ "-"+value.phoneNumberBody;
-    this.regUser.firstName= value.firstName;
-    this.regUser.lastName = value.lastName;
-    this.regUser.email = value.email;
-    this.regUser.password = value.passwords.password;
-    this.regOrg.OrgName= value.orgName;
-    this.regOrg.orgCode= value.orgCode;
-    this.regOrg.streetAddrL1 = value.streetAddrL1;
-    this.regOrg.streetAddrL2 = value.streetAddrL2;
-    this.regOrg.city = value.city;
-    this.regOrg.country = this.selectedCountry;
-    this.regOrg.phoneNumber = value.orgPhoneNumberPrefix + "-" + value.orgPhoneNumberBody;
-    this.regOrg.logoUrl = value.logoUrl;
-    this.regOrg.chritiesNumber = value.charitiesNumber;
-    this.regOrg.gstNumber = value.gstNumber;
+    this._regUser.phoneNumber= value.phoneNumberPrefix+ "-"+value.phoneNumberBody;
+    this._regUser.firstName= value.firstName;
+    this._regUser.lastName = value.lastName;
+    this._regUser.email = value.email;
+    this._regUser.password = value.passwords.password;
+    this._regOrg.OrgName= value.orgName;
+    this._regOrg.orgCode= value.orgCode;
+    this._regOrg.streetAddrL1 = value.streetAddrL1;
+    this._regOrg.streetAddrL2 = value.streetAddrL2;
+    this._regOrg.city = value.city;
+    this._regOrg.country = this.selectedCountry;
+    this._regOrg.phoneNumber = value.orgPhoneNumberPrefix + "-" + value.orgPhoneNumberBody;
+    this._regOrg.logoUrl = value.logoUrl;
+    this._regOrg.chritiesNumber = value.charitiesNumber;
+    this._regOrg.gstNumber = value.gstNumber;
     
-    this.userRegService.registerUser(this.regUser,this.regOrg).subscribe(
+    this.userRegService.registerUser(this._regUser,this._regOrg).subscribe(
       (res:any) =>{
         if (res == "succeed"){
           this.router.navigate(['/login']);
@@ -185,9 +191,6 @@ export class RegisterComponent implements OnInit{
     this.selectedTab = 1;
   }
 
-  prevTab(){
-    this.selectedTab = 0;
-  }
 
   onTabChange(index:number){
     this.selectedTab=index;
@@ -202,7 +205,7 @@ export class RegisterComponent implements OnInit{
     }
   }
 
-  public uploadFinished =(event) =>{
+  public uploadLogoFinished =(event) =>{
     let url = event.dbPath;
     this.logoImgUrl= url;
     this.form.get('logoUrl').setValue(url);

@@ -112,7 +112,7 @@
             <mat-form-field>
               <div class="upload">
                 <img alt="Preview logo" class="preview-logo" [src]="logoImgUrl" style="width:60px;height:60px;">
-                <app-upload (onUploadFinished)="uploadFinished($event)"></app-upload>                
+                <app-upload (onUploadFinished)="uploadLogoFinished($event)"></app-upload>                
                 <input matInput style="display: none;" formControlName="logoUrl">
               </div>
             </mat-form-field>     
