@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApp.Entities;
-using Microsoft.EntityFrameworkCore;
 
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
@@ -22,6 +21,7 @@ namespace WebApp.Services
     {
         private readonly IEmailService emailService;
         private readonly IConverter converter;
+        private readonly IViewRenderService viewRenderService;
         private readonly EmailConfig emailConfig;
         private readonly PdfServiceOptions serviceConfig;
         private readonly CBAContext context;
@@ -29,11 +29,11 @@ namespace WebApp.Services
         public PdfService(IEmailService emailService,
                             IOptionsSnapshot<EmailConfig> emailConfig,
                             IOptionsSnapshot<PdfServiceOptions> serviceConfig,
-                            IConverter converter,
-                            CBAContext context)
+                            IConverter converter)
         {
             this.emailService = emailService;
             this.converter = converter;
+            this.viewRenderService = viewRenderService;
             this.emailConfig = emailConfig.Value;
             this.serviceConfig = serviceConfig.Value;
             this.context = context;
@@ -57,51 +57,8 @@ namespace WebApp.Services
         {
             try
             {
-                DeletePdf(invoiceNumber);
-                var invoice = context.Invoice.Include("InvoiceLine").SingleOrDefault(t => t.InvoiceNumber == invoiceNumber);
-                
-                var charitiesNumber = invoice.CharitiesNumber; // string
-                var clientContact = Regex.Replace(invoice.ClientContact, @"\r\n?|\n", "<br />"); // string, replace "\n" with "<br/>" for html
-                var clientName = invoice.ClientName; // string
-                var dateCreated = invoice.DateCreated; // DateTime
-                var dateDue = invoice.DateDue; // DateTime
-                var email = invoice.Email; // string
-                var grandTotal = invoice.GrandTotal; // decimal
-                var gstNumber = invoice.GstNumber;  // string
-                var gstRate = invoice.GstRate; // decimal
-                var subTotal = invoice.SubTotal; // decimal
-                var invoiceLine = invoice.InvoiceLine; // ICollection<InvoiceLine> of the items
-                var purchaseOrderNumber = invoice.PurchaseOrderNumber; // string
+                DeletePdf(InvoiceNumber);
 
-                // there are more fields but most are null or missing i.e. no logo field?
-                XDocument document = XDocument.Load("Services/PdfServiceHtmlModel.html");
-
-                AddField(ref document, "clientName", clientName);
-
-                AddFieldWithNewline(ref document, "clientContact", clientContact);
-
-                AddField(ref document, "invoiceNumber", invoiceNumber);
-                AddField(ref document, "dateCreated", dateCreated.ToString());
-                AddField(ref document, "gstNumber", gstNumber);
-                AddField(ref document, "charitiesNumber", charitiesNumber);
-                AddField(ref document, "purchaseOrderNumber", purchaseOrderNumber);
-                AddField(ref document, "dateDue", "Due Date" + dateDue.ToString());
-                AddField(ref document, "gstRate", string.Format("GST {0}%", gstRate * 100));
-
-                var gstValue = grandTotal - subTotal;
-                AddField(ref document, "gstValue", gstValue.ToString());
-                AddField(ref document, "subTotal", subTotal.ToString());
-                AddField(ref document, "grandTotal", subTotal.ToString());
-
-
-                // populate the table
-                var holder = "<tr><td>{0}</td><td style=\"text-align: right\">{1}</td><td style=\"text-align: right\">{2}</td><td style=\"text-align: right\">{3}</td></tr>";
-                foreach (var item in invoiceLine)
-                {
-                    var node = XElement.Parse(string.Format(holder, item.Description, item.Quantity, item.UnitPrice, item.Amount));
-                    document.Descendants().Where(x => (string)x.Attribute("id") == "invoiceTable").FirstOrDefault().Add(node);
-                }
-                
                 var doc = new HtmlToPdfDocument()
                 {
                     GlobalSettings = {
@@ -113,7 +70,7 @@ namespace WebApp.Services
                     Objects = {
                     new ObjectSettings()
                     {
-                       HtmlContent = document.ToString(),
+                       HtmlContent = @"<html><body><div>Hello</div></body></html>",
                     }
                 }
                 };

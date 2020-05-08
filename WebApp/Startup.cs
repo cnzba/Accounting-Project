@@ -77,7 +77,6 @@ namespace WebApp
                 c.SwaggerDoc("v1", new Info { Title = "Account WEB/API", Version = "v1" });
             });
 
-
             services.AddOptions();
             services.AddCNZBA(Configuration);
         }
@@ -153,6 +152,8 @@ namespace WebApp
             services.Configure<PdfServiceOptions>(configuration.GetSection("PdfService"));
             //add pdf converter
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+            // Configuration of the converter from razor views to string
+            services.AddScoped<IViewRenderService, ViewRenderService>();
         }
     }
 }

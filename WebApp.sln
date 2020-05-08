@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoServiceCore", "Crypto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{C71392F4-4A25-439E-A4A1-3A559F97BD1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceUtil", "ServiceUtil\ServiceUtil.csproj", "{20A481AD-0401-4695-B855-68C5D5D499E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceUtil", "ServiceUtil\ServiceUtil.csproj", "{20A481AD-0401-4695-B855-68C5D5D499E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
