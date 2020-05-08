@@ -1,11 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { ForgotPasswordService } from './forgot-password.service';
-import { AlertService } from '../common/alert/alert.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Subject } from 'rxjs';
-import { isNullOrUndefined } from 'util';
-
 
 declare var $: any;
 
@@ -21,12 +17,16 @@ export class ForgotPasswordComponent implements OnInit {
     public id: number;
     modalRef: BsModalRef;
 
+    config = {
+        backdrop: true,
+        ignoreBackdropClick: true
+    };
+
     public onClose: Subject<boolean>;
 
     constructor(
         private forgotPasswordService: ForgotPasswordService,
         public bsModalRef: BsModalRef,
-        private alertService: AlertService,
         private modalService: BsModalService) {
     }
 
@@ -44,17 +44,17 @@ export class ForgotPasswordComponent implements OnInit {
 
                     this.model.message = data;//"An email has been sent with instruction to reset your password";
                     this.model.title = "Password Reset Email Sent";
-                    this.modalRef = this.modalService.show(template);
+                    this.modalRef = this.modalService.show(template, this.config);
                     this.emailSent = true;
                     this.loading = false;
                 },
                 error => {
-                    if (!isNullOrUndefined(error) && error.httpError.status == 400) {
-                        let errorMessage = error.globalError;
-                        this.model.title = "Error";
-                        this.model.message = errorMessage;
-                        this.modalRef = this.modalService.show(template);
-                    }
+                    // if (!isNullOrUndefined(error) && error.httpError.status == 400) {
+                    let errorMessage = error.globalError;
+                    this.model.title = "Error";
+                    this.model.message = errorMessage;
+                    this.modalRef = this.modalService.show(template, this.config);
+                    //}
                     this.loading = false;
                 });
     }
@@ -62,5 +62,11 @@ export class ForgotPasswordComponent implements OnInit {
     cancel(e) {
         e.preventDefault();
         this.bsModalRef.hide()
+    }
+
+    cancelChildModal() {
+        this.modalRef.hide();
+        if (this.model.title != "Error")
+            this.bsModalRef.hide()
     }
 }

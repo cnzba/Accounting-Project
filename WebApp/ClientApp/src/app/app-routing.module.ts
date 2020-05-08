@@ -8,10 +8,10 @@ import { InvoicedetailComponent } from './invoices/invoicedetail.component';
 import { InvoiceEditComponent } from './invoices/invoice-edit.component';
 import { InvoiceResolverService } from './invoices/invoice-resolver.service';
 import { ChangePasswordComponent } from './login/change-password.component';
-import { ForgotPasswordComponent } from './login/forgot-password.component';
+import { ForgotPasswordComponent } from './login/forget-password/forgot-password.component';
 import { InvoicePaymentComponent } from './payment/invoice-payment.component';
 import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
-import { ResetPasswordComponent } from './login/reset-password.component';
+import { ResetPasswordComponent } from './login/reset-passowod/reset-password.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginComponent },

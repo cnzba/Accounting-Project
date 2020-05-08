@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResetPasswordService } from './reset-password.service';
-import { AlertService } from '../common/alert/alert.service';
+import { AlertService } from '../../common/alert/alert.service';
 import { Subscription } from 'rxjs';
 import { isNullOrUndefined } from 'util';
 import { NgForm } from '@angular/forms';
-import { delay } from 'rxjs/operators';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
     selector: 'app-reset-password',
@@ -22,15 +22,35 @@ export class ResetPasswordComponent implements OnInit {
     token: string;
     isError: boolean = false;
     emailSent: boolean = false;
+
+    resetPasswordForm: FormGroup;
+
     constructor(
         private resetPasswordService: ResetPasswordService,
         private alertService: AlertService,
-        private route: ActivatedRoute,
-        private router: Router) {
+        private route: ActivatedRoute, private formBuilder: FormBuilder) {
 
     }
 
     ngOnInit() {
+
+        this.resetPasswordForm = this.formBuilder.group({
+
+            passwords: this.formBuilder.group({
+                newPassword: ['', Validators.compose([
+                    Validators.required,
+                    Validators.minLength(8),
+                    Validators.pattern(".*[0-9].*")
+                ])],
+                confirmPassword: ['', Validators.compose([
+                    Validators.required,
+                    Validators.minLength(8),
+                    Validators.pattern(".*[0-9].*")
+                ])]
+            },
+                { validator: this.comparePasswords }
+            ),
+        });
 
         //Retrieve params from URL
         this.id = this.route.snapshot.queryParams['id'];
@@ -46,25 +66,31 @@ export class ResetPasswordComponent implements OnInit {
                     this.isError = true;
                     if (!isNullOrUndefined(error) && error.httpError.status != 400) {
 
-                       this.alertService.error(error.globalError);
+                        this.alertService.error(error.globalError);
                     }
                 });
     }
 
+    comparePasswords(fb: FormGroup) {
+        let confirmPswrdCtrl = fb.get('confirmPassword');
+        if (confirmPswrdCtrl != null && (confirmPswrdCtrl.errors == null || 'passwordMismatch' in confirmPswrdCtrl.errors)) {
+            if (fb.get('newPassword').value != confirmPswrdCtrl.value) {
+                confirmPswrdCtrl.setErrors({ passwordMismatch: true });
+            }
+            else {
+                confirmPswrdCtrl.setErrors(null);
+            }
+        }
 
-    onSubmit() {
 
-        //if (this.model.newPassword != this.model.confirmNewPassword) {
-        //    this.confirmPasswordMatchError = true;
-        //    return;
-        //}
+    }
+    onSubmit({ value, valid }) {
 
-        this.resetPasswordService.changePassword(this.model.newPassword, this.model.confirmNewPassword, this.id, this.token)
+        this.resetPasswordService.changePassword(value.passwords.newPassword, value.passwords.confirmPassword, this.id, this.token)
             .subscribe(
                 data => {
-                    this.alertService.success("Password has been reset successfully..!!");
-                    delay(1000);
-                    this.router.navigate(['login']);
+                    //this.alertService.success("Password has been reset successfully..!!");
+                    this.model.isSuccess = true;
                     this.loading = false;
                 },
                 error => {
@@ -76,7 +102,6 @@ export class ResetPasswordComponent implements OnInit {
     }
 
     reset(form: NgForm) {
-        //form.resetForm();
         form.reset();
     }
 }

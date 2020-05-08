@@ -17,20 +17,14 @@ namespace WebApp.Controllers
     [Route("api/[controller]")]
     public class ForgotPasswordController : Controller
     {
-        private readonly ICryptography _crypto;
-        private readonly CBAContext _context;
         private readonly IEmailService emailService;
         private readonly IEmailConfig emailConfig;
-        private IHostingEnvironment _env;
         private UserManager<CBAUser> _userManager;
-        public ForgotPasswordController(CBAContext context, ICryptography crypto, IEmailService emailService,
-            IOptions<EmailConfig> emailConfig, IHostingEnvironment env, UserManager<CBAUser> userManager)
-        {
-            _context = context;
-            _crypto = crypto;
+        public ForgotPasswordController(IEmailService emailService,
+            IOptions<EmailConfig> emailConfig, UserManager<CBAUser> userManager)
+        {           
             this.emailService = emailService;
             this.emailConfig = emailConfig.Value;
-            _env = env;
             _userManager = userManager;
         }
 
@@ -64,15 +58,9 @@ namespace WebApp.Controllers
 
             string passwordResetLink = QueryHelpers.AddQueryString($"{hostAddress}/reset-password", queryParams);
 
-            var pathToFile = Directory.GetCurrentDirectory()
-                            + Path.DirectorySeparatorChar.ToString()
-                            + "EmailTemplates"
-                            + Path.DirectorySeparatorChar.ToString()
-                            + "ForgotPasswordTemplate.html";
-
-            pathToFile = Path.Combine(Directory.GetCurrentDirectory(),
-                            "EmailTemplates",
-                            "ForgotPasswordTemplate.html");
+            string pathToFile = Path.Combine(Directory.GetCurrentDirectory(),
+                             "EmailTemplates",
+                             "ForgotPasswordTemplate.html");
 
             StreamReader SourceReader = System.IO.File.OpenText(pathToFile);
             string htmlBody = SourceReader.ReadToEnd();
@@ -86,7 +74,8 @@ namespace WebApp.Controllers
             };
             if (!await emailService.SendEmail(emailConfig, emailContent))
             {
-                return BadRequest("Error has been occured during sending mail. Please try again after some time..!!");
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError);
+                //return BadRequest("Error has been occured during sending mail. Please try again after some time..!!");
             }
             return Ok("An email has been sent with instruction to reset your password...!!");
         }

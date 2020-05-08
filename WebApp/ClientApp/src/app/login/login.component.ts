@@ -9,7 +9,7 @@ import { NgForm, FormBuilder } from '@angular/forms';
 import { UserService } from '../users/user.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { ForgotPasswordComponent } from './forgot-password.component';
+import { ForgotPasswordComponent } from './forget-password/forgot-password.component';
 //import { NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -26,6 +26,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     email: string = "";
     isLoginFail: boolean;
     userLogin:FormGroup;    
+
+    config = {
+        backdrop: true,
+        ignoreBackdropClick: true
+    };
 
     constructor(
         private fb:FormBuilder,
@@ -123,14 +128,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     openModal() {
 
-        //let ngbModalOptions: NgbModalOptions = {
-        //    backdrop: 'static',
-        //    keyboard: false
-        //};
-
-        this.modalRef = this.modalService.show(ForgotPasswordComponent);
+        this.modalRef = this.modalService.show(ForgotPasswordComponent, this.config);
         this.modalRef.content.onClose.subscribe(result => {
-            console.log('results', result);
+           
         })
     }
 

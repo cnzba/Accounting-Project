@@ -84,7 +84,7 @@ export class InvoicelistComponent implements OnInit {
             invoiceNumber = delete_value;
             this.invoiceService.deleteInvoice(invoiceNumber).subscribe(
                data => {
-               //window.location.reload();
+               window.location.reload();
                this.invo = this.invo.filter(inv=> inv.invoiceNumber !== invoiceNumber);
                this.offset=0;
                this.alertService.success(invoiceNumber +" has successfully been deleted!");

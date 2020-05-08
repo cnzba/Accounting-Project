@@ -23,11 +23,8 @@ namespace UnitTestProject
         private readonly Mock<IEmailService> _emailService;
         private readonly IOptions<EmailConfig> _emailConfig;
         private readonly DbContextOptions<CBAContext> _dbOptions;
-        private readonly CBAContext _cbaContext;
-        private readonly Mock<ICryptography> _crypto;
         private Mock<IUserStore<CBAUser>> _mockUserStore;
         private Mock<UserManager<CBAUser>> _mockUserManager;
-        private Mock<IHostingEnvironment> _env;
         private ForgotPasswordController _forgetPasswordController;
         public UnitTestForgetPassword()
         {
@@ -41,18 +38,14 @@ namespace UnitTestProject
 
             _dbOptions = new DbContextOptionsBuilder<CBAContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-            _cbaContext = new CBAContext(_dbOptions);
-
+           
             _mockUserStore = new Mock<IUserStore<CBAUser>>();
             _mockUserManager = new Mock<UserManager<CBAUser>>(_mockUserStore.Object,
                  null, null, null, null, null, null, null, null);
 
             _emailService = new Mock<IEmailService>();
-            _crypto = new Mock<ICryptography>();
-            _env = new Mock<IHostingEnvironment>();
-            _env.Setup(m => m.ContentRootPath).Returns(@"F:\Ripal\Project\New folder\CBA Accounting\WebApp");
-
-            _forgetPasswordController = new ForgotPasswordController(_cbaContext, _crypto.Object, _emailService.Object, _emailConfig, _env.Object, _mockUserManager.Object);
+           
+            _forgetPasswordController = new ForgotPasswordController(_emailService.Object, _emailConfig, _mockUserManager.Object);
         }
 
         [TestMethod]
