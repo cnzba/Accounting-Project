@@ -11,12 +11,10 @@ using System.Threading.Tasks;
 using WebApp.Entities;
 using Microsoft.EntityFrameworkCore;
 
-using System.Diagnostics; // remember to remove this , used for debug.console()
-using System.Xml;
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
-using System.Net;
-
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace WebApp.Services
 {
@@ -62,57 +60,48 @@ namespace WebApp.Services
                 DeletePdf(invoiceNumber);
                 var invoice = context.Invoice.Include("InvoiceLine").SingleOrDefault(t => t.InvoiceNumber == invoiceNumber);
                 
-                string charitiesNumber = invoice.CharitiesNumber;
-                //string clientContact = invoice.ClientContact; // address, replace \n with <br> for html
-                var clientContact = Regex.Replace(invoice.ClientContact, @"\r\n?|\n", "<br />");
+                var charitiesNumber = invoice.CharitiesNumber; // string
+                var clientContact = Regex.Replace(invoice.ClientContact, @"\r\n?|\n", "<br />"); // string, replace "\n" with "<br/>" for html
+                var clientName = invoice.ClientName; // string
+                var dateCreated = invoice.DateCreated; // DateTime
+                var dateDue = invoice.DateDue; // DateTime
+                var email = invoice.Email; // string
+                var grandTotal = invoice.GrandTotal; // decimal
+                var gstNumber = invoice.GstNumber;  // string
+                var gstRate = invoice.GstRate; // decimal
+                var subTotal = invoice.SubTotal; // decimal
+                var invoiceLine = invoice.InvoiceLine; // ICollection<InvoiceLine> of the items
+                var purchaseOrderNumber = invoice.PurchaseOrderNumber; // string
 
-                string clientName = invoice.ClientName; // name
-                DateTime dateCreated = invoice.DateCreated; // Invoice Date
-                DateTime dateDue = invoice.DateDue;
-                string email = invoice.Email;
-                decimal grandTotal = invoice.GrandTotal;
-                string gstNumber = invoice.GstNumber;
-                decimal gstRate = invoice.GstRate;
-                var subTotal = invoice.SubTotal;
-                var invoiceLine = invoice.InvoiceLine; // collection of the item in description
-                string purchaseOrderNumber = invoice.PurchaseOrderNumber;
+                // there are more fields but most are null or missing i.e. no logo field?
+                XDocument document = XDocument.Load("Services/PdfServiceHtmlModel.html");
 
-                // there are more fields
-                XDocument temp = XDocument.Load("Services/PdfServiceHtmlModel.html");
-                //temp.Descendants().Where(x => (string)x.Attribute("id") == "myidtest").FirstOrDefault().Value = "foobar"; // .Where(x => (Guid?) x.Attribute("id") == id).FirstOrDefault(); for null?
-                temp.Descendants().Where(x => (string)x.Attribute("id") == "clientName").FirstOrDefault().Value = clientName;
+                AddField(ref document, "clientName", clientName);
 
+                AddFieldWithNewline(ref document, "clientContact", clientContact);
 
-                var clientContactDetails = XElement.Parse("<span>" + clientContact + "</span>");
-                temp.Descendants().Where(x => (string)x.Attribute("id") == "clientContact").FirstOrDefault().Add(clientContactDetails);
-
-
-                // https://stackoverflow.com/questions/19271080/c-sharp-xml-avoid-html-encode-using-xdocument
-                temp.Descendants().Where(x => (string)x.Attribute("id") == "invoiceNumber").FirstOrDefault().Value = invoiceNumber;
-                temp.Descendants().Where(x => (string)x.Attribute("id") == "dateCreated").FirstOrDefault().Value = dateCreated.ToString();
-                temp.Descendants().Where(x => (string)x.Attribute("id") == "gstNumber").FirstOrDefault().Value = gstNumber;
-                temp.Descendants().Where(x => (string)x.Attribute("id") == "charitiesNumber").FirstOrDefault().Value = charitiesNumber;
-                temp.Descendants().Where(x => (string)x.Attribute("id") == "purchaseOrderNumber").FirstOrDefault().Value = purchaseOrderNumber;
- 
-                temp.Descendants().Where(x => (string)x.Attribute("id") == "dateDue").FirstOrDefault().Value = "Due Date" + dateDue.ToString();
-
-                temp.Descendants().Where(x => (string)x.Attribute("id") == "gstRate").FirstOrDefault().Value = String.Format("GST {0}%", gstRate * 100);
+                AddField(ref document, "invoiceNumber", invoiceNumber);
+                AddField(ref document, "dateCreated", dateCreated.ToString());
+                AddField(ref document, "gstNumber", gstNumber);
+                AddField(ref document, "charitiesNumber", charitiesNumber);
+                AddField(ref document, "purchaseOrderNumber", purchaseOrderNumber);
+                AddField(ref document, "dateDue", "Due Date" + dateDue.ToString());
+                AddField(ref document, "gstRate", string.Format("GST {0}%", gstRate * 100));
 
                 var gstValue = grandTotal - subTotal;
-                temp.Descendants().Where(x => (string)x.Attribute("id") == "gstValue").FirstOrDefault().Value = gstValue.ToString();
-                temp.Descendants().Where(x => (string)x.Attribute("id") == "subTotal").FirstOrDefault().Value = subTotal.ToString();
-                temp.Descendants().Where(x => (string)x.Attribute("id") == "grandTotal").FirstOrDefault().Value = grandTotal.ToString();
+                AddField(ref document, "gstValue", gstValue.ToString());
+                AddField(ref document, "subTotal", subTotal.ToString());
+                AddField(ref document, "grandTotal", subTotal.ToString());
 
-                string holder = "<tr><td>{0}</td><td style=\"text-align: right\">{1}</td><td style=\"text-align: right\">{2}</td><td style=\"text-align: right\">{3}</td></tr>";
+
+                // populate the table
+                var holder = "<tr><td>{0}</td><td style=\"text-align: right\">{1}</td><td style=\"text-align: right\">{2}</td><td style=\"text-align: right\">{3}</td></tr>";
                 foreach (var item in invoiceLine)
                 {
-                    var testNode = XElement.Parse(String.Format(holder, item.Description, item.Quantity, item.UnitPrice, item.Amount));
-                    temp.Descendants().Where(x => (string)x.Attribute("id") == "testTable").FirstOrDefault().Add(testNode);
+                    var node = XElement.Parse(string.Format(holder, item.Description, item.Quantity, item.UnitPrice, item.Amount));
+                    document.Descendants().Where(x => (string)x.Attribute("id") == "invoiceTable").FirstOrDefault().Add(node);
                 }
                 
-                
-                
-                // Debug.WriteLine(charitiesNumber); 
                 var doc = new HtmlToPdfDocument()
                 {
                     GlobalSettings = {
@@ -124,12 +113,15 @@ namespace WebApp.Services
                     Objects = {
                     new ObjectSettings()
                     {
-                       HtmlContent = temp.ToString(),
+                       HtmlContent = document.ToString(),
                     }
                 }
                 };
 
                 byte[] pdf = converter.Convert(doc);
+
+                BaseFont bfTimes = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, false); // font
+                pdf = AddWatermark(pdf, bfTimes, "Copy");
 
                 var destination = GetDestination(invoiceNumber);
                 File.WriteAllBytes(destination, pdf);
@@ -140,6 +132,77 @@ namespace WebApp.Services
             {
                 return ex.Message;
             }   
+        }
+
+        /// <summary>
+        /// This method adds data to an html tag by id
+        /// </summary>
+        private static void AddField(ref XDocument document, string id, string data) 
+        {
+            document.Descendants().Where(x => (string)x.Attribute("id") == id).FirstOrDefault().Value = data;
+        }
+
+        /// <summary>
+        /// Similar to AddField, use if string had any inline tags. There is a weird quirk 
+        /// that when adding to the html tag by .Value; inline <> tags are not preserved so when trying to display a newline 
+        /// via <br/> it insteads display "<br/>" literally. It might have something to do with ascii codes?
+        /// to remedy this use .Add() and wrap the XELement in a <span>
+        /// </summary>
+        private static void AddFieldWithNewline(ref XDocument document, string id, string data)
+        {
+            document.Descendants().Where(x => (string)x.Attribute("id") == id).FirstOrDefault()
+                .Add(XElement.Parse("<span>" + data + "</span>"));
+        }
+
+        /// <summary>
+        /// This method adds watermark text under pdf content
+        /// </summary>
+        /// <param name="pdfData">pdf content bytes</param>
+        /// <param name="watermarkText">text to be shown as watermark</param>
+        /// <param name="font">base font</param>
+        /// <param name="fontSize">font size</param>
+        /// <param name="angle">angle at which watermark needs to be shown in degrees</param>
+        /// <param name="color">water mark color</param>
+        /// <param name="realPageSize">pdf page size</param>
+        private static void AddWaterMarkText(PdfContentByte pdfData, string watermarkText, BaseFont font, float fontSize, float angle, BaseColor color, Rectangle realPageSize)
+        {
+            var gstate = new PdfGState { FillOpacity = 0.35f, StrokeOpacity = 0.3f };
+            pdfData.SaveState();
+            pdfData.SetGState(gstate);
+            pdfData.SetColorFill(color);
+            pdfData.BeginText();
+            pdfData.SetFontAndSize(font, fontSize);
+            var x = (realPageSize.Right + realPageSize.Left) / 2;
+            var y = (realPageSize.Bottom + realPageSize.Top) / 2;
+            pdfData.ShowTextAligned(Element.ALIGN_CENTER, watermarkText, x, y, angle);
+            pdfData.EndText();
+            pdfData.RestoreState();
+        }
+
+        /// <summary>
+        /// This method calls another method to add watermark text for each page
+        /// </summary>
+        /// <param name="bytes">byte array of Pdf</param>
+        /// <param name="baseFont">Base font</param>
+        /// <param name="watermarkText">Text to be added as watermark</param>
+        /// <returns>Pdf bytes array having watermark added</returns>
+        private static byte[] AddWatermark(byte[] bytes, BaseFont baseFont, string watermarkText)
+        {
+            using (var ms = new MemoryStream(10 * 1024))
+            {
+                using (var reader = new PdfReader(bytes))
+                using (var stamper = new PdfStamper(reader, ms))
+                {
+                    var pages = reader.NumberOfPages;
+                    for (var i = 1; i <= pages; i++)
+                    {
+                        var dc = stamper.GetOverContent(i);
+                        AddWaterMarkText(dc, watermarkText, baseFont, 100, 45, BaseColor.GRAY, reader.GetPageSizeWithRotation(i));
+                    }
+                    stamper.Close();
+                }
+                return ms.ToArray();
+            }
         }
 
         /// <summary>
