@@ -1,5 +1,5 @@
 import { Component, OnInit} from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { UserRegisterService, } from "../services";
 import { CBAUser } from '../domain/CBAUser';
 import { Router } from '@angular/router';
@@ -50,13 +50,14 @@ export class RegisterComponent implements OnInit{
       ])],
 
       phoneNumberPrefix:['',Validators.compose([
-        Validators.required, 
-        Validators.pattern("[0-9]{3}")
+        Validators.required,         
+        this.fixLength(3)
       ])],
 
       phoneNumberBody:['',Validators.compose([
         Validators.required, 
-        Validators.pattern("[0-9]{7,10}")
+        Validators.minLength(7),
+        Validators.maxLength(10)
       ])],
 
       passwords:this.fb.group({
@@ -78,16 +79,15 @@ export class RegisterComponent implements OnInit{
       ])],
 
       orgCode:['',Validators.compose([
-        Validators.required,   
-        Validators.pattern("[a-zA-Z]{4}")  
+        Validators.required, 
+        this.fixLength(4),           
       ])],
 
       streetAddrL1:['',Validators.compose([
         Validators.required,      
       ])],
 
-      streetAddrL2:['',Validators.compose([
-              
+      streetAddrL2:['',Validators.compose([              
       ])],
 
       city:['',Validators.compose([
@@ -100,12 +100,13 @@ export class RegisterComponent implements OnInit{
 
       orgPhoneNumberPrefix:['',Validators.compose([
         Validators.required, 
-        Validators.pattern("[0-9]{3}")     
+        this.fixLength(3)     
       ])],
 
       orgPhoneNumberBody:['',Validators.compose([
         Validators.required,   
-        Validators.pattern("[0-9]{7,10}")   
+        Validators.minLength(7),
+        Validators.maxLength(10)   
       ])],
 
       logoUrl:['',Validators.compose([
@@ -122,6 +123,12 @@ export class RegisterComponent implements OnInit{
         {validator:this.validateGST}
       )
     })    
+  }
+  fixLength(length:number): ValidatorFn {    
+    return (control: AbstractControl):ValidationErrors | null =>{            
+      var num = control.value;
+      return num.length != length ? {"fixLength":true, "requiredLength":length} : null;      
+    }
   }
   
   validateGST(fb:FormGroup){
