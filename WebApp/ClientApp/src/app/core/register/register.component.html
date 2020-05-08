@@ -26,15 +26,13 @@
               <mat-form-field class="prefix">
                 <input  appreance="fill" matInput placeholder="Prefix" formControlName="phoneNumberPrefix" required>
                 <mat-hint>3 digits</mat-hint>
-                <mat-error *ngIf="form.controls['phoneNumberPrefix'].errors.required">You must enter a value</mat-error>
-                <mat-error *ngIf="form.controls['phoneNumberPrefix'].errors.pattern">Must a three digits number</mat-error>
+                <mat-error>{{form.controls['phoneNumberPrefix'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
 
               <mat-form-field class="number">
                 <input  appreance="fill" matInput placeholder="Phone Number" formControlName="phoneNumberBody" required>
                 <mat-hint>7 digits</mat-hint>
-                <mat-error *ngIf="form.controls['phoneNumberBody'].errors.required">You must enter a value</mat-error>
-                <mat-error *ngIf="form.controls['phoneNumberBody'].errors.pattern">Must a senven digits number</mat-error>
+                <mat-error>{{form.controls['phoneNumberBody'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
             </div>            
 
@@ -96,15 +94,13 @@
               <mat-form-field class="prefix">
                 <input  appreance="fill" matInput placeholder="Prefix" formControlName="orgPhoneNumberPrefix" required>
                 <mat-hint>3 digits</mat-hint>
-                <mat-error *ngIf="form.controls['orgPhoneNumberPrefix'].errors.required">You must enter a value</mat-error>
-                <mat-error *ngIf="form.controls['orgPhoneNumberPrefix'].errors.pattern">Must a three digits number</mat-error>
+                <mat-error>{{form.controls['orgPhoneNumberPrefix'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
 
               <mat-form-field class="number">
                 <input  appreance="fill" matInput placeholder="Phone Number" formControlName="orgPhoneNumberBody" required>
                 <mat-hint>7 digits</mat-hint>
-                <mat-error *ngIf="form.controls['orgPhoneNumberBody'].errors.required">You must enter a value</mat-error>
-                <mat-error *ngIf="form.controls['orgPhoneNumberBody'].errors.pattern">Must a senven digits number</mat-error>
+                <mat-error>{{form.controls['orgPhoneNumberBody'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
             </div>            
 
