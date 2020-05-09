@@ -5,10 +5,11 @@
                 <a class="btn btn-secondary" role="button" (click)="onCancel(template)">Cancel</a>
             </div>
             <div class="col">
-                <div class="float-right">                    
+                <div class="float-right">
                     <button type="submit" class="btn btn-secondary" (click)="onSaveDraft()">Save Draft</button>
                     <!-- <button *ngIf="showFinalise" type="button" class="btn btn-primary" data-toggle="modal" data-target="#finaliseModal">Finalise & Send Invoice</button> -->
-                    <button *ngIf="showFinalise" type="button" class="btn btn-primary" (click)="onShowFinalise(finalTemplate)">Finalise & Send Invoice</button>
+                    <!--<button *ngIf="showFinalise" type="button" class="btn btn-primary" (click)="onShowFinalise(finalTemplate)">Finalise & Send Invoice</button>-->
+                    <button type="button" class="btn btn-primary" (click)="onShowFinalise(finalTemplate)">Finalise & Send Invoice</button>
 
                 </div>
             </div>

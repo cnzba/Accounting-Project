@@ -64,9 +64,9 @@ export class InvoiceEditComponent implements OnInit {
     }
 
     // determine whether to show the finalise and send button
-    get showFinalise(): boolean {
-        return this.modifyInvoice.status == "Draft";
-    }
+    //get showFinalise(): boolean {
+    //    return this.modifyInvoice.status == "Draft";
+    //}
 
     // button actions
     addAddress() {
