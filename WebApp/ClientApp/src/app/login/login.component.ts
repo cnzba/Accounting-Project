@@ -54,9 +54,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     OnSubmit({value,valid}, ev:Event) {
-        ev.preventDefault();
-        console.log(JSON.stringify(value));
-        console.log(valid);
+        ev.preventDefault();        
         this.spinnerService.showSpinner();
         this.model.username = value.username;
         this.model.password = value.password;
@@ -78,31 +76,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         );
 
-        // this.authenticationService.login(this.model.username, this.model.password)
-        //     .subscribe(
-        //     (res: any) => {
-        //         console.log(res.token);
-        //         localStorage.setItem('token',res.token);
-        //         this.router.navigateByUrl('/core');
-        //         // this.isLoginFail = false;
-        //         // if (data.forcePasswordChange) {
-        //         //     localStorage.setItem("forcePasswordChange", "true");
-        //         //     this.callbackService.updateNav(true);
-        //         //     this.router.navigate(["change-password"]);
-        //         // } else {
-        //         //     this.router.navigate([this.returnUrl]);
-        //         // }
-        //     },
-        //     error => {
-        //         //this.alertService.error("User Not Found.");
-        //         // this.isLoginFail = true;
-        //         // this.spinnerService.hideSpinner();
-        //         if (error.status == 400){
-        //             this.alertService.error("Incorrect username or password");
-        //         }else{
-        //             console.log(error);
-        //         }
-        //     });
     }
 
     inputChanged(event) {

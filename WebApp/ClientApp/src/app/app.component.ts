@@ -18,6 +18,8 @@ import { LoginUser } from './users/LoginUser';
     providers: [InvoiceService, CallbackService]
 })
 
+//The codes commented out are the lagecy codes.
+//Keep them in case of necessary.
 export class AppComponent {
     title = 'CBA Invoicing';
     loading: boolean = true;

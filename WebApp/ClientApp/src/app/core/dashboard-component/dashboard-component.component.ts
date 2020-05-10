@@ -58,7 +58,6 @@ export class DashboardComponent implements OnInit {
   //InvoiceStatus 
   //{ New = 0, Draft = 1, Issued = 2, Paid = 3, Cancelled = 4 , overdued =5}
   onClickInvoiceRow(ev){
-    console.log(ev);
     let status = this.receiveDataSource.filter( item => item.title==ev.title)[0].status;
     this.route.navigate(["invoices"],{queryParams:{status:status}});
   }
