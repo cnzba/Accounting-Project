@@ -22,15 +22,17 @@
               <mat-error>{{form.controls['email'].errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
-            <div class="phone-number">              
+            <div class="phone-number">   
               <mat-form-field class="prefix">
-                <input appreance="fill" matInput placeholder="Prefix" formControlName="phoneNumberPrefix" required>
+                <input appRestrictInput="integer" appreance="fill" matInput 
+                  placeholder="Prefix" formControlName="phoneNumberPrefix" required>
                 <mat-hint>3 digits</mat-hint>
                 <mat-error>{{form.controls['phoneNumberPrefix'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
 
               <mat-form-field class="number">
-                <input  appreance="fill" matInput placeholder="Phone Number" formControlName="phoneNumberBody" required>
+                <input  appRestrictInput="integer" appreance="fill" matInput 
+                  placeholder="Phone Number" formControlName="phoneNumberBody" required appPositiveInteger>
                 <mat-hint>7 digits</mat-hint>
                 <mat-error>{{form.controls['phoneNumberBody'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
@@ -92,13 +94,16 @@
 
             <div class="phone-number">              
               <mat-form-field class="prefix">
-                <input  appreance="fill" matInput placeholder="Prefix" formControlName="orgPhoneNumberPrefix" required>
+                <input appRestrictInput="integer"  appreance="fill" matInput 
+                  placeholder="Prefix" formControlName="orgPhoneNumberPrefix" required>
                 <mat-hint>3 digits</mat-hint>
                 <mat-error>{{form.controls['orgPhoneNumberPrefix'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
 
               <mat-form-field class="number">
-                <input  appreance="fill" matInput placeholder="Phone Number" formControlName="orgPhoneNumberBody" required>
+                <input appRestrictInput="integer" appreance="fill" matInput 
+                  placeholder="Phone Number" formControlName="orgPhoneNumberBody" required
+                  οnpaste="return false" οndragenter="return false"  style="ime-mode:disabled">
                 <mat-hint>7 digits</mat-hint>
                 <mat-error>{{form.controls['orgPhoneNumberBody'].errors | regerrtranslate}}</mat-error>
               </mat-form-field>
@@ -109,7 +114,7 @@
               <mat-error>{{form.controls['charitiesNumber'].errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
-            <mat-form-field>
+            <mat-form-field> 
               <div class="upload">
                 <img alt="Preview logo" class="preview-logo" [src]="logoImgUrl" style="width:60px;height:60px;">
                 <app-upload (onUploadFinished)="uploadLogoFinished($event)"></app-upload>                

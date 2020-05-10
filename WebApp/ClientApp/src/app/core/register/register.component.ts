@@ -7,6 +7,7 @@ import { CBAOrg } from '../domain/CBAOrg';
 import { UserValidators } from '../validators/user.validator';
 import { AlertService } from 'src/app/common/alert/alert.service';
 import { debounceTime, filter, subscribeOn } from 'rxjs/operators';
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -151,7 +152,6 @@ export class RegisterComponent implements OnInit{
     confirmPwd$.subscribe( confirmPwd =>{
       if (fb.get('password').value != confirmPwd){
         confirmPswrdCtrl.setErrors({passwordMismatch:true});
-        console.log(confirmPswrdCtrl.errors);
       }        
       else
         confirmPswrdCtrl.setErrors(null);
@@ -160,8 +160,6 @@ export class RegisterComponent implements OnInit{
 
   onSubmit({value, valid},ev: Event){
     ev.preventDefault();
-    console.log(JSON.stringify(value));
-    console.log(valid);
     this._regUser.phoneNumber= value.phoneNumberPrefix+ "-"+value.phoneNumberBody;
     this._regUser.firstName= value.firstName;
     this._regUser.lastName = value.lastName;
@@ -204,7 +202,6 @@ export class RegisterComponent implements OnInit{
   }
 
   toggleGST(event){
-    console.log(event);
     if (event.checked == true){
       this.displayInputGST=false;
     } else{

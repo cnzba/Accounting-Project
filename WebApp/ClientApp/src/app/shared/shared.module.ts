@@ -13,6 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {CdkTableModule} from '@angular/cdk/table';
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { UploadComponent } from './upload';
+import { RestrictInputDirective } from "../directives/restrict-input.directive";
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { UploadComponent } from './upload';
         MatCheckboxModule,
         FormsModule,
         UploadComponent,
+        RestrictInputDirective
     ],
 
     providers:[
@@ -64,6 +66,7 @@ import { UploadComponent } from './upload';
     ],
     declarations: [
         UploadComponent,
+        RestrictInputDirective
     ],
     
 })
