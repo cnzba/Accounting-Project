@@ -8,18 +8,18 @@
           <div class="form-content">
             <mat-form-field>
               <input matInput placeholder="First Name" formControlName="firstName" required>
-              <mat-error>{{form.controls['firstName'].errors | regerrtranslate}}</mat-error>
+              <mat-error>{{form.get('firstName').errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
               <input matInput placeholder="Last Name" formControlName="lastName" required>
-              <mat-error>{{form.controls['lastName'].errors | regerrtranslate}}</mat-error>
+              <mat-error>{{form.get('lastName').errors | regerrtranslate}}</mat-error>
 
             </mat-form-field>
 
             <mat-form-field>
               <input matInput placeholder="Email" formControlName="email" required>
-              <mat-error>{{form.controls['email'].errors | regerrtranslate}}</mat-error>
+              <mat-error>{{form.get('email').errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <div class="phone-number">   
@@ -27,26 +27,26 @@
                 <input appRestrictInput="integer" appreance="fill" matInput 
                   placeholder="Prefix" formControlName="phoneNumberPrefix" required>
                 <mat-hint>3 digits</mat-hint>
-                <mat-error>{{form.controls['phoneNumberPrefix'].errors | regerrtranslate}}</mat-error>
+                <mat-error>{{form.get('phoneNumberPrefix').errors | regerrtranslate}}</mat-error>
               </mat-form-field>
 
               <mat-form-field class="number">
                 <input  appRestrictInput="integer" appreance="fill" matInput 
                   placeholder="Phone Number" formControlName="phoneNumberBody" required appPositiveInteger>
                 <mat-hint>7 digits</mat-hint>
-                <mat-error>{{form.controls['phoneNumberBody'].errors | regerrtranslate}}</mat-error>
+                <mat-error>{{form.get('phoneNumberBody').errors | regerrtranslate}}</mat-error>
               </mat-form-field>
             </div>            
 
             <ng-container formGroupName="passwords" class="pass">
               <mat-form-field >
                 <input type="password" matInput placeholder="Password" formControlName="password"  required>
-                <mat-error>{{form.get('passwords').controls['password'].errors | regerrtranslate}}</mat-error>
+                <mat-error>{{form.get('passwords').get('password').errors | regerrtranslate}}</mat-error>
               </mat-form-field>
 
               <mat-form-field >
                 <input type="password" matInput placeholder="Confirm Password" formControlName="confirmedPassword" required>
-                <mat-error>{{form.get('passwords').controls['confirmedPassword'].errors | regerrtranslate}}</mat-error>
+                <mat-error>{{form.get('passwords').get('confirmedPassword').errors | regerrtranslate}}</mat-error>
               </mat-form-field>
             </ng-container>
           </div>
@@ -61,22 +61,22 @@
           <div class="form-content">
             <mat-form-field>
               <input matInput placeholder="Organisation Name" formControlName="orgName" required>
-              <mat-error>{{form.controls['orgName'].errors | regerrtranslate}}</mat-error>
+              <mat-error>{{form.get('orgName').errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
               <input matInput placeholder="Organisation Short Code" formControlName="orgCode" required>
-              <mat-error>{{form.controls['orgCode'].errors | regerrtranslate}}</mat-error>
+              <mat-error>{{form.get('orgCode').errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
               <input matInput placeholder="Street address line 1" formControlName="streetAddrL1">
-              <mat-error>{{form.controls['streetAddrL1'].errors | regerrtranslate}}</mat-error>
+              <mat-error>{{form.get('streetAddrL1').errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
               <input matInput placeholder="Street address line 2" formControlName="streetAddrL2">
-              <mat-error>{{form.controls['streetAddrL2'].errors | regerrtranslate}}</mat-error>
+              <mat-error>{{form.get('streetAddrL2').errors | regerrtranslate}}</mat-error>
 
             </mat-form-field>
 
@@ -88,7 +88,7 @@
               </mat-form-field>
               <mat-form-field>
                 <input matInput placeholder="City / Town" formControlName="city" required>
-                <mat-error>{{form.controls['city'].errors | regerrtranslate}}</mat-error>
+                <mat-error>{{form.get('city').errors | regerrtranslate}}</mat-error>
               </mat-form-field>
             </div>
 
@@ -97,7 +97,7 @@
                 <input appRestrictInput="integer"  appreance="fill" matInput 
                   placeholder="Prefix" formControlName="orgPhoneNumberPrefix" required>
                 <mat-hint>3 digits</mat-hint>
-                <mat-error>{{form.controls['orgPhoneNumberPrefix'].errors | regerrtranslate}}</mat-error>
+                <mat-error>{{form.get('orgPhoneNumberPrefix').errors | regerrtranslate}}</mat-error>
               </mat-form-field>
 
               <mat-form-field class="number">
@@ -105,13 +105,13 @@
                   placeholder="Phone Number" formControlName="orgPhoneNumberBody" required
                   οnpaste="return false" οndragenter="return false"  style="ime-mode:disabled">
                 <mat-hint>7 digits</mat-hint>
-                <mat-error>{{form.controls['orgPhoneNumberBody'].errors | regerrtranslate}}</mat-error>
+                <mat-error>{{form.get('orgPhoneNumberBody').errors | regerrtranslate}}</mat-error>
               </mat-form-field>
             </div>            
 
             <mat-form-field>
               <input matInput placeholder="Charities Number" formControlName="charitiesNumber">
-              <mat-error>{{form.controls['charitiesNumber'].errors | regerrtranslate}}</mat-error>
+              <mat-error>{{form.get('charitiesNumber').errors | regerrtranslate}}</mat-error>
             </mat-form-field>
 
             <mat-form-field> 
@@ -129,7 +129,7 @@
               <span *ngIf="!displayInputGST">
                 <mat-form-field>
                   <input matInput placeholder="Input your GST number: " formControlName="gstNumber">
-                  <mat-error>{{form.get('inputGST').controls['gstNumber'].errors | regerrtranslate}}</mat-error>
+                  <mat-error>{{form.get('inputGST').controls('gstNumber').errors | regerrtranslate}}</mat-error>
                 </mat-form-field>
               </span>
             </div>
