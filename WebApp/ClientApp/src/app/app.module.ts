@@ -42,6 +42,7 @@ import { DatePipe } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared';
 import { CoreModule } from './core';
+import { AuthInterceptor } from './login/auth.interceptor';
 
 @NgModule({
     declarations: [
@@ -87,7 +88,8 @@ import { CoreModule } from './core';
         ChangePasswordService,
         InvoicePaymentService,
         SpinnerService,
-        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
+        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
     ],
     bootstrap: [AppComponent]
 })

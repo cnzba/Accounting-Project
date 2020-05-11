@@ -45,3 +45,7 @@ button.menu{
     margin-right: 1rem;
     line-height: 0.5;
 }
+
+.top-bar div{
+    margin-left: 20px;
+}

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace WebApp.Entities
 {
-    public class User
+    public class User 
     {
         [JsonIgnore] [BindNever]
         public int Id { get; set; }

@@ -1,0 +1,14 @@
+<div class="container">  
+  <span class="select-file">
+    <input type="file" #file 
+      placeholder="Choose a file" 
+      (change)="uploadFile(file.files)"
+      > 
+  </span>
+  <span class="message">
+    <span class="upload" *ngIf="progress > 0">
+      {{progress}}%
+    </span>
+    <span class="upload" *ngIf="message">{{message}}</span>
+  </span>
+</div>

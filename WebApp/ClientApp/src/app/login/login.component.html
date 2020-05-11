@@ -11,7 +11,6 @@
                 <div class="row p-0 m-0">
                     <div class="col-md-4 d-flex justify-content-center align-items-center text-center" style="background-color: #007bff; color:white">
                         <div class="" style="position: relative;">
-
                             <i class="fa fa-user-o fa-3x" aria-hidden="true"></i>
                             <div>Login</div>
                         </div>
@@ -20,10 +19,9 @@
                     <div class="col-md-8 text-center" style="">
 
                         <label class="my-4">Login</label>
-                        <form [formGroup]="userLogin" (ngSubmit)="login()" novalidate>
-
+                        <form [formGroup]="userLogin" (ngSubmit)="OnSubmit(userLogin, $event)">
                             <div class="form-group">
-                                <label>Primary Email:</label>
+                                <label>Email:</label>
                                 <input [class.is-invalid]="userLogin.get('username').invalid && userLogin.get('username').touched"
                                        placeholder="Email"
                                        type="email"
@@ -32,7 +30,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Secondary Email:</label>
+                                <label>Password</label>
                                 <input [class.is-invalid]="userLogin.get('password').invalid && userLogin.get('password').touched"
                                        placeholder="Password"
                                        type="password"
@@ -107,7 +105,7 @@
                             <a class="" href="#">Forgot Password?</a>
                         </div>
                         <div class="mb-2">
-                            <a class="" href="#">Register</a>
+                            <a class="" [routerLink]="['/register']">Register</a>                            
                         </div>
 
                     </div>

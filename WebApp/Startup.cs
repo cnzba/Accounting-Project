@@ -19,6 +19,14 @@ using AutoMapper;
 using WebApp.Services;
 using DinkToPdf.Contracts;
 using DinkToPdf;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using ServiceUtil;
 
 namespace WebApp
 {
@@ -38,11 +46,33 @@ namespace WebApp
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            //Set the requirement of the password, email and email confirmation.
+            services.AddDefaultIdentity<CBAUser>(options =>
+            {
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = false;
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = true;
+            }).AddDefaultUI()
+            .AddEntityFrameworkStores<CBAContext>(); 
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+
+            //To upload large files, set the length of upload file to max value.
+            services.Configure<FormOptions>(form =>
+            {
+                form.ValueLengthLimit = int.MaxValue;
+                form.MultipartBodyLengthLimit = int.MaxValue;
+                form.MemoryBufferThreshold = int.MaxValue;
             });
 
             services.AddMvc()
@@ -55,29 +85,52 @@ namespace WebApp
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            // Cookie Authentication 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            //JWT Authentication
+            var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
+            services.AddAuthentication(x =>
             {
-                options.Cookie.Name = "InvoiceCbaNZ";
-                // Controls how much time the authentication ticket stored in the cookie will remain valid from the point it is created.
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(240);
-
-                // ensures a 401 instead of 404 response if authorization fails
-                // (404 comes because default is to redirect to asp.net core login page, which doesn't exist
-                // as we are just a web api)
-                options.Events.OnRedirectToLogin = context =>
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer( x => {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = false;
+                x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
-                    context.Response.StatusCode = 401;
-                    return Task.CompletedTask;
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience =false,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
+
+
+            
+
+            #region Cookie authentication, deprived.
+            // Cookie Authentication 
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            //{
+            //    options.Cookie.Name = "InvoiceCbaNZ";
+            //    // Controls how much time the authentication ticket stored in the cookie will remain valid from the point it is created.
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(240);
+
+            //    // ensures a 401 instead of 404 response if authorization fails
+            //    // (404 comes because default is to redirect to asp.net core login page, which doesn't exist
+            //    // as we are just a web api)
+            //    options.Events.OnRedirectToLogin = context =>
+            //    {
+            //        context.Response.StatusCode = 401;
+            //        return Task.CompletedTask;
+            //    };
+            //}); 
+            #endregion
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Account WEB/API", Version = "v1" });
             });
-
-
             services.AddOptions();
             services.AddCNZBA(Configuration);
         }
@@ -103,6 +156,13 @@ namespace WebApp
             // app.UseDefaultFiles();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), 
+                    @"Resources")),
+                RequestPath= new PathString("/Resources")
+            });
+
             app.UseSpaStaticFiles();
             app.UseCookiePolicy();
 
@@ -146,8 +206,10 @@ namespace WebApp
             services.AddTransient<CBASeeder>();
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IPdfService, PdfService>();
+            services.AddScoped<IPdfService, PdfService>();
             services.AddScoped<IStripePaymentService, StripePaymentService>();
-
+            //Inject create return HTML service
+            services.AddTransient<ICreateReturnHTML, CreateReturnHTML>();
             services.Configure<CBAOptions>(configuration);
             services.Configure<EmailConfig>(configuration.GetSection("EmailConfig"));
             services.Configure<PdfServiceOptions>(configuration.GetSection("PdfService"));
