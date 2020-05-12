@@ -60,10 +60,9 @@ namespace WebApp.Controllers
 
         // GET: api/User/User
         /// <summary>
-        /// Get a user by UserID
-        /// UserID is in token.
+        /// Get a user by UserID which is in the token.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>If found user, return the user, else return NotFound</returns>
         [HttpGet()]
         [Authorize]
         [Route("User")]
@@ -90,8 +89,8 @@ namespace WebApp.Controllers
         /// Check if the user exists by email.
         /// </summary>
         /// <param name="email">Email to be checked</param>
-        /// <returns>Two string "Exist" and "NotExist"</returns>
-        [HttpGet, Route("CheckUserExist/{email}")]
+        /// <returns>If user exist, return "Exist", or return "NotExist"</returns>
+        [HttpGet,Route("CheckUserExist/{email}")]
         public async Task<IActionResult> CheckUserExist([FromRoute] string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -139,34 +138,36 @@ namespace WebApp.Controllers
                 if (result != null && result.Succeeded)
                 {
                     //_logger.LogInformation("User created a new account with password");
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(cbaUser);
-                    var transCode = WebUtility.UrlEncode(code);
-                    // var callbackUrl = "https://" + Request.Host.Value + "/api/user/confirmEmail?userId=" + cbaUser.Id + "&token=" + transCode;
-                    //Multiple Parameters
-                    var queryParams = new Dictionary<string, string>()
-                    {
-                        { "userId",cbaUser.Id},
-                        { "token", code}
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(cbaUser);                    
+                    var hostAddress = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+                    var queryPrarms = new Dictionary<string, string>() {
+                        {"userId", cbaUser.Id + ""},
+                        {"token", code + ""}
                     };
-                    var callbackUrl = QueryHelpers.AddQueryString($"https://{Request.Host.Value }/api/product/list", queryParams);
+
+                    string callbackUrl = QueryHelpers.AddQueryString($"{hostAddress}/api/user/confirmEmail", queryPrarms);
+                    var pathToFile = Directory.GetCurrentDirectory()
+                                    + Path.DirectorySeparatorChar.ToString()
+                                    + "EmailTemplates"
+                                    + Path.DirectorySeparatorChar.ToString()
+                                    + "ConfirmRegEmailTemplate.html";
+
+                    string htmlBody = "";
+
+                    using (StreamReader SourceReader = System.IO.File.OpenText(pathToFile))
+                    {
+                        htmlBody = await SourceReader.ReadToEndAsync();
+                    };
 
                     Email emailContent = new Email()
                     {
                         To = cbaUser.Email,
-                        Subject = $"CBA user register confirmation for {cbaUser.FirstName} {cbaUser.LastName}",
-                        Body = $"<img src=\"{Request.Host.Value}/assets/images/CBA-Logoupdated-01-1.jpeg\" style=\"width:60 %; \">" +
-                            $"<div>Dear {cbaUser.FirstName}</div>" +
-                            $"<div>Please verify your email address which will enable you to log into your account and get started </div>" +
-                            $"<div style=\"background-color: #007bff; width£º50px;align-items:center;\">" +
-                            $"<a href='{callbackUrl}'> Verify My Email Address </a>" +
-                            $"</div>" +
-                            $"<div>Welcome Aboard!</div>" +
-                            $"<div>The CNBA Team</div>"
-                    };
-
-
-                    await _emailService.SendEmail(_emailConfig, emailContent);
-                    return Ok("succeed");
+                        Subject = $"CBA user validation email for {cbaUser.FirstName} {cbaUser.LastName}",
+                        Body = string.Format(htmlBody, cbaUser.FirstName, callbackUrl)
+                    };                    
+                    var sentEmailRes = await _emailService.SendEmail(_emailConfig, emailContent);
+                    
+                    return sentEmailRes? Ok("succeed") : StatusCode(500, "Failed to send confirmation email, please contact CBA");
                 }
                 else
                 {
@@ -237,9 +238,8 @@ namespace WebApp.Controllers
 
         /// <summary>
         /// 1. Upload the logo file to server
-        /// 2. Return the full path of the logo file.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>If a valid file, then return full path of the logo file.</returns>
         [HttpPost, Route("uploadLogo")]
         [DisableRequestSizeLimit]
         public IActionResult UploadLogo()

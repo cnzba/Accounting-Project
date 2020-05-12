@@ -31,8 +31,7 @@ export class UserRegisterService{
             CharitiesNumber: org.chritiesNumber,
             GSTNumber: org.gstNumber            
         }
-        console.log('Post(send): ' +JSON.stringify(user));
-        return this.http.post<CBAUser>(this.userRegUrl,body)
-            .pipe(tap(data => console.log('Post(send): ' +JSON.stringify(user))))
+        
+        return this.http.post<CBAUser>(this.userRegUrl,body)        
     }
 }

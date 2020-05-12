@@ -18,14 +18,16 @@ import { LoginUser } from './users/LoginUser';
     providers: [InvoiceService, CallbackService]
 })
 
+//The codes commented out are the lagecy codes.
+//Keep them in case of necessary.
 export class AppComponent {
     title = 'CBA Invoicing';
     loading: boolean = true;
     forcePasswordChange: boolean = false;
 
-    currentUser: LoginUser ;
+    currentUser: IUser ;
     
-    showUser: boolean ;
+    //showUser: boolean ;
 
     constructor(
         private authenticationService: AuthenticationService,
@@ -43,33 +45,35 @@ export class AppComponent {
         callbackService.updateNavObs$.subscribe(fpc => {
             this.forcePasswordChange = fpc;
         });
-        callbackService.paymentNavObs$.subscribe(show => {
-            if (this.showUser)
-                this.showUser = false;
-            if (this.currentUser)
-                this.currentUser = null;
-            this.loading = show;
-        });
+        // callbackService.paymentNavObs$.subscribe(show => {
+        //     if (this.showUser)
+        //         this.showUser = false;
+        //     if (this.currentUser)
+        //         this.currentUser = null;
+        //     this.loading = show;
+        // });
     }
 
     ngOnInit() {
         this.alertService.success("Loading ...");
         this.authenticationService.getCurrentUser().subscribe(
             (user:any) => {
-                this.currentUser= new LoginUser();
-                this.currentUser.name = user.UserName;
-                this.currentUser.email = user.Email;
-                this.currentUser.active=user.Active;
-                this.showUser = true;
+                this.currentUser =  new LoginUser();
+                this.currentUser.name = user.firstName + " " + user.lastName;
+                this.currentUser.email = user.email;
+                this.currentUser.active=user.isActive;
+                //this.showUser = true;
             });
+        console.log(this.currentUser);
         //this.forcePasswordChange = localStorage.getItem("forcePasswordChange") === "true";
 
     }
 
     onLogout(){
         console.log("logout click");
-        this.showUser = false;
+        //this.showUser = false;
         localStorage.removeItem('token');
+        this.currentUser = null;
         this.router.navigate(['/login']);
     }
 

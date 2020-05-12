@@ -18,8 +18,8 @@
                         </button>
                     </span>
                     <span class="navbar-brand">CBANZ</span>
-                    <span class="navbar-text" *ngIf="!currentUser && showUser">Log in with Username/Password: guest@guest.com/guest</span>
-                    <span class="navbar-text" *ngIf="currentUser">Logged in as {{currentUser.name}}</span>
+                    <span class="navbar-text" *ngIf="currentUser == null">Please register with a valid email first and use it as your login email</span>
+                    <span class="navbar-text" *ngIf="currentUser != null" >Logged in as {{currentUser.name}}</span>
                     <button class="navbar-toggler" data-toggle="collapse" data-target="#menu">
                     </button>
                 </div>

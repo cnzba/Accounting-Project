@@ -22,8 +22,12 @@
     border-bottom: 1px solid rgba(0, 0, 0,.87);
 }
 
+.phone-number{
+    margin-bottom: 10px;
+}
+
 .phone-number mat-form-field+mat-form-field{
-    margin-left: 8px;
+    margin-left: 10px;
 }
 
 .select-country mat-form-field+mat-form-field{
@@ -31,5 +35,11 @@
 }
 
 .phone-number .prefix{
-    width: 5rem;
+    width: 8rem;
+}
+
+.input-gst{
+    display: flex;
+    flex-direction: row;
+    padding-left: 1rem;
 }
