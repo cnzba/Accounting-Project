@@ -3,7 +3,7 @@ import { IUser } from "../users/user";
 import { Observable ,  ReplaySubject } from 'rxjs';
 import { map, filter, flatMap, tap } from 'rxjs/operators';
 
-import {
+import {    
     HttpRequest,
     HttpHandler,
     HttpEvent,
@@ -52,7 +52,6 @@ class AuthenticationHelper {
 
     logout() {
         this.clearStoredUser();
-        localStorage.removeItem('forcePasswordChange');
         this.userSubject.next(null);
     }
 
@@ -74,75 +73,106 @@ class AuthenticationHelper {
 // from Angular 5.2.3 it will be possible to revert to using HttpClient
 @Injectable()
 export class AuthenticationService {
-    private accountUrl = 'api/account';
-    private getUserUrl = 'api/user/';
-    private helper = new AuthenticationHelper();
+    private accountUrl = 'api/account/login';
+    private getUserUrl = 'api/user/user';
+    //private helper = new AuthenticationHelper();
+    //private userSubject = new ReplaySubject<IUser>(1);
 
-    constructor(private backend: HttpBackend) {
-        let login: string = this.helper.getStoredUser();
 
-        if (login) {
-            console.log(`AUTH: Refreshing user ${login}`);
-            console.log(`AUTH: Retrieving user information for logged in user ${login}`);
-            let req = new HttpRequest("GET", this.getUserUrl + login);
-            this.backend.handle(req)
-                .pipe(filter(event => event.type === HttpEventType.Response))
-                .subscribe(
-                (data: HttpResponse<IUser>) => this.helper.setCurrentUser(data.body),
-                (err: HttpErrorResponse) => {
-                    console.log("No user logged in.");
-                    this.helper.setCurrentUser(null);
-                });
-        }
-        else this.helper.setCurrentUser(null);
+    constructor(
+        //private backend: HttpBackend, 
+        private http:HttpClient) {
+        // //let login: string = this.helper.getStoredUser();
+
+        // // if (login) {
+        // //     console.log(`AUTH: Refreshing user ${login}`);
+        // //     console.log(`AUTH: Retrieving user information for logged in user ${login}`);
+        // //     this.http.get(this.getUserUrl).subscribe(
+        // //         res => {
+        // //             console.log(res);
+
+        // //         }
+        // //     )
+        //     // let req = new HttpRequest("GET", this.getUserUrl + login);
+        //     // this.backend.handle(req)
+        //     //     .pipe(filter(event => event.type === HttpEventType.Response))
+        //     //     .subscribe(
+        //     //     (data: HttpResponse<IUser>) => this.helper.setCurrentUser(data.body),
+        //     //     (err: HttpErrorResponse) => {
+        //     //         console.log("No user logged in.");
+        //     //         this.helper.setCurrentUser(null);
+        //     //     });
+        // }
+        // else this.helper.setCurrentUser(null);
     }
-
-    isLoggedIn(): Observable<boolean> {
-        return this.helper.isLoggedIn();
-    }
-
-    getCurrentUser(): Observable<IUser> {
-        return this.helper.getCurrentUser();
-    }
-
-    login(username: string, password: string) {
-        let params: HttpParams = new HttpParams().set('username', username).set('password', password);
-        let headers: HttpHeaders = new HttpHeaders().set('Accept', 'application/json')
-
-        let post = new HttpRequest<string>("POST", this.accountUrl, "", { params: params, headers: headers });
-
-        console.log(`Logging in with ${username} and ${password}`);
-        return this.backend.handle(post)
-            .pipe(filter(event => event.type === HttpEventType.Response), 
-            flatMap((login: HttpResponse<string>) => {
-                let get = new HttpRequest("GET", this.getUserUrl + login.body);
-                
-                console.log(`Retrieving info for ${login.body}`);
-                return this.backend.handle(get).pipe(filter(event => event.type === HttpEventType.Response));
-            }), 
-            map((data: HttpResponse<IUser>) => data.body), 
-            tap(user => this.helper.setCurrentUser(user)));
+    getCurrentUser() {
+        return  this.http.get(this.getUserUrl);
     }
 
     localLogout(): void {
-        this.helper.logout();
+        localStorage.removeItem('token');
+
     }
+    // isLoggedIn(): Observable<boolean> {
+    //     return this.helper.isLoggedIn();
+    // }
 
-    logout() {
-        let get = new HttpRequest("GET", this.accountUrl);
+    
 
-        console.log(`AUTH: Logging out user`);
+    // login(username: string, password: string) {
+    //     var body = {
+    //         Username:username,
+    //         Password:password
+    //     }
 
-        return this.backend.handle(get)
-            .pipe(filter(event => event.type === HttpEventType.Response),
-            tap(data => {
-                this.helper.logout();
-            }));
-    }
+    //     return this.http.post(this.accountUrl,body)
+    //         .pipe(
+    //         //filter(event => event.type === HttpEventType.Response), 
+    //         flatMap((login: HttpResponse<string>) => {
+    //             //let get = new HttpRequest("GET", this.getUserUrl + login.body);
+    //             let get = new HttpRequest("GET", this.getUserUrl);
+                
+    //             console.log(`Retrieving info for ${login.body}`);
+    //             return this.backend.handle(get).pipe(filter(event => event.type === HttpEventType.Response));
+    //         }), 
+    //         map((data: HttpResponse<IUser>) => data.body), 
+    //         tap(user => this.helper.setCurrentUser(user)));
+    //     // let params: HttpParams = new HttpParams().set('username', username).set('password', password);
+    //     // let headers: HttpHeaders = new HttpHeaders().set('Accept', 'application/json')
 
-    getLoginId(): string {
-        return this.helper.getStoredUser();
-    }
+    //     // let post = new HttpRequest<string>("POST", this.accountUrl, "", { params: params, headers: headers });
+
+    //     // console.log(`Logging in with ${username} and ${password}`);
+    //     // return this.backend.handle(post)
+    //     //     .pipe(filter(event => event.type === HttpEventType.Response), 
+    //     //     flatMap((login: HttpResponse<string>) => {
+    //     //         //let get = new HttpRequest("GET", this.getUserUrl + login.body);
+    //     //         let get = new HttpRequest("GET", this.getUserUrl);
+                
+    //     //         console.log(`Retrieving info for ${login.body}`);
+    //     //         return this.backend.handle(get).pipe(filter(event => event.type === HttpEventType.Response));
+    //     //     }), 
+    //     //     map((data: HttpResponse<IUser>) => data.body), 
+    //     //     tap(user => this.helper.setCurrentUser(user)));
+    // }
+
+    
+
+    // logout() {
+    //     let get = new HttpRequest("GET", this.accountUrl);
+
+    //     console.log(`AUTH: Logging out user`);
+
+    //     return this.backend.handle(get)
+    //         .pipe(filter(event => event.type === HttpEventType.Response),
+    //         tap(data => {
+    //             this.helper.logout();
+    //         }));
+    // }
+
+    // getLoginId(): string {
+    //     return this.helper.getStoredUser();
+    // }
 
 }
 

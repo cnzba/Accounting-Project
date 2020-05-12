@@ -31,6 +31,6 @@ namespace WebApp.Entities
 
         public string Status { get; set; }
 
-        public ICollection<User> Users { get; set; }
+        public virtual ICollection<CBAUser> Users { get; set; }
     }
 }

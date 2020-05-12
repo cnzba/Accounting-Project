@@ -49,7 +49,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
     constructor(private router: Router,
         private alertService: AlertService,
-        private authenticationService: AuthenticationService) { }
+        private authenticationService: AuthenticationService
+        ) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(this.handleError));
@@ -66,12 +67,13 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                     resultError.globalError = `The requested resource was not found. The server could be down.`;
                 }
                 else if (err.status == 401) { // request not authorized
-                    console.log(`HTTP: 401 redirecting to ${this.router.url}`);
-                    this.authenticationService.localLogout();
-                    this.router.navigate(['/login', { returnUrl: this.router.url }]);
-
-                    resultError.globalError = "Your session has expired. Please re-login.";
-                    this.alertService.error(resultError.globalError, true);
+                    console.log(`HTTP: 401 redirecting to ${this.router?this.router.url : ""}`);
+                    localStorage.removeItem('token');
+                    if (this.router){
+                        this.router.navigate(['/login', { returnUrl: this.router.url }]);
+                        resultError.globalError = "Your session has expired. Please re-login.";
+                        this.alertService.error(resultError.globalError, true);
+                    }                    
                 }
                 else if (err.status >= 500 && err.status < 600) { // server errors
                     resultError.globalError = "A server error has occurred.";

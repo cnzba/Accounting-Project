@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
-import { AuthenticationService } from "./authentication.service";
+//import { AuthenticationService } from "./authentication.service";
 import { AlertService } from "../common/alert/alert.service";
 import { CallbackService } from '../common/callback.service';
 import { Subscription } from 'rxjs';
 import { SpinnerService } from "../common/spinner.service";
+import { NgForm, FormBuilder } from '@angular/forms';
+import { UserService } from '../users/user.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -13,32 +15,27 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
     styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit, OnDestroy {
-    model: any = {};
+    model: any = {username:"",password:""};
     returnUrl: string;
     subscription: Subscription;
     isLoginFail: boolean;
-
-    userLogin = new FormGroup({
-        username: new FormControl('', [
-            Validators.required,
-            Validators.pattern("[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}")]),
-        password: new FormControl('', [
-            Validators.required])
-    }); 
+    userLogin:FormGroup;    
 
     constructor(
+        private fb:FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService,
+        //private authenticationService: AuthenticationService,        
         private alertService: AlertService,
         private callbackService: CallbackService,
-        private spinnerService: SpinnerService) {
+        private spinnerService: SpinnerService,
+        private userService:UserService) {
         this.subscription = callbackService.updateNavObs$.subscribe();
     }
 
     ngOnInit() {
         // reset login status
-        this.authenticationService.logout().subscribe();
+        //this.authenticationService.logout().subscribe();
 
         // get return url from route parameters or default to '/'
         if (this.route.snapshot.paramMap.has('returnUrl'))
@@ -46,28 +43,39 @@ export class LoginComponent implements OnInit, OnDestroy {
         else this.returnUrl = '/';
 
         console.log(`LOGIN: After login will direct to ${this.returnUrl}`);
+        this.userLogin = this.fb.group({
+            username: new FormControl('', [
+                Validators.required,
+                Validators.pattern("[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}")]),
+            password: new FormControl('', [
+                Validators.required])
+        }); 
+
     }
 
-    login() {
+    OnSubmit({value,valid}, ev:Event) {
+        ev.preventDefault();        
         this.spinnerService.showSpinner();
-
-        this.authenticationService.login(this.getUsername.value, this.getPassword.value)
-            .subscribe(
-            data => {
-                this.isLoginFail = false;
-                if (data.forcePasswordChange) {
-                    localStorage.setItem("forcePasswordChange", "true");
-                    this.callbackService.updateNav(true);
-                    this.router.navigate(["change-password"]);
-                } else {
-                    this.router.navigate([this.returnUrl]);
-                }
+        this.model.username = value.username;
+        this.model.password = value.password;
+        this.userService.login(this.model).subscribe(
+            (res:any) => {
+                var token = JSON.parse(res._body).token;
+                localStorage.setItem('token',token);
+                this.router.navigateByUrl('/core');
             },
-            error => {
-                //this.alertService.error("User Not Found.");
-                this.isLoginFail = true;
-                this.spinnerService.hideSpinner();
-            });
+            err => {
+                if(err.status == 400){
+                    this.alertService.error("Incorrect username or password");                    
+                    this.spinnerService.hideSpinner();
+                }else{
+                    console.log(err);
+                }
+            }
+
+
+        );
+
     }
 
     inputChanged(event) {

@@ -1,13 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { IUser } from "./user";
+import { HttpHeaders } from '@angular/common/http';
  
 
  
 @Injectable()
 export class UserService {
     constructor(private http: Http) { }
-
+    login(formData){
+        return this.http.post('/api/account/login', formData);
+    }
+    getUserProfile(){
+        //var tokenHeader = new Headers({'Authorization':'Bearer'} + localStorage.getitem('token'));
+        this.http.get('api/user/user');
+    }
     /*
     getAll() {
         return this.http.get('/api/users', this.jwt()).map((response: Response) => response.json());
