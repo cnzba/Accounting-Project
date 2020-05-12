@@ -64,7 +64,7 @@ namespace WebApp.Services
                 var invoice = context.Invoice.Include("InvoiceLine").SingleOrDefault(t => t.InvoiceNumber == invoiceNumber);
 
                 var charitiesNumber = invoice.CharitiesNumber; // string
-                var clientContact = Regex.Replace(invoice.ClientContact, @"\r\n?|\n", "<br />"); // string, replace "\n" with "<br/>" for html
+                var clientContact = Regex.Replace(invoice.ClientContact, @"\r\n?|\r\n|\n", "<br />"); // string, replace "\n" with "<br/>" for html
                 var clientName = invoice.ClientName; // string
                 var dateCreated = invoice.DateCreated; // DateTime
                 var dateDue = invoice.DateDue; // DateTime
@@ -79,8 +79,10 @@ namespace WebApp.Services
                 // there are more fields but most are null or missing i.e. no logo field?
                 XDocument document = XDocument.Load("Services/PdfServiceHtmlModel.html");
 
+                // document.Descendants().Where(x => (string)x.Attribute("id") == "businessLogo").FirstOrDefault().Attribute("src").SetValue("https://www.childhood.org.au/app/uploads/2017/07/ACF-logo-placeholder.png");
+                // uncomment above line when there is an logo field, set the src to a url or file directory
                 AddField(ref document, "clientName", clientName);
-
+            
                 AddFieldWithNewline(ref document, "clientContact", clientContact);
 
                 AddField(ref document, "invoiceNumber", invoiceNumber);
@@ -88,7 +90,7 @@ namespace WebApp.Services
                 AddField(ref document, "gstNumber", gstNumber);
                 AddField(ref document, "charitiesNumber", charitiesNumber);
                 AddField(ref document, "purchaseOrderNumber", purchaseOrderNumber);
-                AddField(ref document, "dateDue", "Due Date" + dateDue.ToString());
+                AddField(ref document, "dateDue", "Due Date " + dateDue.ToString());
                 AddField(ref document, "gstRate", string.Format("GST {0}%", gstRate * 100));
 
                 var gstValue = grandTotal - subTotal;
