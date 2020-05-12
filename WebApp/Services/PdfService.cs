@@ -79,19 +79,17 @@ namespace WebApp.Services
                 // there are more fields but most are null or missing i.e. no logo field?
                 XDocument document = XDocument.Load("Services/PdfServiceHtmlModel.html");
 
-                // var logoUrl = "https://www.childhood.org.au/app/uploads/2017/07/ACF-logo-placeholder.png";
-                // document.Descendants().Where(x => (string)x.Attribute("id") == "logo").FirstOrDefault().Add(XElement.Parse(string.Format("<img src=\"{0}\" alt=\"\" width=\"50\" height=\"50\"/>", logoUrl)));
+                // document.Descendants().Where(x => (string)x.Attribute("id") == "businessLogo").FirstOrDefault().Attribute("src").SetValue("https://www.childhood.org.au/app/uploads/2017/07/ACF-logo-placeholder.png");
                 // uncomment above line when there is an logo field, set the src to a url or file directory
-
                 AddField(ref document, "clientName", clientName);
             
                 AddFieldWithNewline(ref document, "clientContact", clientContact);
 
-                AddField(ref document, "invoiceNumber", invoiceNumber.ToString());
+                AddField(ref document, "invoiceNumber", invoiceNumber);
                 AddField(ref document, "dateCreated", dateCreated.ToString());
-                AddField(ref document, "gstNumber", gstNumber.ToString());
-                AddField(ref document, "charitiesNumber", charitiesNumber.ToString());
-                AddField(ref document, "purchaseOrderNumber", purchaseOrderNumber.ToString());
+                AddField(ref document, "gstNumber", gstNumber);
+                AddField(ref document, "charitiesNumber", charitiesNumber);
+                AddField(ref document, "purchaseOrderNumber", purchaseOrderNumber);
                 AddField(ref document, "dateDue", "Due Date " + dateDue.ToString());
                 AddField(ref document, "gstRate", string.Format("GST {0}%", gstRate * 100));
 
