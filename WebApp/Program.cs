@@ -29,6 +29,8 @@ namespace WebApp
                         // added a 2nd time to ensure environment variables can override settings in the CBA database
                         config.AddEnvironmentVariables();
                     })
+                .CaptureStartupErrors(true)
+                .UseSetting("detailedErrors","true")
                 .UseStartup<Startup>();
 
         private static void MigrateAndSeedCBADatabase(IWebHost host)
