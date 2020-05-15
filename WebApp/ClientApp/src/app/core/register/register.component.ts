@@ -9,9 +9,9 @@ import { AlertService } from 'src/app/common/alert/alert.service';
 import { debounceTime, filter, subscribeOn } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit{
   selectedTab = 0;
@@ -31,24 +31,24 @@ export class RegisterComponent implements OnInit{
       this._regOrg = new CBAOrg();
     }  
 
-  ngOnInit() {
-    this.form = this.fb.group({
-      email: ['',
-      Validators.compose([
-        Validators.required,
-        Validators.email,
-        Validators.maxLength(50)
-      ]),
-      this.checkUserExistService.emailExistValidator()
-      ],
-      firstName:['',Validators.compose([
-        Validators.required,   
-        Validators.maxLength(50)   
-      ])],
-      lastName:['',Validators.compose([
-        Validators.required, 
-        Validators.maxLength(50)      
-      ])],
+    ngOnInit() {
+        this.form = this.fb.group({
+            email: ['',
+                Validators.compose([
+                    Validators.required,
+                    Validators.email,
+                    Validators.maxLength(50)
+                ]),
+                this.checkUserExistService.emailExistValidator()
+            ],
+            firstName: ['', Validators.compose([
+                Validators.required,
+                Validators.maxLength(50)
+            ])],
+            lastName: ['', Validators.compose([
+                Validators.required,
+                Validators.maxLength(50)
+            ])],
 
       phoneNumberPrefix:['',Validators.compose([
         Validators.required,         
@@ -61,43 +61,43 @@ export class RegisterComponent implements OnInit{
         Validators.maxLength(10)
       ])],
 
-      passwords:this.fb.group({
-        password: ['',Validators.compose([
-          Validators.required,
-          Validators.minLength(8)        
-        ])],
-        confirmedPassword:['',Validators.compose([
-          Validators.required,  
-          Validators.minLength(8)      
-        ])]
-      },
-      {validator: this.comparePasswords}
-      ),
-      
-      orgName:['',Validators.compose([
-        Validators.required, 
-        Validators.maxLength(50)     
-      ])],
+            passwords: this.fb.group({
+                password: ['', Validators.compose([
+                    Validators.required,
+                    Validators.minLength(8)
+                ])],
+                confirmedPassword: ['', Validators.compose([
+                    Validators.required,
+                    Validators.minLength(8)
+                ])]
+            },
+                { validator: this.comparePasswords }
+            ),
+
+            orgName: ['', Validators.compose([
+                Validators.required,
+                Validators.maxLength(50)
+            ])],
 
       orgCode:['',Validators.compose([
         Validators.required, 
         this.fixLength(4),           
       ])],
 
-      streetAddrL1:['',Validators.compose([
-        Validators.required,      
-      ])],
+            streetAddrL1: ['', Validators.compose([
+                Validators.required,
+            ])],
 
       streetAddrL2:['',Validators.compose([              
       ])],
 
-      city:['',Validators.compose([
-        Validators.required,      
-      ])],
+            city: ['', Validators.compose([
+                Validators.required,
+            ])],
 
-      country:['',Validators.compose([
-        Validators.required,      
-      ])],
+            country: ['', Validators.compose([
+                Validators.required,
+            ])],
 
       orgPhoneNumberPrefix:['',Validators.compose([
         Validators.required, 
@@ -110,12 +110,12 @@ export class RegisterComponent implements OnInit{
         Validators.maxLength(10)   
       ])],
 
-      logoUrl:['',Validators.compose([
-      ])],
+            logoUrl: ['', Validators.compose([
+            ])],
 
-      charitiesNumber:['',Validators.compose([
-        Validators.maxLength(20),      
-      ])],
+            charitiesNumber: ['', Validators.compose([
+                Validators.maxLength(20),
+            ])],
 
       inputGST:this.fb.group({
         haveGST:[false ],
@@ -192,14 +192,14 @@ export class RegisterComponent implements OnInit{
     );
   }
 
-  nextTab(){
-    this.selectedTab = 1;
-  }
+    nextTab() {
+        this.selectedTab = 1;
+    }
 
 
-  onTabChange(index:number){
-    this.selectedTab=index;
-  }
+    onTabChange(index: number) {
+        this.selectedTab = index;
+    }
 
   toggleGST(event){
     if (event.checked == true){
@@ -216,5 +216,5 @@ export class RegisterComponent implements OnInit{
   }
 
 
-  
+
 }

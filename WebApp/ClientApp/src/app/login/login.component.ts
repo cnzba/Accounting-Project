@@ -7,6 +7,10 @@ import { Subscription } from 'rxjs';
 import { SpinnerService } from "../common/spinner.service";
 import { NgForm, FormBuilder } from '@angular/forms';
 import { UserService } from '../users/user.service';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { ForgotPasswordComponent } from './forget-password/forgot-password.component';
+//import { NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -18,8 +22,15 @@ export class LoginComponent implements OnInit, OnDestroy {
     model: any = {username:"",password:""};
     returnUrl: string;
     subscription: Subscription;
+    modalRef: BsModalRef;
+    email: string = "";
     isLoginFail: boolean;
     userLogin:FormGroup;    
+
+    config = {
+        backdrop: true,
+        ignoreBackdropClick: true
+    };
 
     constructor(
         private fb:FormBuilder,
@@ -29,7 +40,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         private alertService: AlertService,
         private callbackService: CallbackService,
         private spinnerService: SpinnerService,
-        private userService:UserService) {
+        private userService: UserService,
+        private modalService: BsModalService) {
         this.subscription = callbackService.updateNavObs$.subscribe();
     }
 
@@ -85,6 +97,16 @@ export class LoginComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
     }
+
+
+    openModal() {
+
+        this.modalRef = this.modalService.show(ForgotPasswordComponent, this.config);
+        this.modalRef.content.onClose.subscribe(result => {
+           
+        })
+    }
+
 
     get getUsername() {
         return this.userLogin.get('username')

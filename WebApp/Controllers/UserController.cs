@@ -55,7 +55,7 @@ namespace WebApp.Controllers
             _emailService = emailService;
             _emailConfig = emailConfig.Value;
             _createReturnHTML = createReturnHTML;
-        }        
+        }
 
 
         // GET: api/User/User
@@ -81,7 +81,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            
+
             return Ok(user);
         }
 
@@ -135,7 +135,7 @@ namespace WebApp.Controllers
             try
             {
                 var result = await _userManager.CreateAsync(cbaUser, regUser.Password);
-                if (result.Succeeded)
+                if (result != null && result.Succeeded)
                 {
                     //_logger.LogInformation("User created a new account with password");
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(cbaUser);                    
@@ -218,7 +218,7 @@ namespace WebApp.Controllers
             if (confirmUser != null)
             {
                 var result = await _userManager.ConfirmEmailAsync(confirmUser, token);
-                if (result.Succeeded)
+                if (result != null && result.Succeeded)
                 {
                     confirmUser.EmailConfirmed = true;
                     confirmUser.IsActive = true;
@@ -228,11 +228,11 @@ namespace WebApp.Controllers
                     Response.ContentType = "text/html";
                     await Response.Body.WriteAsync(responseBody, 0, responseBody.Length);
                 }
-                return StatusCode(500, "Fail to verify the user.");
+                return StatusCode(500, "Failed to verify the user.");
             }
             else
             {
-                return StatusCode(500, "The user do not exist.");
+                return StatusCode(500, "The user does not exist.");
             }
         }
 
@@ -251,7 +251,7 @@ namespace WebApp.Controllers
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 if (file.Length > 0)
                 {
-                    var fileName = 
+                    var fileName =
                         DateTime.Now.ToFileTime().ToString() +
                         ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                     var fullPath = Path.Combine(pathToSave, fileName);
@@ -266,8 +266,9 @@ namespace WebApp.Controllers
                 else
                 {
                     return BadRequest();
-                }                
-            }catch(Exception ex)
+                }
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error:{ex}");
             }
@@ -402,7 +403,7 @@ namespace WebApp.Controllers
             }
 
             return NoContent();
-        } 
+        }
         #endregion
 
 
