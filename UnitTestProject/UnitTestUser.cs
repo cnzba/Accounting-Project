@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnitTestProject.Common;
 using WebApp.Controllers;
@@ -223,8 +224,10 @@ namespace UnitTestProject
         public void UploadLogo()
         {
             Mock<HttpRequest> mockRequest = new Mock<HttpRequest>();
+            Regex appPathMatcher = new Regex(@"(?<!fil)[A-Za-z]:\\+[\S\s]*?(?=\\+bin)");
+            var appRoot = appPathMatcher.Match(Directory.GetCurrentDirectory());
+            string path = Path.Combine(appRoot.ToString(), "Icons", "CBA-Logo.jpeg");
 
-            string path = @"F:\Ripal\Project\New folder\CBA Accounting\WebApp\ClientApp\src\assets\images\CBA-Logoupdated-01-1.jpeg";
             FileInfo fileInfo = new FileInfo(path);
             byte[] buffer = new byte[fileInfo.Length];
 

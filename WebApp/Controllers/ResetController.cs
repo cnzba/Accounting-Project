@@ -1,17 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using CryptoService;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ServiceUtil.Email;
 using WebApp.Entities;
 using System.IO;
 using WebApp.Models;
-using System;
-using AutoMapper.Configuration;
-using WebApp.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
 
@@ -22,16 +15,14 @@ namespace WebApp.Controllers
     {
         private readonly IEmailService emailService;
         private readonly IEmailConfig emailConfig;
-        private IHostingEnvironment _env;
         private UserManager<CBAUser> _userManager;
 
         public ResetPasswordController(IEmailService emailService,
-            IOptions<EmailConfig> emailConfig, IHostingEnvironment env, UserManager<CBAUser> userManager)
+            IOptions<EmailConfig> emailConfig, UserManager<CBAUser> userManager)
         {
             this.emailService = emailService;
             this.emailConfig = emailConfig.Value;
             _userManager = userManager;
-            _env = env;
         }
 
         [HttpPost]
@@ -46,24 +37,12 @@ namespace WebApp.Controllers
             if (cbaUser == null)
                 return BadRequest("Invalid User..!!");
 
-            // var result = await _userManager.VerifyTwoFactorTokenAsync(cbaUser, "ResetPassword", obj.Token);
             var result = await _userManager.VerifyUserTokenAsync(cbaUser, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", obj.Token);
 
             if (!result)
             {
                 return BadRequest("Invalid token..!!");
             }
-
-            //if (!obj.Token.Equals(user.ForgetPasswordToken))
-            //    return BadRequest("Invalid token");
-
-            //TimeSpan totalDays = DateTime.Now - user.ForgetPasswordTokenGenerateDateTme;
-
-            //int validityExpireDays = configuration.LinkExpireValidityInDays;
-            //if (totalDays.TotalDays > validityExpireDays)
-            //{
-            //    return BadRequest("Token validation time has been expired..!!");
-            //}
             return Ok();
         }
 
@@ -106,8 +85,8 @@ namespace WebApp.Controllers
                 };
                 if (!await emailService.SendEmail(emailConfig, emailContent))
                 {
-                    //return BadRequest("Error has been occured during sending mail. Please try again after some time..!!");
-                }              
+                    return StatusCode((int)System.Net.HttpStatusCode.InternalServerError);
+                }
                 return Ok();
             }
             else
