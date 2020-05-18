@@ -1,15 +1,18 @@
 <div id="invoicelistscreen">
+
     <form #invoice="ngForm">
+
         <div class="row">
-            <div class="col-3">
+            <div class="col-4">
                 <a class="btn btn-secondary" role="button" (click)="onCancel(template)">Cancel</a>
             </div>
-            <div class="col">
-                <div class="float-right">                    
+            <div class="col-4">
+                <button *ngIf="this.modifyInvoice.status === 'New' || this.modifyInvoice.status === 'Draft'" type="button" class="btn btn-danger text-nowrap" (click)="onShowDelete(deleteTemplate)">Delete draft</button>
+            </div>
+            <div class="col-4">
+                <div class="float-right">
                     <button type="submit" class="btn btn-secondary" (click)="onSaveDraft()">Save Draft</button>
-                    <!-- <button *ngIf="showFinalise" type="button" class="btn btn-primary" data-toggle="modal" data-target="#finaliseModal">Finalise & Send Invoice</button> -->
                     <button *ngIf="showFinalise" type="button" class="btn btn-primary" (click)="onShowFinalise(finalTemplate)">Finalise & Send Invoice</button>
-
                 </div>
             </div>
         </div>
@@ -157,11 +160,6 @@
 
             <div class="col-2 text-right">
                 <b>Amount</b>
-                <!--<div class="float-right">
-                <button type="button" class="btn btn-link btn-sm" (click)="addLineItem()">
-                    Add Item
-                </button>
-            </div>-->
             </div>
         </div>
 
@@ -236,7 +234,7 @@
             <!-- Utilise a click method to close the modal to solve the problem that the pop up modal dialog is gray and not clickable. -->
             <!-- This is the orignial code to define the modal -->
             <!-- <div id="finaliseModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="finaliseModalLabel" aria-hidden="true"> -->
-            <div id="finaliseModal" >
+            <div id="finaliseModal">
                 <div class="modal-dialog" role="document">
                     <!-- Modal content-->
                     <div class="modal-content">
@@ -256,7 +254,39 @@
                 </div>
             </div>
         </ng-template>
+
+
+
+        <ng-template #deleteTemplate>
+            <!-- Utilise a click method to close the modal to solve the problem that the pop up modal dialog is gray and not clickable. -->
+            <!-- This is the orignial code to define the modal -->
+            <div id="deleteModal">
+                <div class="modal-dialog" role="document">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header   bg-warning">
+                            <h4 class="modal-title" id="deleteModalLabel">Delete Invoice Draft?</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onCancelDelete()"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                Are you sure you want to delete draft invoice: {{modifyInvoice.invoiceNumber}}?
+                                <br /><br />
+                                <b>When you delete a draft invoice, it cannot be undone!</b>
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onCancelDelete()">No</button>
+                            <button type="submit" class="btn btn-danger" data-dismiss="modal" (click)="onDelete()">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
+
     </form>
+
 </div>
 
 

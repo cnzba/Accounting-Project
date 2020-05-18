@@ -19,11 +19,9 @@
     text-align: center;
     padding: 0 !important;
 }
-.modal-header {
-    background-color: #222529;
-    color: white
+/*
 
-}
+*/
 .modal:before {
     content:"";
     display: inline-block;
@@ -37,4 +35,15 @@
     text-align: left;
     vertical-align: middle;
 
+}
+
+/*
+#deleteModalLabel{
+    color:white;
+}
+*/
+
+.modal-header {
+    background-color: #222529;
+    color: white
 }

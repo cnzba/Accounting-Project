@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, SimpleChange } from '@angular/core';
-import { ActivatedRoute, ParamMap } from "@angular/router";
+import { ActivatedRoute, ParamMap, Params } from "@angular/router";
 import { Location } from '@angular/common';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal'
 
@@ -29,18 +29,19 @@ import { Router } from '@angular/router';
 export class InvoiceEditComponent implements OnInit {
     constructor(
         private router: Router,
-        private invoiceServiceP: InvoiceService,
+        private invoiceService: InvoiceService,
         private route: ActivatedRoute,
         private location: Location,
         private alertService: AlertService,
         private spinnerService: SpinnerService,
         private modalService: BsModalService) { }
 
-    invoiceService: InvoiceService = this.invoiceServiceP;
+    //invoiceService: InvoiceService = this.invoiceServiceP;
     
 
     // the model backing the form
     modifyInvoice: IInvoice = new Invoice();
+    public invoiceNumber: string;
 
     // model for any errors on the form
     formErrors: ApiError = new ApiError();
@@ -67,6 +68,8 @@ export class InvoiceEditComponent implements OnInit {
     get showFinalise(): boolean {
         return this.modifyInvoice.status == "Draft";
     }
+
+    
 
     // button actions
     addAddress() {
@@ -186,9 +189,43 @@ export class InvoiceEditComponent implements OnInit {
         this.modalRef = this.modalService.show(template,{class:'modal-md'});
     }
 
+    
+
     onCancelFinalise(): void{
         this.modalRef.hide();
     }
+
+
+
+    // Delete Process
+    // ====================================
+    //get ShowDelete(): boolean {
+    //    return this.modifyInvoice.status == "Draft";
+    //}
+
+    // Open dialog
+    onShowDelete(template: TemplateRef<any>) {
+        this.modalRef = this.modalService.show(template, { class: 'modal-md' });
+    }
+
+    // Close Dialog
+    onCancelDelete(): void {
+        this.modalRef.hide();
+    }
+
+    // User clicked yes to delete
+    onDelete() {
+        this.modalRef.hide();
+        this.deleteInvoice();
+    }
+
+
+    
+
+
+
+
+
 
 
     /**Methods for modal */
@@ -218,6 +255,27 @@ export class InvoiceEditComponent implements OnInit {
         this.route.data.subscribe((data: { invoice: IInvoice }) => {            
             this.orgInvoice = JSON.stringify(data.invoice);
             this.modifyInvoice = data.invoice;
+        });
+    }
+
+    deleteInvoice() {
+
+        // Only Draft invoices can be deleted. otherwise exit.
+        if (this.modifyInvoice.status !== 'Draft' && this.modifyInvoice.status !== 'New') {
+            this.alertService.error("You can not delete a none draft invoice.");
+            return;
+        }
+
+        // get invoice number to delete
+        const invoiceNumber = this.modifyInvoice.invoiceNumber;
+
+        // Delete the invoice
+        this.invoiceService.deleteInvoice(invoiceNumber).subscribe(data => {
+            // Navigate to create new invoice
+            this.router.navigate(['/invoices']);
+        },
+        err => {
+            this.alertService.error("Error: the delete has failed.")
         });
     }
     
