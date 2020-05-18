@@ -23,7 +23,7 @@ import { LoginUser } from './users/LoginUser';
 export class AppComponent {
     title = 'CBA Invoicing';
     loading: boolean = true;
-    forcePasswordChange: boolean = false;
+    //forcePasswordChange: boolean = false;
 
     currentUser: IUser ;
     
@@ -42,9 +42,9 @@ export class AppComponent {
 
         router.events.subscribe((routerEvent: Event) => this.checkRouterEvent(routerEvent));
 
-        callbackService.updateNavObs$.subscribe(fpc => {
-            this.forcePasswordChange = fpc;
-        });
+        // callbackService.updateNavObs$.subscribe(fpc => {
+        //     this.forcePasswordChange = fpc;
+        // });
         // callbackService.paymentNavObs$.subscribe(show => {
         //     if (this.showUser)
         //         this.showUser = false;
@@ -56,6 +56,7 @@ export class AppComponent {
 
     ngOnInit() {
         this.alertService.success("Loading ...");
+        if (localStorage.getItem("token") != null){
         this.authenticationService.getCurrentUser().subscribe(
             (user:any) => {
                 this.currentUser =  new LoginUser();
@@ -65,9 +66,11 @@ export class AppComponent {
                 //this.showUser = true;
             });
         console.log(this.currentUser);
-        //this.forcePasswordChange = localStorage.getItem("forcePasswordChange") === "true";
-
     }
+        //this.forcePasswordChange = localStorage.getItem("forcePasswordChange") === "true";
+    }
+
+    
 
     onLogout(){
         console.log("logout click");
@@ -78,6 +81,8 @@ export class AppComponent {
     }
 
     checkRouterEvent(routerEvent: Event): void {
+        console.log(routerEvent);
+        //if (this.currentUser) 
         if (routerEvent instanceof NavigationStart) {
             this.spinnerService.showSpinner();
         }
