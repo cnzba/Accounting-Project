@@ -1,10 +1,11 @@
 using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace WebApp.Entities
 {
-    public partial class CBAContext : DbContext
+    public partial class CBAContext : IdentityDbContext<CBAUser>
     {
         // Constuctor do not remove (DI)
         public CBAContext() { }
@@ -23,6 +24,9 @@ namespace WebApp.Entities
             // at https://docs.microsoft.com/en-us/ef/core/modeling/
             // e.g. properties named "Id" are treated as primary keys; therefore
             // primary keys have not been explicitly configured
+
+            //
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Invoice>(entity =>
             {
@@ -71,6 +75,13 @@ namespace WebApp.Entities
                 entity.Property(e => e.City).IsRequired();
                 entity.Property(e => e.Country).IsRequired();
             });
+
+            modelBuilder.Entity<CBAUser>(entity =>
+           {
+               entity.HasOne(u => u.Organisation).WithMany(o => o.Users);
+               entity.Property(u => u.IsActive).IsRequired();
+
+           });
         }
     }
 }

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AlertComponent } from './common/alert/alert.component';
@@ -15,9 +15,9 @@ import { InvoicedetailComponent } from "./invoices/invoicedetail.component";
 import { InvoiceEditComponent } from "./invoices/invoice-edit.component";
 import { InvoiceService } from "./invoices/invoice.service";
 import { InvoiceListResolver } from "./invoices/invoicelist-resolver.service";
-import { ForgotPasswordComponent } from './login/forgot-password.component';
+import { ForgotPasswordComponent } from './login/forget-password/forgot-password.component';
 import { ChangePasswordComponent } from './login/change-password.component';
-import { ForgotPasswordService } from './login/forgot-password.service';
+import { ForgotPasswordService } from './login/forget-password/forgot-password.service';
 import { ChangePasswordService } from './login/change-password.service';
 import { InvoicePaymentComponent } from './payment/invoice-payment.component';
 import { InvoicePaymentService } from './payment/invoice-payment.service';
@@ -27,6 +27,7 @@ import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 import { InvoiceResolverService } from "./invoices/invoice-resolver.service";
 import { SpinnerService } from "./common/spinner.service";
 import { environment } from '../environments/environment';
+import { ResetPasswordComponent } from './login/reset-passowod/reset-password.component';
 
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -42,6 +43,8 @@ import { DatePipe } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared';
 import { CoreModule } from './core';
+import { AuthInterceptor } from './login/auth.interceptor';
+import { ResetPasswordErrTranslate } from './pipes/resetPasswordInputError.pipe';
 
 @NgModule({
     declarations: [
@@ -53,12 +56,14 @@ import { CoreModule } from './core';
         InvoiceEditComponent,
         ForgotPasswordComponent,
         ChangePasswordComponent,
+        ResetPasswordComponent,
         InvoicePaymentComponent,
         PaginationComponent,
         PageNotFoundComponent,
         InvoiceFilterPipe,
         TwoDigitDecimaNumberDirective,
-        InputIntegerOnlyDirective
+        ResetPasswordErrTranslate,
+        InputIntegerOnlyDirective,
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -67,6 +72,7 @@ import { CoreModule } from './core';
         AngularFontAwesomeModule,
         HttpClientModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpModule,
         ModalModule.forRoot(),
         AppRoutingModule,
@@ -84,9 +90,11 @@ import { CoreModule } from './core';
         UserService,
         ForgotPasswordService,
         ChangePasswordService,
+        ResetPasswordComponent,
         InvoicePaymentService,
         SpinnerService,
-        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
+        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
     ],
     bootstrap: [AppComponent]
 })
