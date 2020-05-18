@@ -219,6 +219,14 @@ export class InvoiceEditComponent implements OnInit {
         this.deleteInvoice();
     }
 
+    computedTotal = () => {
+       return this.invoiceService.computeTotal(this.modifyInvoice);
+    }
+
+    computedGST = () =>{
+        return this.invoiceService.computeGST(this.modifyInvoice);
+    }
+
 
     
 

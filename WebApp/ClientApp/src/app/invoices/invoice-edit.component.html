@@ -113,7 +113,7 @@
                         <b>Total</b>
                     </div>
                     <div class="col-6">
-                        {{invoiceService.computeTotal(modifyInvoice) |number:'.2-2'}}
+                        {{computedTotal() |number:'.2-2'}}
                     </div>
                 </div>
                 <div class="row">
@@ -121,7 +121,7 @@
                         <b>Includes GST of</b>
                     </div>
                     <div class="col-6">
-                        {{invoiceService.computeGST(modifyInvoice) |number:'.2-2'}}
+                        {{computedGST() |number:'.2-2'}}
                     </div>
                 </div>
                 <div class="row">
@@ -217,7 +217,7 @@
                 <b>Total</b>
             </div>
             <div class="col-2 text-right">
-                {{invoiceService.computeTotal(modifyInvoice) |number:'.2-2'}}
+                {{computedTotal() |number:'.2-2'}}
             </div>
         </div>
         <div class="row">
@@ -225,7 +225,7 @@
                 <b>Includes GST of</b>
             </div>
             <div class="col-2 text-right">
-                {{invoiceService.computeGST(modifyInvoice) |number:'.2-2'}}
+                {{computedGST() |number:'.2-2'}}
             </div>
         </div>
 
