@@ -35,6 +35,7 @@ namespace UnitTestProject
                  null, null, null, null, null, null, null, null);
 
             _emailService = new Mock<IEmailService>();
+            _emailService.Setup(x => x.SendEmail(It.IsAny<EmailConfig>(), It.IsAny<Email>())).ReturnsAsync(true);
             _resetPasswordController = new ResetPasswordController(_emailService.Object, _emailConfig, _mockUserManager.Object);
         }
 
@@ -59,7 +60,7 @@ namespace UnitTestProject
             _mockUserManager.Setup(x => x.VerifyUserTokenAsync(It.IsAny<CBAUser>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
 
             var result = await _resetPasswordController.PostVerifyToken(obj);
-            Assert.AreEqual(((Microsoft.AspNetCore.Mvc.StatusCodeResult)result).StatusCode, 200);
+            Assert.AreEqual(((StatusCodeResult)result).StatusCode, 200);
         }
 
         [TestMethod]
@@ -134,7 +135,7 @@ namespace UnitTestProject
             _mockUserManager.Setup(x => x.ResetPasswordAsync(It.IsAny<CBAUser>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success);
 
             var result = await _resetPasswordController.PostChangePassword(objPasswordModel);
-            Assert.AreEqual(((ObjectResult)result).Value, "Password has been reset successfully..!!");
+            Assert.AreEqual(((Microsoft.AspNetCore.Mvc.StatusCodeResult)result).StatusCode, 200);
         }
     }
 }

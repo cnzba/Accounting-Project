@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal'
 import { InvoiceService } from "./invoice.service";
 import { IInvoice, IInvoiceLine } from "./invoice";
 import { AlertService } from "../common/alert/alert.service";
@@ -39,8 +40,17 @@ export class InvoicelistComponent implements OnInit {
 
     public searchString: string;
 
+    /**Methods for modal */
+    modalRef: BsModalRef;
+
     // inject InvoiceService
-    constructor(private route: ActivatedRoute, private invoiceService: InvoiceService, private alertService: AlertService, private http: Http) {
+    constructor(
+        private route: ActivatedRoute,
+        private invoiceService: InvoiceService,
+        private alertService: AlertService,
+        private http: Http,
+        private modalService: BsModalService) {
+
         let status = this.route.snapshot.queryParams["status"];
 //        this.route.queryParams.subscribe(param =>{console.log(param["status"])})
         this.invo = this.route.snapshot.data['invoices'];        
@@ -61,47 +71,81 @@ export class InvoicelistComponent implements OnInit {
         }else{
             this.sortedData = allInvoices;            
         }
-       
-        
-        
-//        this.sortedData = 
     }
+
     onPageChange(offset) {
         this.offset = offset;
-       
     }
-    
-    private _invoiceNumber: string;
-    getinvoiceNum():string{
-       return this._invoiceNumber;
-           } 
-    setinvoiceNum(currentInvoiceNum:string){
-         this._invoiceNumber = currentInvoiceNum;
-       }
-    
-    deleteFieldValue(invoiceNumber: string){
-            var delete_value = this.getinvoiceNum();
-            invoiceNumber = delete_value;
-            this.invoiceService.deleteInvoice(invoiceNumber).subscribe(
-               data => {
-               window.location.reload();
-               this.invo = this.invo.filter(inv=> inv.invoiceNumber !== invoiceNumber);
-               this.offset=0;
-               this.alertService.success(invoiceNumber +" has successfully been deleted!");
-                   //this.invo = this.route.snapshot.data['invoices'];
-               let delIndex = 0;
-               for (let i = 0; i < this.sortedData.length; i++) {
-                   if (this.sortedData[i].invoiceNumber == invoiceNumber)
-                       delIndex = i;
-               };
-               this.sortedData.splice(delIndex, 1);
+
+
+
+
+
+
+
+
+    // Delete Process
+    // ====================================
+
+    //public _invoiceNumber: string;
+    public currentInvoiceNumber: string;
+
+    // Open dialog
+    onShowDelete(template: TemplateRef<any>, currentInvoiceNum: string) {
+        this.currentInvoiceNumber = currentInvoiceNum;
+        this.modalRef = this.modalService.show(template, { class: 'modal-md' });
+    }
+
+    // Close Dialog
+    onCancelDelete(): void {
+        this.modalRef.hide();
+    }
+
+    // User clicked yes to delete
+    onDelete() {
+        this.deleteFieldValue();
+        this.modalRef.hide();
+    }
+
+
+    // Delete Draft Invoice
+    deleteFieldValue() {
+
+        // get invoice number to delete
+        const invoiceNumber = this.currentInvoiceNumber;
+
+        // Only Draft invoices can be deleted. otherwise exit.
+        let inv: IInvoice[] = this.invo.filter((el) => el.invoiceNumber === invoiceNumber);
+
+        if (inv.length > 0 && inv[0].status !== 'Draft' && inv[0].status !== 'New') {
+            this.alertService.error("You can not delete a none draft invoice.");
+            return;
+        }
+
+        // Delete the invoice
+        this.invoiceService.deleteInvoice(invoiceNumber).subscribe(
+            data => {
+                // Remove deleted invoice from list of invo
+                this.invo = this.invo.filter(inv => inv.invoiceNumber !== invoiceNumber);
+                // Reset pagination offset
+                this.offset = 0;
+                // Show delete confirmation on page
+                this.alertService.success(invoiceNumber + " has successfully been deleted!");
+                // find invoice index to remove from presentation list
+                let delIndex = this.sortedData.findIndex((el) => el.invoiceNumber === invoiceNumber);
+                // Remove deleted invoice from presentation list
+                if (delIndex >= 0) {
+                    this.sortedData.splice(delIndex, 1);
+                }
             },
               err=> {
                 this.alertService.error("Error: the delete has failed")
             });
-
     }
        
+
+
+
 
     sortData(sort: Sort) {
         const data = this.invo.slice();

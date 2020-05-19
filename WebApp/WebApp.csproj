@@ -62,6 +62,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="EmailTemplates\ConfirmRegEmailTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="EmailTemplates\DefaultInvoiceTemplate.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

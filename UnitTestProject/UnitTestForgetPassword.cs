@@ -44,7 +44,7 @@ namespace UnitTestProject
                  null, null, null, null, null, null, null, null);
 
             _emailService = new Mock<IEmailService>();
-           
+            _emailService.Setup(x => x.SendEmail(It.IsAny<EmailConfig>(), It.IsAny<Email>())).ReturnsAsync(true);
             _forgetPasswordController = new ForgotPasswordController(_emailService.Object, _emailConfig, _mockUserManager.Object);
         }
 
