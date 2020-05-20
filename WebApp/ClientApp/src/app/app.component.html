@@ -7,31 +7,9 @@
     </mat-sidenav>
 
     <div class="site">
-        <header>
-            
-            <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-                
-                <div>
-                    <span *ngIf="currentUser">
-                        <button type="button" class="btn btn-info btn-lg menu" (click)="sidenav.toggle()">
-                            <i class="material-icons">menu</i>
-                        </button>
-                    </span>
-                    <span class="navbar-brand">CBANZ</span>
-                    <span class="navbar-text" *ngIf="currentUser == null">Please register with a valid email first and use it as your login email</span>
-                    <span class="navbar-text" *ngIf="currentUser != null" >Logged in as {{currentUser.name}}</span>
-                    <button class="navbar-toggler" data-toggle="collapse" data-target="#menu">
-                    </button>
-                </div>
-        
-                <div id="menu" class="collapse navbar-collapse">
-                    <ul *ngIf="currentUser" class="navbar-nav">
-                        <li class="nav-item" ><a [routerLink]="['/change-password']">Change Password</a></li>
-                        <li class="nav-item" ><a [routerLink]="['/login']" (click)="onLogout()">Logout</a></li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
+        <app-header [currentUser]='currentUser'
+                    (isLogout)='onLogout($event)'
+                    (toggleSidebar)="sidenav.toggle()"></app-header>
         
         
         <section class="container-fluid">

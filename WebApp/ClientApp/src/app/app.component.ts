@@ -57,33 +57,31 @@ export class AppComponent {
     ngOnInit() {
         this.alertService.success("Loading ...");
         if (localStorage.getItem("token") != null){
-        this.authenticationService.getCurrentUser().subscribe(
-            (user:any) => {
-                this.currentUser =  new LoginUser();
-                this.currentUser.name = user.firstName + " " + user.lastName;
-                this.currentUser.email = user.email;
-                this.currentUser.active=user.isActive;
-                //this.showUser = true;
-            });
+            this.getCurrentUser();
         console.log(this.currentUser);
     }
         //this.forcePasswordChange = localStorage.getItem("forcePasswordChange") === "true";
-    }
+    }    
 
-    
-
-    onLogout(){
+    onLogout(isLogout:boolean){
         console.log("logout click");
         //this.showUser = false;
+
+        if (isLogout){
         localStorage.removeItem('token');
         this.currentUser = null;
-        this.router.navigate(['/login']);
+        this.router.navigate(['/login'], { queryParams: { name: 1 } });
+        }
     }
 
     checkRouterEvent(routerEvent: Event): void {
-        console.log(routerEvent);
+        console.log("RouterEvent:   "+routerEvent);
         //if (this.currentUser) 
         if (routerEvent instanceof NavigationStart) {
+            console.log(routerEvent.url);
+            if (routerEvent.url.includes("isLogin=true")){
+                this.getCurrentUser();
+            }
             this.spinnerService.showSpinner();
         }
 
@@ -92,5 +90,16 @@ export class AppComponent {
             routerEvent instanceof NavigationError) {
             this.spinnerService.hideSpinner();
         }
+    }
+
+    getCurrentUser(){
+        this.authenticationService.getCurrentUser().subscribe(
+            (user:any) => {
+                this.currentUser =  new LoginUser();
+                this.currentUser.name = user.firstName + " " + user.lastName;
+                this.currentUser.email = user.email;
+                this.currentUser.active=user.isActive;
+                //this.showUser = true;
+            });
     }
 }

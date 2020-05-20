@@ -42,7 +42,8 @@ namespace WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CBAContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CBA_Database")));
+            //services.AddDbContext<CBAContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CBA_Database")));
+            services.AddDbContext<CBAContext>(options => options.UseSqlServer("Data Source=tcp:cbaaccountingwebapptestdbserver.database.windows.net, 1433; Initial Catalog=CBAAccountingWebAppTest_db; User Id=cbaadmin@cbaaccountingwebapptestdbserver;Password=CBA@dmin"));
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

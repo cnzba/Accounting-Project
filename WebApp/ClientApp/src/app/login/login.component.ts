@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             (res:any) => {
                 var token = JSON.parse(res._body).token;
                 localStorage.setItem('token',token);
-                this.router.navigateByUrl('/core');
+                this.router.navigate(['/core'], { queryParams: { isLogin: true } });
                 //localStorage.setItem('userName', )
             },
             err => {
