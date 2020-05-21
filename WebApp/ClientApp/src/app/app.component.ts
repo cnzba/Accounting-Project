@@ -58,7 +58,6 @@ export class AppComponent {
         this.alertService.success("Loading ...");
         if (localStorage.getItem("token") != null){
             this.getCurrentUser();
-        console.log(this.currentUser);
     }
         //this.forcePasswordChange = localStorage.getItem("forcePasswordChange") === "true";
     }    
@@ -76,7 +75,6 @@ export class AppComponent {
 
     checkRouterEvent(routerEvent: Event): void {
         console.log("RouterEvent:   "+routerEvent);
-        //if (this.currentUser) 
         if (routerEvent instanceof NavigationStart) {
             console.log(routerEvent.url);
             if (routerEvent.url.includes("isLogin=true")){
