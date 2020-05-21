@@ -62,8 +62,8 @@ namespace WebApp.Controllers
             if (curUser == null) return BadRequest(new { message = "The user is not exist" });
 
             //bool isValidPassword = await _userManager.CheckPasswordAsync(curUser, loginModel.Password);
-            var res = await _signInManager.PasswordSignInAsync(curUser, loginModel.Password, isPersistent: true, lockoutOnFailure: true);
-            if (res.IsNotAllowed) return BadRequest(new { message = "The password is not correct" });
+            var res = await _signInManager.PasswordSignInAsync(curUser, loginModel.Password, isPersistent: false, lockoutOnFailure: false);
+            if ( !res.Succeeded ) return BadRequest(new { message = "The password is not correct" });
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
