@@ -56,7 +56,7 @@ namespace UnitTestProject
             CBAUser objCBAUser = ClsCommon.GetMockObject();
 
             _mockUserManager.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(objCBAUser);
-            _mockSignInManager.Setup(x => x.PasswordSignInAsync(It.IsAny<CBAUser>(), It.IsAny<string>(), true, true)).ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+            _mockSignInManager.Setup(x => x.PasswordSignInAsync(It.IsAny<CBAUser>(), It.IsAny<string>(), false, false)).ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
 
             Login objLogin = new Login()
             {
