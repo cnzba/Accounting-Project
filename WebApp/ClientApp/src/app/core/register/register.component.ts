@@ -7,6 +7,7 @@ import { CBAOrg } from '../domain/CBAOrg';
 import { UserValidators } from '../validators/user.validator';
 import { AlertService } from 'src/app/common/alert/alert.service';
 import { debounceTime, filter, subscribeOn } from 'rxjs/operators';
+import { SpinnerService } from "../../common/spinner.service";
 
 @Component({
     selector: 'app-register',
@@ -26,7 +27,8 @@ export class RegisterComponent implements OnInit{
               private userRegService:UserRegisterService,
               private router: Router,
               private checkUserExistService:UserValidators,
-              private alertService:AlertService){ 
+              private alertService:AlertService,
+              private spinnerService:SpinnerService){ 
       this._regUser = new CBAUser();
       this._regOrg = new CBAOrg();
     }  
@@ -160,6 +162,7 @@ export class RegisterComponent implements OnInit{
 
   onSubmit({value, valid},ev: Event){
     ev.preventDefault();
+    this.spinnerService.showSpinner();
     this._regUser.phoneNumber= value.phoneNumberPrefix+ "-"+value.phoneNumberBody;
     this._regUser.firstName= value.firstName;
     this._regUser.lastName = value.lastName;
@@ -183,11 +186,13 @@ export class RegisterComponent implements OnInit{
           this.alertService.success("Register succeed and a confirmation email has been sent to you.");
         }else{
           console.log(res);
-          this.alertService.error("Register failed.")
+          this.alertService.error("Register failed.");
+          this.spinnerService.hideSpinner();
         }
       },
       err => {
         console.log(err);
+        this.spinnerService.hideSpinner();
       }
     );
   }

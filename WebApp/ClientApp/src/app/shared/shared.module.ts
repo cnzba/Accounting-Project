@@ -14,6 +14,8 @@ import {CdkTableModule} from '@angular/cdk/table';
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { UploadComponent } from './upload';
 import { RestrictInputDirective } from "../directives/restrict-input.directive";
+import { AppHeaderComponent } from './app-header';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -37,6 +39,7 @@ import { RestrictInputDirective } from "../directives/restrict-input.directive";
         MatSelectModule,
         MatCheckboxModule,
         FormsModule,
+        RouterModule
          ],
     exports: [
         MatToolbarModule,
@@ -58,7 +61,8 @@ import { RestrictInputDirective } from "../directives/restrict-input.directive";
         MatCheckboxModule,
         FormsModule,
         UploadComponent,
-        RestrictInputDirective
+        RestrictInputDirective,
+        AppHeaderComponent
     ],
 
     providers:[
@@ -66,7 +70,8 @@ import { RestrictInputDirective } from "../directives/restrict-input.directive";
     ],
     declarations: [
         UploadComponent,
-        RestrictInputDirective
+        RestrictInputDirective,
+        AppHeaderComponent
     ],
     
 })

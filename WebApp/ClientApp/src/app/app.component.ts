@@ -23,7 +23,7 @@ import { LoginUser } from './users/LoginUser';
 export class AppComponent {
     title = 'CBA Invoicing';
     loading: boolean = true;
-    forcePasswordChange: boolean = false;
+    //forcePasswordChange: boolean = false;
 
     currentUser: IUser ;
     
@@ -42,9 +42,9 @@ export class AppComponent {
 
         router.events.subscribe((routerEvent: Event) => this.checkRouterEvent(routerEvent));
 
-        callbackService.updateNavObs$.subscribe(fpc => {
-            this.forcePasswordChange = fpc;
-        });
+        // callbackService.updateNavObs$.subscribe(fpc => {
+        //     this.forcePasswordChange = fpc;
+        // });
         // callbackService.paymentNavObs$.subscribe(show => {
         //     if (this.showUser)
         //         this.showUser = false;
@@ -56,29 +56,30 @@ export class AppComponent {
 
     ngOnInit() {
         this.alertService.success("Loading ...");
-        this.authenticationService.getCurrentUser().subscribe(
-            (user:any) => {
-                this.currentUser =  new LoginUser();
-                this.currentUser.name = user.firstName + " " + user.lastName;
-                this.currentUser.email = user.email;
-                this.currentUser.active=user.isActive;
-                //this.showUser = true;
-            });
-        console.log(this.currentUser);
-        //this.forcePasswordChange = localStorage.getItem("forcePasswordChange") === "true";
-
+        if (localStorage.getItem("token") != null){
+            this.getCurrentUser();
     }
+        //this.forcePasswordChange = localStorage.getItem("forcePasswordChange") === "true";
+    }    
 
-    onLogout(){
+    onLogout(isLogout:boolean){
         console.log("logout click");
         //this.showUser = false;
+
+        if (isLogout){
         localStorage.removeItem('token');
         this.currentUser = null;
-        this.router.navigate(['/login']);
+        this.router.navigate(['/login'], { queryParams: { name: 1 } });
+        }
     }
 
     checkRouterEvent(routerEvent: Event): void {
+        console.log("RouterEvent:   "+routerEvent);
         if (routerEvent instanceof NavigationStart) {
+            console.log(routerEvent.url);
+            if (routerEvent.url.includes("isLogin=true")){
+                this.getCurrentUser();
+            }
             this.spinnerService.showSpinner();
         }
 
@@ -87,5 +88,16 @@ export class AppComponent {
             routerEvent instanceof NavigationError) {
             this.spinnerService.hideSpinner();
         }
+    }
+
+    getCurrentUser(){
+        this.authenticationService.getCurrentUser().subscribe(
+            (user:any) => {
+                this.currentUser =  new LoginUser();
+                this.currentUser.name = user.firstName + " " + user.lastName;
+                this.currentUser.email = user.email;
+                this.currentUser.active=user.isActive;
+                //this.showUser = true;
+            });
     }
 }
