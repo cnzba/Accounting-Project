@@ -260,3 +260,5 @@ paket-files/
 __pycache__/
 *.pyc
 /WebApp/ClientApp/src/app/password-reset-link-sent
+/WebApp/ClientApp/package-lock.json
+/WebApp/Resources/Images/132345929644141921IMG_0286.JPG

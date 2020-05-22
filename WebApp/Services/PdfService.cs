@@ -9,6 +9,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApp.Entities;
+using Microsoft.EntityFrameworkCore;
+
+using System.Xml.Linq;
+using System.Text.RegularExpressions;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace WebApp.Services
 {
@@ -18,16 +24,19 @@ namespace WebApp.Services
         private readonly IConverter converter;
         private readonly EmailConfig emailConfig;
         private readonly PdfServiceOptions serviceConfig;
+        private readonly CBAContext context;
 
         public PdfService(IEmailService emailService,
                             IOptionsSnapshot<EmailConfig> emailConfig,
                             IOptionsSnapshot<PdfServiceOptions> serviceConfig,
-                            IConverter converter)
+                            IConverter converter,
+                            CBAContext context)
         {
             this.emailService = emailService;
             this.converter = converter;
             this.emailConfig = emailConfig.Value;
             this.serviceConfig = serviceConfig.Value;
+            this.context = context;
         }
 
         private string GetDestination(string InvoiceNumber)
@@ -44,12 +53,57 @@ namespace WebApp.Services
         /// </summary>
         /// <param name="InvoiceNumber">The invoice to create</param>
         /// <returns>The filename/path of the generated pdf</returns>
-        private string CreatePdf(string InvoiceNumber)
+        private string CreatePdf(string invoiceNumber)
         {
             try
             {
-                DeletePdf(InvoiceNumber);
+                DeletePdf(invoiceNumber);
 
+                var invoice = context.Invoice.Include("InvoiceLine").SingleOrDefault(t => t.InvoiceNumber == invoiceNumber);
+
+                var charitiesNumber = invoice.CharitiesNumber; // string
+                var clientContact = Regex.Replace(invoice.ClientContact, @"\r\n|\n|\\r\\n|\\n", "<br />"); // string, replace "\n" with "<br/>" for html
+                var clientName = invoice.ClientName; // string
+                var dateCreated = invoice.DateCreated; // DateTime
+                var dateDue = invoice.DateDue; // DateTime
+                var email = invoice.Email; // string
+                var grandTotal = invoice.GrandTotal; // decimal
+                var gstNumber = invoice.GstNumber;  // string
+                var gstRate = invoice.GstRate; // decimal
+                var subTotal = invoice.SubTotal; // decimal
+                var invoiceLine = invoice.InvoiceLine; // ICollection<InvoiceLine> of the items
+                var purchaseOrderNumber = invoice.PurchaseOrderNumber; // string
+
+                // there are more fields but most are null or missing i.e. no logo field?
+                XDocument document = XDocument.Load("Resources/Assets/PdfServiceHtmlModel.html");
+
+                // var logoUrl = "https://www.childhood.org.au/app/uploads/2017/07/ACF-logo-placeholder.png";
+                // document.Descendants().Where(x => (string)x.Attribute("id") == "logo").FirstOrDefault().Add(XElement.Parse(string.Format("<img src=\"{0}\" alt=\"\" width=\"50\" height=\"50\"/>", logoUrl)));
+                // uncomment above line when there is an logo field, set the src to a url or file directory
+                AddField(ref document, "clientName", clientName);
+
+                AddFieldWithNewline(ref document, "clientContact", clientContact.ToString());
+
+                AddField(ref document, "invoiceNumber", invoiceNumber.ToString());
+                AddField(ref document, "dateCreated", dateCreated.ToString());
+                AddField(ref document, "gstNumber", gstNumber.ToString());
+                AddField(ref document, "charitiesNumber", charitiesNumber.ToString());
+                AddField(ref document, "purchaseOrderNumber", purchaseOrderNumber);
+                AddField(ref document, "dateDue", "Due Date " + dateDue.ToString());
+                AddField(ref document, "gstRate", string.Format("GST {0}%", gstRate * 100));
+
+                var gstValue = grandTotal - subTotal;
+                AddField(ref document, "gstValue", gstValue.ToString());
+                AddField(ref document, "subTotal", subTotal.ToString());
+                AddField(ref document, "grandTotal", subTotal.ToString());
+
+                // populate the table
+                var holder = "<tr><td>{0}</td><td style=\"text-align: right\">{1}</td><td style=\"text-align: right\">{2}</td><td style=\"text-align: right\">{3}</td></tr>";
+                foreach (var item in invoiceLine)
+                {
+                    var node = XElement.Parse(string.Format(holder, item.Description, item.Quantity, item.UnitPrice, item.Amount));
+                    document.Descendants().Where(x => (string)x.Attribute("id") == "invoiceTable").FirstOrDefault().Add(node);
+                }
                 var doc = new HtmlToPdfDocument()
                 {
                     GlobalSettings = {
@@ -61,14 +115,17 @@ namespace WebApp.Services
                     Objects = {
                     new ObjectSettings()
                     {
-                       HtmlContent = @"<html><body><div>Hello</div></body></html>",
+                       HtmlContent = document.ToString(),
                     }
                 }
                 };
 
                 byte[] pdf = converter.Convert(doc);
 
-                var destination = GetDestination(InvoiceNumber);
+                BaseFont bfTimes = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, false); // font
+                pdf = AddWatermark(pdf, bfTimes, "Copy");
+
+                var destination = GetDestination(invoiceNumber);
                 File.WriteAllBytes(destination, pdf);
 
                 return destination;
@@ -77,6 +134,87 @@ namespace WebApp.Services
             {
                 return ex.Message;
             }   
+        }
+
+        /// <summary>
+        /// This method adds data to an html tag by id
+        /// </summary>
+        private static void AddField(ref XDocument document, string id, string data)
+        {
+            if (data == null)
+            {
+                return;
+            }
+
+            document.Descendants().Where(x => (string)x.Attribute("id") == id).FirstOrDefault().Value = data;
+        }
+
+        /// <summary>
+        /// Similar to AddField, use if string had any inline tags. There is a weird quirk 
+        /// that when adding to the html tag by .Value; inline <> tags are not preserved so when trying to display a newline 
+        /// via <br/> it insteads display "<br/>" literally. It might have something to do with ascii codes?
+        /// to remedy this use .Add() and wrap the XElement in a <span>
+        /// </summary>
+        private static void AddFieldWithNewline(ref XDocument document, string id, string data)
+        {
+            if (data == null)
+            {
+                return;
+            }
+
+            document.Descendants().Where(x => (string)x.Attribute("id") == id).FirstOrDefault()
+                .Add(XElement.Parse("<span>" + data + "</span>"));
+        }
+
+        /// <summary>
+        /// This method adds watermark text under pdf content
+        /// </summary>
+        /// <param name="pdfData">pdf content bytes</param>
+        /// <param name="watermarkText">text to be shown as watermark</param>
+        /// <param name="font">base font</param>
+        /// <param name="fontSize">font size</param>
+        /// <param name="angle">angle at which watermark needs to be shown in degrees</param>
+        /// <param name="color">water mark color</param>
+        /// <param name="realPageSize">pdf page size</param>
+        private static void AddWaterMarkText(PdfContentByte pdfData, string watermarkText, BaseFont font, float fontSize, float angle, BaseColor color, Rectangle realPageSize)
+        {
+            var gstate = new PdfGState { FillOpacity = 0.35f, StrokeOpacity = 0.3f };
+            pdfData.SaveState();
+            pdfData.SetGState(gstate);
+            pdfData.SetColorFill(color);
+            pdfData.BeginText();
+            pdfData.SetFontAndSize(font, fontSize);
+            var x = (realPageSize.Right + realPageSize.Left) / 2;
+            var y = (realPageSize.Bottom + realPageSize.Top) / 2;
+            pdfData.ShowTextAligned(Element.ALIGN_CENTER, watermarkText, x, y, angle);
+            pdfData.EndText();
+            pdfData.RestoreState();
+        }
+
+        /// <summary>
+        /// This method calls another method to add watermark text for each page
+        /// </summary>
+        /// <param name="bytes">byte array of Pdf</param>
+        /// <param name="baseFont">Base font</param>
+        /// <param name="watermarkText">Text to be added as watermark</param>
+        /// <returns>Pdf bytes array having watermark added</returns>
+        private static byte[] AddWatermark(byte[] bytes, BaseFont baseFont, string watermarkText)
+        {
+            using (var ms = new MemoryStream(10 * 1024))
+            {
+                using (var reader = new PdfReader(bytes))
+                using (var stamper = new PdfStamper(reader, ms))
+                {
+                    var pages = reader.NumberOfPages;
+                    for (var i = 1; i <= pages; i++)
+                    {
+                        var dc = stamper.GetOverContent(i);
+                        AddWaterMarkText(dc, watermarkText, baseFont, 100, 45, BaseColor.GRAY, reader.GetPageSizeWithRotation(i));
+                    }
+                    stamper.Close();
+                }
+                return ms.ToArray();
+            }
         }
 
         /// <summary>
